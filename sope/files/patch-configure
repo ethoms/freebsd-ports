@@ -1,0 +1,20 @@
+$FreeBSD$
+
+do not link against gnustep-gui in case its installed
+
+--- configure.orig	Wed Oct 24 21:00:15 2012
++++ configure	Fri Oct 26 09:52:19 2012
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+ 
+ #
+ # Note: When adding make options to this script, ensure that the source still
+@@ -396,6 +396,7 @@ genConfigMake() {
+     cfgwrite "debug:=no"
+   fi
+   cfgwrite ""
++  cfgwrite "NEEDS_GUI=no"
+   
+   if test $ARG_WITH_STRIP = 1; then
+     cfgwrite "# configured to produce stripped code";
