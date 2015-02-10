@@ -1,7 +1,7 @@
 # freebsd-ports
 Euan Thoms' FreeBSD ports development
 
-*Instructions:*
+**Instructions:**
 
 1.) Copy the port directories you need into the correct ports tree path.
 
