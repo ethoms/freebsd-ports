@@ -3,7 +3,7 @@
 
 PORTNAME=		sogo
 PORTVERSION=		2.2.14
-#PORTEPOCH=		1
+PORTREVISION=		1
 CATEGORIES=		www gnustep
 MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
 DISTNAME=		SOGo-${PORTVERSION}
@@ -36,11 +36,6 @@ SUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
 			GNUSTEP_MAKEFILES=${GNUSTEP_MAKEFILES}
 
 CONFIGURE_ARGS=		--disable-debug --enable-strip
-
-#SHARED_LIBS +=	GDLContentStore 2.0
-#SHARED_LIBS +=	NGCards		2.0
-#SHARED_LIBS +=	SOGo		2.3
-#SHARED_LIBS +=	SOGoUI		2.0
 
 .include <bsd.port.options.mk>
 

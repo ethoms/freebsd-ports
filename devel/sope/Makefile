@@ -3,7 +3,7 @@
 
 PORTNAME=		sope
 PORTVERSION=		2.2.14
-#PORTEPOCH=		1
+#PORTREVISION=		1
 CATEGORIES=		devel gnustep
 MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
 DISTNAME=		SOPE-${PORTVERSION}
@@ -35,17 +35,6 @@ USE_GNUSTEP_MAKE=	yes
 USE_GNUSTEP_LDCONFIG=	${GNUSTEP_LOCAL_LIBRARIES}
 
 CONFIGURE_ARGS+=	--with-gnustep --disable-debug --enable-strip
-
-#SO_MAJOR=	2
-#SO_MINOR=	3
-#.for _lib in DOM EOControl GDLAccess NGExtensions NGLdap NGMime \
-#		NGObjWeb NGStreams SaxObjC WEExtensions \
-#		WOExtensions XmlRpc SBJson
-#SHARED_LIBS+=	${_lib} ${SO_MAJOR}.${SO_MINOR}
-#.endfor
-
-#MAKE_FLAGS+=		MAJOR_VERSION=${SO_MAJOR} MINOR_VERSION=${SO_MINOR}
-#MAKE_FLAGS+=		SOPE_MAJOR_VERSION=4 SOPE_MINOR_VERSION=9
 
 .include <bsd.port.options.mk>
 
