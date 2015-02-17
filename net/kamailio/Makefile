@@ -53,7 +53,6 @@ BUILD_DEPENDS+=	clang33:${PORTSDIR}/lang/clang33
 DEFAULT_GROUP_INCLUDE=	standard standard-dep
 
 .if ${PORT_OPTIONS:MMYSQL}
-EXTRA_MODULES+=	db_mysql
 EXTRA_GROUPS+=	mysql
 .endif
 
