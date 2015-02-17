@@ -3,7 +3,7 @@
 
 PORTNAME=		sope
 PORTVERSION=		2.2.14
-#PORTREVISION=		1
+PORTREVISION=		1
 CATEGORIES=		devel gnustep
 MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
 DISTNAME=		SOPE-${PORTVERSION}
