@@ -1,0 +1,26 @@
+
+$FreeBSD:
+
+--- freebsd/rtpproxy.in.orig
++++ freebsd/rtpproxy.in
+@@ -9,7 +9,7 @@
+ 
+ # PROVIDE: rtpproxy
+ # REQUIRE: DAEMON
+-# BEFORE: ser openser
++# BEFORE: ser openser kamailio
+ 
+ prefix=/usr/local
+ 
+@@ -25,7 +25,10 @@
+ 
+ rtpproxy_enable=${rtpproxy_enable:-"NO"}
+ rtpproxy_laddr=${rtpproxy_laddr:-"0.0.0.0"}
++rtpproxy_ctrl_socket=${rtpproxy_ctrl_socket:-"udp:0.0.0.0:7722"}
++rtpproxy_usr=${rtpproxy_usr:-"rtpproxy"}
++rtpproxy_grp=${rtpproxy_grp:-"rtpproxy"}
+ 
+-command_args="-l ${rtpproxy_laddr} -p /var/run/rtpproxy.pid"
++command_args="-u ${rtpproxy_usr}:${rtpproxy_grp} -l ${rtpproxy_laddr} -s ${rtpproxy_ctrl_socket} -p /var/run/rtpproxy.pid"
+ 
+ run_rc_command "${1}"
