@@ -80,10 +80,6 @@ EXTRA_MODULES+= tls
 EXTRA_GROUPS+=  presence
 .endif
 
-.if !empty (EXTRA_MODULES)
-MAKE_ARGS+=     group_include="${DEFAULT_GROUP_INCLUDE} ${EXTRA_GROUPS}" include_modules="${EXTRA_MODULES}"
-.endif
-
 .if !empty (EXTRA_GROUPS)
 MAKE_ARGS+=     group_include="${DEFAULT_GROUP_INCLUDE} ${EXTRA_GROUPS}"
 .else
