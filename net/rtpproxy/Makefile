@@ -23,7 +23,7 @@ GROUPS=		${PORTNAME}
 
 post-build:
 	${SED} 's|%%PREFIX%%|${PREFIX}|g ; s|%%RC_SUBR%%|/etc/rc.subr|g' \
-	    ${WRKSRC}/freebsd/rtpproxy.in > ${WRKDIR}/rtpproxy
+		${WRKSRC}/freebsd/rtpproxy.in > ${WRKDIR}/rtpproxy
 
 post-install:
 	${INSTALL_SCRIPT} ${WRKDIR}/rtpproxy ${STAGEDIR}${PREFIX}/etc/rc.d/rtpproxy
