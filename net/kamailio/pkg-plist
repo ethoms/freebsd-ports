@@ -262,6 +262,7 @@ lib/kamailio/modules/xprint.so
 %%MYSQL%%%%DATADIR%%/mysql/speeddial-create.sql
 %%MYSQL%%%%DATADIR%%/mysql/standard-create.sql
 %%MYSQL%%%%DATADIR%%/mysql/uac-create.sql
+%%MYSQL%%%%DATADIR%%/mysql/uid_auth_db-create.sql
 %%MYSQL%%%%DATADIR%%/mysql/uid_avp_db-create.sql
 %%MYSQL%%%%DATADIR%%/mysql/uid_domain-create.sql
 %%MYSQL%%%%DATADIR%%/mysql/uid_gflags-create.sql

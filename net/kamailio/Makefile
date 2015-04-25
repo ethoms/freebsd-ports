@@ -1,9 +1,9 @@
 # Created by: Oliver Mahmoudi <olivermahmoudi@gmail.com>
-# $FreeBSD: head/net/kamailio/Makefile 379332 2015-02-19 05:29:43Z pi $
+# $FreeBSD: head/net/kamailio/Makefile 383748 2015-04-10 18:49:46Z pi $
 #
 
 PORTNAME=	kamailio
-PORTVERSION=	4.2.3
+PORTVERSION=	4.2.4
 CATEGORIES=	net
 MASTER_SITES=	http://www.kamailio.org/pub/kamailio/${PORTVERSION}/src/
 DISTNAME=	${PORTNAME}-${PORTVERSION}_src
@@ -92,10 +92,9 @@ MAKE_ARGS+=	include_modules="${EXTRA_MODULES}"
 
 post-patch:
 .if ! ${PORT_OPTIONS:MDOCS}
-	@${REINPLACE_CMD} -e 's#install-doc install-man#install-man#'	\
+	${REINPLACE_CMD} -e 's#install-doc install-man#install-man#'	\
 		${WRKSRC}/Makefile
 .endif
-
 .if ${OPSYS} == FreeBSD && ${OSVERSION} < 900000
 	${REINPLACE_CMD} -e 's/clang/clang33/g' ${WRKSRC}/Makefile.defs
 .endif
