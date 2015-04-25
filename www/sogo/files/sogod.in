@@ -13,6 +13,8 @@ rcvar=sogod_enable
 
 load_rc_config ${name}
 
+: ${sogod_enable:=NO}
+
 command=%%GNUSTEP_LOCAL_TOOLS%%/Admin/${name}
 pidfile=/var/run/sogo/sogo.pid
 
