@@ -21,14 +21,9 @@ RUN_DEPENDS:=		${BUILD_DEPENDS}
 USERS=			sogod
 GROUPS=			sogod
 
-USE_GNUSTEP=		yes
-USE_GNUSTEP_BASE=	yes
-USE_GNUSTEP_CONFIGURE=	yes
-USE_GNUSTEP_BUILD=	yes
-USE_GNUSTEP_INSTALL=	yes
-USE_GNUSTEP_MAKE=	yes
-
-USE_GNUSTEP_LDCONFIG=	${GNUSTEP_LOCAL_LIBRARIES}/sogo
+USES=                   gnustep objc
+USE_GNUSTEP=            base build
+USE_LDCONFIG=           ${GNUSTEP_LOCAL_LIBRARIES}/sogo
 
 USE_RC_SUBR=		sogod
 
@@ -42,6 +37,9 @@ CONFIGURE_ARGS=		--disable-debug --enable-strip
 post-patch:
 	@${GREP} -rlF '/etc/sogo' ${WRKSRC} \
 		| ${XARGS} ${REINPLACE_CMD} 's#/etc/sogo#${PREFIX}/etc/sogo#g'
+
+do-configure:
+	cd ${WRKSRC} ; . ${GNUSTEP_MAKEFILES}/GNUstep.sh ; ./configure ${CONFIGURE_ARGS}
 
 post-stage:
 	@${MKDIR} ${STAGEDIR}/var/spool/sogo
