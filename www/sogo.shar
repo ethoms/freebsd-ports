@@ -3,8 +3,8 @@
 # To extract the files from this archive, save it to some FILE, remove
 # everything before the '#!/bin/sh' line above, then type 'sh FILE'.
 #
-lock_dir=_sh08541
-# Made on 2015-05-21 14:03 SGT by <euan.thoms@fts-dt-0012>.
+lock_dir=_sh06181
+# Made on 2015-05-22 13:55 SGT by <euan.thoms@fts-dt-0012>.
 # Source directory was '/home/euan.thoms/LocalDev/freebsd-ports/www'.
 #
 # Existing files will *not* be overwritten, unless '-c' is specified.
@@ -18,8 +18,7 @@ lock_dir=_sh08541
 #    275 -rw-r--r-- sogo/files/patch-SoObjects_SOGo_NSData+Crypto_m
 #    300 -rw-r--r-- sogo/files/cron-ealarms-notify.sample
 #    552 -rw-r--r-- sogo/files/sogod.in
-#    299 -rw-r--r-- sogo/files/cron-expire-autoreply.sample
-#     18 -rw-r--r-- sogo/files/sieve.creds.sample
+#    310 -rw-r--r-- sogo/files/cron-expire-autoreply.sample
 #     18 -rw-r--r-- sogo/files/ealarms-notify.creds.sample
 #   1928 -rw-r--r-- sogo/pkg-message
 #   1620 -rw-r--r-- sogo/Makefile
@@ -31,16 +30,14 @@ lock_dir=_sh08541
 #    275 -rw-r--r-- sogo/files/patch-SoObjects_SOGo_NSData+Crypto_m
 #    300 -rw-r--r-- sogo/files/cron-ealarms-notify.sample
 #    552 -rw-r--r-- sogo/files/sogod.in
-#    299 -rw-r--r-- sogo/files/cron-expire-autoreply.sample
-#     18 -rw-r--r-- sogo/files/sieve.creds.sample
+#    310 -rw-r--r-- sogo/files/cron-expire-autoreply.sample
 #     18 -rw-r--r-- sogo/files/ealarms-notify.creds.sample
 #    623 -rw-r--r-- sogo/files/patch-SoObjects_SOGo_ParentFolder_m
 #     18 -rw-r--r-- sogo/files/expire-autoreply.creds.sample
 #    275 -rw-r--r-- sogo/files/patch-SoObjects_SOGo_NSData+Crypto_m
 #    300 -rw-r--r-- sogo/files/cron-ealarms-notify.sample
 #    552 -rw-r--r-- sogo/files/sogod.in
-#    299 -rw-r--r-- sogo/files/cron-expire-autoreply.sample
-#     18 -rw-r--r-- sogo/files/sieve.creds.sample
+#    310 -rw-r--r-- sogo/files/cron-expire-autoreply.sample
 #     18 -rw-r--r-- sogo/files/ealarms-notify.creds.sample
 #   1928 -rw-r--r-- sogo/pkg-message
 #   1620 -rw-r--r-- sogo/Makefile
@@ -415,9 +412,9 @@ TZ=Europe/London; export TZ
 PATH=$PATH:/usr/local/GNUstep/System/Tools; export PATH
 X. /usr/local/GNUstep/System/Library/Makefiles/GNUstep.sh
 X
-/usr/local/GNUstep/Local/Tools/Admin/sogo-tool expire-autoreply -p /usr/local/etc/sogo/sieve.creds > /var/log/sogo/cron-expire-autoreply.out 2>&1
+/usr/local/GNUstep/Local/Tools/Admin/sogo-tool expire-autoreply -p /usr/local/etc/sogo/expire-autoreply.creds > /var/log/sogo/cron-expire-autoreply.out 2>&1
 SHAR_EOF
-  (set 20 15 05 21 13 56 17 'sogo/files/cron-expire-autoreply.sample'
+  (set 20 15 05 22 13 54 33 'sogo/files/cron-expire-autoreply.sample'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/cron-expire-autoreply.sample'
 if test $? -ne 0
@@ -427,40 +424,12 @@ fi
   then (
        ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'sogo/files/cron-expire-autoreply.sample': 'MD5 check failed'
        ) << \SHAR_EOF
-8e4aeb0bc02fced89583967e1150abcf  sogo/files/cron-expire-autoreply.sample
+37632ba3bb33fcfdfafa15e023b8a728  sogo/files/cron-expire-autoreply.sample
 SHAR_EOF
 
 else
-test `LC_ALL=C wc -c < 'sogo/files/cron-expire-autoreply.sample'` -ne 299 && \
-  ${echo} "restoration warning:  size of 'sogo/files/cron-expire-autoreply.sample' is not 299"
-  fi
-fi
-# ============= sogo/files/sieve.creds.sample ==============
-if test -n "${keep_file}" && test -f 'sogo/files/sieve.creds.sample'
-then
-${echo} "x - SKIPPING sogo/files/sieve.creds.sample (file already exists)"
-
-else
-${echo} "x - extracting sogo/files/sieve.creds.sample (text)"
-  sed 's/^X//' << 'SHAR_EOF' > 'sogo/files/sieve.creds.sample' &&
-username:password
-SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/sieve.creds.sample'
-   eval "${shar_touch}") && \
-  chmod 0644 'sogo/files/sieve.creds.sample'
-if test $? -ne 0
-then ${echo} "restore of sogo/files/sieve.creds.sample failed"
-fi
-  if ${md5check}
-  then (
-       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'sogo/files/sieve.creds.sample': 'MD5 check failed'
-       ) << \SHAR_EOF
-390ae80ed318d2db67fe631024466b8c  sogo/files/sieve.creds.sample
-SHAR_EOF
-
-else
-test `LC_ALL=C wc -c < 'sogo/files/sieve.creds.sample'` -ne 18 && \
-  ${echo} "restoration warning:  size of 'sogo/files/sieve.creds.sample' is not 18"
+test `LC_ALL=C wc -c < 'sogo/files/cron-expire-autoreply.sample'` -ne 310 && \
+  ${echo} "restoration warning:  size of 'sogo/files/cron-expire-autoreply.sample' is not 310"
   fi
 fi
 # ============= sogo/files/ealarms-notify.creds.sample ==============
@@ -2664,9 +2633,9 @@ TZ=Europe/London; export TZ
 PATH=$PATH:/usr/local/GNUstep/System/Tools; export PATH
 X. /usr/local/GNUstep/System/Library/Makefiles/GNUstep.sh
 X
-/usr/local/GNUstep/Local/Tools/Admin/sogo-tool expire-autoreply -p /usr/local/etc/sogo/sieve.creds > /var/log/sogo/cron-expire-autoreply.out 2>&1
+/usr/local/GNUstep/Local/Tools/Admin/sogo-tool expire-autoreply -p /usr/local/etc/sogo/expire-autoreply.creds > /var/log/sogo/cron-expire-autoreply.out 2>&1
 SHAR_EOF
-  (set 20 15 05 21 13 56 17 'sogo/files/cron-expire-autoreply.sample'
+  (set 20 15 05 22 13 54 33 'sogo/files/cron-expire-autoreply.sample'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/cron-expire-autoreply.sample'
 if test $? -ne 0
@@ -2676,40 +2645,12 @@ fi
   then (
        ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'sogo/files/cron-expire-autoreply.sample': 'MD5 check failed'
        ) << \SHAR_EOF
-8e4aeb0bc02fced89583967e1150abcf  sogo/files/cron-expire-autoreply.sample
+37632ba3bb33fcfdfafa15e023b8a728  sogo/files/cron-expire-autoreply.sample
 SHAR_EOF
 
 else
-test `LC_ALL=C wc -c < 'sogo/files/cron-expire-autoreply.sample'` -ne 299 && \
-  ${echo} "restoration warning:  size of 'sogo/files/cron-expire-autoreply.sample' is not 299"
-  fi
-fi
-# ============= sogo/files/sieve.creds.sample ==============
-if test -n "${keep_file}" && test -f 'sogo/files/sieve.creds.sample'
-then
-${echo} "x - SKIPPING sogo/files/sieve.creds.sample (file already exists)"
-
-else
-${echo} "x - extracting sogo/files/sieve.creds.sample (text)"
-  sed 's/^X//' << 'SHAR_EOF' > 'sogo/files/sieve.creds.sample' &&
-username:password
-SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/sieve.creds.sample'
-   eval "${shar_touch}") && \
-  chmod 0644 'sogo/files/sieve.creds.sample'
-if test $? -ne 0
-then ${echo} "restore of sogo/files/sieve.creds.sample failed"
-fi
-  if ${md5check}
-  then (
-       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'sogo/files/sieve.creds.sample': 'MD5 check failed'
-       ) << \SHAR_EOF
-390ae80ed318d2db67fe631024466b8c  sogo/files/sieve.creds.sample
-SHAR_EOF
-
-else
-test `LC_ALL=C wc -c < 'sogo/files/sieve.creds.sample'` -ne 18 && \
-  ${echo} "restoration warning:  size of 'sogo/files/sieve.creds.sample' is not 18"
+test `LC_ALL=C wc -c < 'sogo/files/cron-expire-autoreply.sample'` -ne 310 && \
+  ${echo} "restoration warning:  size of 'sogo/files/cron-expire-autoreply.sample' is not 310"
   fi
 fi
 # ============= sogo/files/ealarms-notify.creds.sample ==============
@@ -2948,9 +2889,9 @@ TZ=Europe/London; export TZ
 PATH=$PATH:/usr/local/GNUstep/System/Tools; export PATH
 X. /usr/local/GNUstep/System/Library/Makefiles/GNUstep.sh
 X
-/usr/local/GNUstep/Local/Tools/Admin/sogo-tool expire-autoreply -p /usr/local/etc/sogo/sieve.creds > /var/log/sogo/cron-expire-autoreply.out 2>&1
+/usr/local/GNUstep/Local/Tools/Admin/sogo-tool expire-autoreply -p /usr/local/etc/sogo/expire-autoreply.creds > /var/log/sogo/cron-expire-autoreply.out 2>&1
 SHAR_EOF
-  (set 20 15 05 21 13 56 17 'sogo/files/cron-expire-autoreply.sample'
+  (set 20 15 05 22 13 54 33 'sogo/files/cron-expire-autoreply.sample'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/cron-expire-autoreply.sample'
 if test $? -ne 0
@@ -2960,40 +2901,12 @@ fi
   then (
        ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'sogo/files/cron-expire-autoreply.sample': 'MD5 check failed'
        ) << \SHAR_EOF
-8e4aeb0bc02fced89583967e1150abcf  sogo/files/cron-expire-autoreply.sample
+37632ba3bb33fcfdfafa15e023b8a728  sogo/files/cron-expire-autoreply.sample
 SHAR_EOF
 
 else
-test `LC_ALL=C wc -c < 'sogo/files/cron-expire-autoreply.sample'` -ne 299 && \
-  ${echo} "restoration warning:  size of 'sogo/files/cron-expire-autoreply.sample' is not 299"
-  fi
-fi
-# ============= sogo/files/sieve.creds.sample ==============
-if test -n "${keep_file}" && test -f 'sogo/files/sieve.creds.sample'
-then
-${echo} "x - SKIPPING sogo/files/sieve.creds.sample (file already exists)"
-
-else
-${echo} "x - extracting sogo/files/sieve.creds.sample (text)"
-  sed 's/^X//' << 'SHAR_EOF' > 'sogo/files/sieve.creds.sample' &&
-username:password
-SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/sieve.creds.sample'
-   eval "${shar_touch}") && \
-  chmod 0644 'sogo/files/sieve.creds.sample'
-if test $? -ne 0
-then ${echo} "restore of sogo/files/sieve.creds.sample failed"
-fi
-  if ${md5check}
-  then (
-       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'sogo/files/sieve.creds.sample': 'MD5 check failed'
-       ) << \SHAR_EOF
-390ae80ed318d2db67fe631024466b8c  sogo/files/sieve.creds.sample
-SHAR_EOF
-
-else
-test `LC_ALL=C wc -c < 'sogo/files/sieve.creds.sample'` -ne 18 && \
-  ${echo} "restoration warning:  size of 'sogo/files/sieve.creds.sample' is not 18"
+test `LC_ALL=C wc -c < 'sogo/files/cron-expire-autoreply.sample'` -ne 310 && \
+  ${echo} "restoration warning:  size of 'sogo/files/cron-expire-autoreply.sample' is not 310"
   fi
 fi
 # ============= sogo/files/ealarms-notify.creds.sample ==============
