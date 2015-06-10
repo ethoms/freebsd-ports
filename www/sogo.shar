@@ -3,8 +3,8 @@
 # To extract the files from this archive, save it to some FILE, remove
 # everything before the '#!/bin/sh' line above, then type 'sh FILE'.
 #
-lock_dir=_sh06181
-# Made on 2015-05-22 13:55 SGT by <euan.thoms@fts-dt-0012>.
+lock_dir=_sh25626
+# Made on 2015-06-10 10:03 SGT by <euan.thoms@potensol2>.
 # Source directory was '/home/euan.thoms/LocalDev/freebsd-ports/www'.
 #
 # Existing files will *not* be overwritten, unless '-c' is specified.
@@ -20,7 +20,7 @@ lock_dir=_sh06181
 #    552 -rw-r--r-- sogo/files/sogod.in
 #    310 -rw-r--r-- sogo/files/cron-expire-autoreply.sample
 #     18 -rw-r--r-- sogo/files/ealarms-notify.creds.sample
-#   1928 -rw-r--r-- sogo/pkg-message
+#   1944 -rw-r--r-- sogo/pkg-message
 #   1620 -rw-r--r-- sogo/Makefile
 #    132 -rw-r--r-- sogo/distinfo
 # 131928 -rw-r--r-- sogo/pkg-plist
@@ -39,7 +39,7 @@ lock_dir=_sh06181
 #    552 -rw-r--r-- sogo/files/sogod.in
 #    310 -rw-r--r-- sogo/files/cron-expire-autoreply.sample
 #     18 -rw-r--r-- sogo/files/ealarms-notify.creds.sample
-#   1928 -rw-r--r-- sogo/pkg-message
+#   1944 -rw-r--r-- sogo/pkg-message
 #   1620 -rw-r--r-- sogo/Makefile
 #    132 -rw-r--r-- sogo/distinfo
 # 131928 -rw-r--r-- sogo/pkg-plist
@@ -162,7 +162,7 @@ standard protocols such as CalDAV, CardDAV and GroupDAV.
 X
 WWW: http://sogo.nu/
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/pkg-descr'
+  (set 20 15 06 10 09 51 23 'sogo/pkg-descr'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/pkg-descr'
 if test $? -ne 0
@@ -215,7 +215,7 @@ X       && ![sm validatePermission: SOGoPerm_AccessObject
 X                        onObject: subscribedFolder
 X                       inContext: context])
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/patch-SoObjects_SOGo_ParentFolder_m'
+  (set 20 15 06 10 09 51 23 'sogo/files/patch-SoObjects_SOGo_ParentFolder_m'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/patch-SoObjects_SOGo_ParentFolder_m'
 if test $? -ne 0
@@ -251,7 +251,7 @@ ${echo} "x - extracting sogo/files/expire-autoreply.creds.sample (text)"
   sed 's/^X//' << 'SHAR_EOF' > 'sogo/files/expire-autoreply.creds.sample' &&
 username:password
 SHAR_EOF
-  (set 20 15 05 21 13 55 17 'sogo/files/expire-autoreply.creds.sample'
+  (set 20 15 06 10 09 51 23 'sogo/files/expire-autoreply.creds.sample'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/expire-autoreply.creds.sample'
 if test $? -ne 0
@@ -291,7 +291,7 @@ X #include <sys/types.h>
 X #include <sys/stat.h>
 X #include <fcntl.h>
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/patch-SoObjects_SOGo_NSData+Crypto_m'
+  (set 20 15 06 10 09 51 23 'sogo/files/patch-SoObjects_SOGo_NSData+Crypto_m'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/patch-SoObjects_SOGo_NSData+Crypto_m'
 if test $? -ne 0
@@ -325,7 +325,7 @@ X. /usr/local/GNUstep/System/Library/Makefiles/GNUstep.sh
 X
 /usr/local/GNUstep/Local/Tools/Admin/sogo-ealarms-notify -p /usr/local/etc/sogo/ealarms-notify.creds >> /var/log/sogo/cron-ealarms-notify.log 2>&1
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/cron-ealarms-notify.sample'
+  (set 20 15 06 10 09 51 23 'sogo/files/cron-ealarms-notify.sample'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/cron-ealarms-notify.sample'
 if test $? -ne 0
@@ -380,7 +380,7 @@ restart_precmd='cd /; . %%GNUSTEP_MAKEFILES%%/GNUstep.sh'
 X
 run_rc_command "$1"
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/sogod.in'
+  (set 20 15 06 10 09 51 23 'sogo/files/sogod.in'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/sogod.in'
 if test $? -ne 0
@@ -414,7 +414,7 @@ X. /usr/local/GNUstep/System/Library/Makefiles/GNUstep.sh
 X
 /usr/local/GNUstep/Local/Tools/Admin/sogo-tool expire-autoreply -p /usr/local/etc/sogo/expire-autoreply.creds > /var/log/sogo/cron-expire-autoreply.out 2>&1
 SHAR_EOF
-  (set 20 15 05 22 13 54 33 'sogo/files/cron-expire-autoreply.sample'
+  (set 20 15 06 10 09 51 23 'sogo/files/cron-expire-autoreply.sample'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/cron-expire-autoreply.sample'
 if test $? -ne 0
@@ -442,7 +442,7 @@ ${echo} "x - extracting sogo/files/ealarms-notify.creds.sample (text)"
   sed 's/^X//' << 'SHAR_EOF' > 'sogo/files/ealarms-notify.creds.sample' &&
 username:password
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/ealarms-notify.creds.sample'
+  (set 20 15 06 10 09 51 23 'sogo/files/ealarms-notify.creds.sample'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/ealarms-notify.creds.sample'
 if test $? -ne 0
@@ -496,10 +496,10 @@ X /usr/local/GNUstep/Local/Tools/Admin/cron-ealarms-notify
 X
 And edit this file to suit your server timezone (e.g. TZ=Africa/Algiers).
 X
-Then add the following lines to your /etc/crontab file:
+Then add the following lines to the root users' crontab (crontab -e):
 X
 # Process email reminders every minute
-* * * * * sogod /usr/local/GNUstep/Local/Tools/Admin/cron-ealarms-notify
+* * * * * /usr/local/GNUstep/Local/Tools/Admin/cron-ealarms-notify
 X
 X
 X
@@ -519,18 +519,18 @@ X /usr/local/GNUstep/Local/Tools/Admin/cron-expire-autoreply
 X
 And edit this file to suit your server timezone (e.g. TZ=Africa/Algiers).
 X
-Then add the following lines to your /etc/crontab file:
+Then add the following lines to the root users' crontab (crontab -e):
 X
 # Vacation messages expiration
 # The credentials file should contain the sieve admin credentials (username:passwd)
-0 0 * * * sogod /usr/local/GNUstep/Local/Tools/Admin/cron-expire-autoreply
+0 0 * * * /usr/local/GNUstep/Local/Tools/Admin/cron-expire-autoreply
 X
 X
 For more information about using SOGo, visit:
 http://www.sogo.nu/downloads/documentation.html
 X
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/pkg-message'
+  (set 20 15 06 10 09 57 03 'sogo/pkg-message'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/pkg-message'
 if test $? -ne 0
@@ -540,12 +540,12 @@ fi
   then (
        ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'sogo/pkg-message': 'MD5 check failed'
        ) << \SHAR_EOF
-f533ef2f3c653fb94190c2a93fd3fb6e  sogo/pkg-message
+ebc161e33f35757328529f2ddc5da7e1  sogo/pkg-message
 SHAR_EOF
 
 else
-test `LC_ALL=C wc -c < 'sogo/pkg-message'` -ne 1928 && \
-  ${echo} "restoration warning:  size of 'sogo/pkg-message' is not 1928"
+test `LC_ALL=C wc -c < 'sogo/pkg-message'` -ne 1944 && \
+  ${echo} "restoration warning:  size of 'sogo/pkg-message' is not 1944"
   fi
 fi
 # ============= sogo/Makefile ==============
@@ -609,7 +609,7 @@ X	(cp ${FILESDIR}/cron-expire-autoreply.sample ${STAGEDIR}${PREFIX}/GNUstep/Loca
 X
 X.include <bsd.port.mk>
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/Makefile'
+  (set 20 15 06 10 09 51 23 'sogo/Makefile'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/Makefile'
 if test $? -ne 0
@@ -638,7 +638,7 @@ ${echo} "x - extracting sogo/distinfo (text)"
 SHA256 (SOGo-2.2.14.tar.gz) = c6d149f5ff5e256c5a68cbbe72fe20ff1b2edd6f5bebaaffad32d23783f6c708
 SIZE (SOGo-2.2.14.tar.gz) = 11581370
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/distinfo'
+  (set 20 15 06 10 09 51 23 'sogo/distinfo'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/distinfo'
 if test $? -ne 0
@@ -2374,7 +2374,7 @@ GNUstep/Local/Tools/Admin/sogod
 GNUstep/Local/Tools/Admin/cron-ealarms-notify.sample
 GNUstep/Local/Tools/Admin/cron-expire-autoreply.sample
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/pkg-plist'
+  (set 20 15 06 10 09 51 23 'sogo/pkg-plist'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/pkg-plist'
 if test $? -ne 0
@@ -2407,7 +2407,7 @@ standard protocols such as CalDAV, CardDAV and GroupDAV.
 X
 WWW: http://sogo.nu/
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/pkg-descr'
+  (set 20 15 06 10 09 51 23 'sogo/pkg-descr'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/pkg-descr'
 if test $? -ne 0
@@ -2444,7 +2444,7 @@ X       && ![sm validatePermission: SOGoPerm_AccessObject
 X                        onObject: subscribedFolder
 X                       inContext: context])
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/patch-SoObjects_SOGo_ParentFolder_m'
+  (set 20 15 06 10 09 51 23 'sogo/files/patch-SoObjects_SOGo_ParentFolder_m'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/patch-SoObjects_SOGo_ParentFolder_m'
 if test $? -ne 0
@@ -2472,7 +2472,7 @@ ${echo} "x - extracting sogo/files/expire-autoreply.creds.sample (text)"
   sed 's/^X//' << 'SHAR_EOF' > 'sogo/files/expire-autoreply.creds.sample' &&
 username:password
 SHAR_EOF
-  (set 20 15 05 21 13 55 17 'sogo/files/expire-autoreply.creds.sample'
+  (set 20 15 06 10 09 51 23 'sogo/files/expire-autoreply.creds.sample'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/expire-autoreply.creds.sample'
 if test $? -ne 0
@@ -2512,7 +2512,7 @@ X #include <sys/types.h>
 X #include <sys/stat.h>
 X #include <fcntl.h>
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/patch-SoObjects_SOGo_NSData+Crypto_m'
+  (set 20 15 06 10 09 51 23 'sogo/files/patch-SoObjects_SOGo_NSData+Crypto_m'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/patch-SoObjects_SOGo_NSData+Crypto_m'
 if test $? -ne 0
@@ -2546,7 +2546,7 @@ X. /usr/local/GNUstep/System/Library/Makefiles/GNUstep.sh
 X
 /usr/local/GNUstep/Local/Tools/Admin/sogo-ealarms-notify -p /usr/local/etc/sogo/ealarms-notify.creds >> /var/log/sogo/cron-ealarms-notify.log 2>&1
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/cron-ealarms-notify.sample'
+  (set 20 15 06 10 09 51 23 'sogo/files/cron-ealarms-notify.sample'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/cron-ealarms-notify.sample'
 if test $? -ne 0
@@ -2601,7 +2601,7 @@ restart_precmd='cd /; . %%GNUSTEP_MAKEFILES%%/GNUstep.sh'
 X
 run_rc_command "$1"
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/sogod.in'
+  (set 20 15 06 10 09 51 23 'sogo/files/sogod.in'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/sogod.in'
 if test $? -ne 0
@@ -2635,7 +2635,7 @@ X. /usr/local/GNUstep/System/Library/Makefiles/GNUstep.sh
 X
 /usr/local/GNUstep/Local/Tools/Admin/sogo-tool expire-autoreply -p /usr/local/etc/sogo/expire-autoreply.creds > /var/log/sogo/cron-expire-autoreply.out 2>&1
 SHAR_EOF
-  (set 20 15 05 22 13 54 33 'sogo/files/cron-expire-autoreply.sample'
+  (set 20 15 06 10 09 51 23 'sogo/files/cron-expire-autoreply.sample'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/cron-expire-autoreply.sample'
 if test $? -ne 0
@@ -2663,7 +2663,7 @@ ${echo} "x - extracting sogo/files/ealarms-notify.creds.sample (text)"
   sed 's/^X//' << 'SHAR_EOF' > 'sogo/files/ealarms-notify.creds.sample' &&
 username:password
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/ealarms-notify.creds.sample'
+  (set 20 15 06 10 09 51 23 'sogo/files/ealarms-notify.creds.sample'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/ealarms-notify.creds.sample'
 if test $? -ne 0
@@ -2700,7 +2700,7 @@ X       && ![sm validatePermission: SOGoPerm_AccessObject
 X                        onObject: subscribedFolder
 X                       inContext: context])
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/patch-SoObjects_SOGo_ParentFolder_m'
+  (set 20 15 06 10 09 51 23 'sogo/files/patch-SoObjects_SOGo_ParentFolder_m'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/patch-SoObjects_SOGo_ParentFolder_m'
 if test $? -ne 0
@@ -2728,7 +2728,7 @@ ${echo} "x - extracting sogo/files/expire-autoreply.creds.sample (text)"
   sed 's/^X//' << 'SHAR_EOF' > 'sogo/files/expire-autoreply.creds.sample' &&
 username:password
 SHAR_EOF
-  (set 20 15 05 21 13 55 17 'sogo/files/expire-autoreply.creds.sample'
+  (set 20 15 06 10 09 51 23 'sogo/files/expire-autoreply.creds.sample'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/expire-autoreply.creds.sample'
 if test $? -ne 0
@@ -2768,7 +2768,7 @@ X #include <sys/types.h>
 X #include <sys/stat.h>
 X #include <fcntl.h>
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/patch-SoObjects_SOGo_NSData+Crypto_m'
+  (set 20 15 06 10 09 51 23 'sogo/files/patch-SoObjects_SOGo_NSData+Crypto_m'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/patch-SoObjects_SOGo_NSData+Crypto_m'
 if test $? -ne 0
@@ -2802,7 +2802,7 @@ X. /usr/local/GNUstep/System/Library/Makefiles/GNUstep.sh
 X
 /usr/local/GNUstep/Local/Tools/Admin/sogo-ealarms-notify -p /usr/local/etc/sogo/ealarms-notify.creds >> /var/log/sogo/cron-ealarms-notify.log 2>&1
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/cron-ealarms-notify.sample'
+  (set 20 15 06 10 09 51 23 'sogo/files/cron-ealarms-notify.sample'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/cron-ealarms-notify.sample'
 if test $? -ne 0
@@ -2857,7 +2857,7 @@ restart_precmd='cd /; . %%GNUSTEP_MAKEFILES%%/GNUstep.sh'
 X
 run_rc_command "$1"
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/sogod.in'
+  (set 20 15 06 10 09 51 23 'sogo/files/sogod.in'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/sogod.in'
 if test $? -ne 0
@@ -2891,7 +2891,7 @@ X. /usr/local/GNUstep/System/Library/Makefiles/GNUstep.sh
 X
 /usr/local/GNUstep/Local/Tools/Admin/sogo-tool expire-autoreply -p /usr/local/etc/sogo/expire-autoreply.creds > /var/log/sogo/cron-expire-autoreply.out 2>&1
 SHAR_EOF
-  (set 20 15 05 22 13 54 33 'sogo/files/cron-expire-autoreply.sample'
+  (set 20 15 06 10 09 51 23 'sogo/files/cron-expire-autoreply.sample'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/cron-expire-autoreply.sample'
 if test $? -ne 0
@@ -2919,7 +2919,7 @@ ${echo} "x - extracting sogo/files/ealarms-notify.creds.sample (text)"
   sed 's/^X//' << 'SHAR_EOF' > 'sogo/files/ealarms-notify.creds.sample' &&
 username:password
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/files/ealarms-notify.creds.sample'
+  (set 20 15 06 10 09 51 23 'sogo/files/ealarms-notify.creds.sample'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/files/ealarms-notify.creds.sample'
 if test $? -ne 0
@@ -2973,10 +2973,10 @@ X /usr/local/GNUstep/Local/Tools/Admin/cron-ealarms-notify
 X
 And edit this file to suit your server timezone (e.g. TZ=Africa/Algiers).
 X
-Then add the following lines to your /etc/crontab file:
+Then add the following lines to the root users' crontab (crontab -e):
 X
 # Process email reminders every minute
-* * * * * sogod /usr/local/GNUstep/Local/Tools/Admin/cron-ealarms-notify
+* * * * * /usr/local/GNUstep/Local/Tools/Admin/cron-ealarms-notify
 X
 X
 X
@@ -2996,18 +2996,18 @@ X /usr/local/GNUstep/Local/Tools/Admin/cron-expire-autoreply
 X
 And edit this file to suit your server timezone (e.g. TZ=Africa/Algiers).
 X
-Then add the following lines to your /etc/crontab file:
+Then add the following lines to the root users' crontab (crontab -e):
 X
 # Vacation messages expiration
 # The credentials file should contain the sieve admin credentials (username:passwd)
-0 0 * * * sogod /usr/local/GNUstep/Local/Tools/Admin/cron-expire-autoreply
+0 0 * * * /usr/local/GNUstep/Local/Tools/Admin/cron-expire-autoreply
 X
 X
 For more information about using SOGo, visit:
 http://www.sogo.nu/downloads/documentation.html
 X
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/pkg-message'
+  (set 20 15 06 10 09 57 03 'sogo/pkg-message'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/pkg-message'
 if test $? -ne 0
@@ -3017,12 +3017,12 @@ fi
   then (
        ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'sogo/pkg-message': 'MD5 check failed'
        ) << \SHAR_EOF
-f533ef2f3c653fb94190c2a93fd3fb6e  sogo/pkg-message
+ebc161e33f35757328529f2ddc5da7e1  sogo/pkg-message
 SHAR_EOF
 
 else
-test `LC_ALL=C wc -c < 'sogo/pkg-message'` -ne 1928 && \
-  ${echo} "restoration warning:  size of 'sogo/pkg-message' is not 1928"
+test `LC_ALL=C wc -c < 'sogo/pkg-message'` -ne 1944 && \
+  ${echo} "restoration warning:  size of 'sogo/pkg-message' is not 1944"
   fi
 fi
 # ============= sogo/Makefile ==============
@@ -3086,7 +3086,7 @@ X	(cp ${FILESDIR}/cron-expire-autoreply.sample ${STAGEDIR}${PREFIX}/GNUstep/Loca
 X
 X.include <bsd.port.mk>
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/Makefile'
+  (set 20 15 06 10 09 51 23 'sogo/Makefile'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/Makefile'
 if test $? -ne 0
@@ -3115,7 +3115,7 @@ ${echo} "x - extracting sogo/distinfo (text)"
 SHA256 (SOGo-2.2.14.tar.gz) = c6d149f5ff5e256c5a68cbbe72fe20ff1b2edd6f5bebaaffad32d23783f6c708
 SIZE (SOGo-2.2.14.tar.gz) = 11581370
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/distinfo'
+  (set 20 15 06 10 09 51 23 'sogo/distinfo'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/distinfo'
 if test $? -ne 0
@@ -4851,7 +4851,7 @@ GNUstep/Local/Tools/Admin/sogod
 GNUstep/Local/Tools/Admin/cron-ealarms-notify.sample
 GNUstep/Local/Tools/Admin/cron-expire-autoreply.sample
 SHAR_EOF
-  (set 20 15 05 21 11 12 41 'sogo/pkg-plist'
+  (set 20 15 06 10 09 51 23 'sogo/pkg-plist'
    eval "${shar_touch}") && \
   chmod 0644 'sogo/pkg-plist'
 if test $? -ne 0

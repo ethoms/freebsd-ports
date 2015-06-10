@@ -1,18 +1,22 @@
-# Created by: sobomax
-# $FreeBSD: head/net/rtpproxy/Makefile 365277 2014-08-18 11:52:27Z wg $
+# Created by: Euan Thoms <euan@potensol.com>
+# $FreeBSD$
 
 PORTNAME=	rtpproxy
-PORTVERSION=	1.2.1
-PORTREVISION=	2
+PORTVERSION=	2.0.0
 CATEGORIES=	net
-MASTER_SITES=	http://www.rtpproxy.org/chrome/site/
+MASTER_SITES=	https://github.com/sippy/rtpproxy/archive/
+DISTNAME=	v${PORTVERSION}
 
-MAINTAINER=	ports@FreeBSD.org
-COMMENT=	High-performance RTP proxy server for Kamailio (Formerly known as OpenSER and SER)
+MAINTAINER=	euan@potensol.com
+COMMENT=	High-performance RTP proxy server for the SIP Routers
 
 LICENSE=	BSD2CLAUSE
 
 LIB_DEPENDS=	libgsm.so:${PORTSDIR}/audio/gsm
+
+WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
+
+USE_RC_SUBR=	rtpproxy
 
 GNU_CONFIGURE=	yes
 CPPFLAGS+=	-I${LOCALBASE}/include
@@ -20,12 +24,5 @@ LIBS+=		-L${LOCALBASE}/lib
 
 USERS=		${PORTNAME}
 GROUPS=		${PORTNAME}
-
-post-build:
-	${SED} 's|%%PREFIX%%|${PREFIX}|g ; s|%%RC_SUBR%%|/etc/rc.subr|g' \
-		${WRKSRC}/freebsd/rtpproxy.in > ${WRKDIR}/rtpproxy
-
-post-install:
-	${INSTALL_SCRIPT} ${WRKDIR}/rtpproxy ${STAGEDIR}${PREFIX}/etc/rc.d/rtpproxy
 
 .include <bsd.port.mk>
