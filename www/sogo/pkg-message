@@ -26,10 +26,10 @@ cp -p /usr/local/GNUstep/Local/Tools/Admin/cron-ealarms-notify.sample \
 
 And edit this file to suit your server timezone (e.g. TZ=Africa/Algiers).
 
-Then add the following lines to your /etc/crontab file:
+Then add the following lines to the root users' crontab (crontab -e):
 
 # Process email reminders every minute
-* * * * * sogod /usr/local/GNUstep/Local/Tools/Admin/cron-ealarms-notify
+* * * * * /usr/local/GNUstep/Local/Tools/Admin/cron-ealarms-notify
 
 
 
@@ -49,11 +49,11 @@ cp -p /usr/local/GNUstep/Local/Tools/Admin/cron-expire-autoreply.sample \
 
 And edit this file to suit your server timezone (e.g. TZ=Africa/Algiers).
 
-Then add the following lines to your /etc/crontab file:
+Then add the following lines to the root users' crontab (crontab -e):
 
 # Vacation messages expiration
 # The credentials file should contain the sieve admin credentials (username:passwd)
-0 0 * * * sogod /usr/local/GNUstep/Local/Tools/Admin/cron-expire-autoreply
+0 0 * * * /usr/local/GNUstep/Local/Tools/Admin/cron-expire-autoreply
 
 
 For more information about using SOGo, visit:
