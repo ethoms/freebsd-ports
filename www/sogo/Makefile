@@ -44,7 +44,7 @@ post-stage:
 	@${MKDIR} ${STAGEDIR}/var/spool/sogo
 	@${MKDIR} ${STAGEDIR}${ETCDIR}
 	(cp ${WRKSRC}/Scripts/sogo.conf ${STAGEDIR}${ETCDIR}/sogo.conf.sample)
-	(cp ${FILESDIR}/sieve.creds.sample ${STAGEDIR}${ETCDIR}/)
+	(cp ${FILESDIR}/expire-autoreply.creds.sample ${STAGEDIR}${ETCDIR}/)
 	(cp ${FILESDIR}/ealarms-notify.creds.sample ${STAGEDIR}${ETCDIR}/)
 	(cp ${FILESDIR}/cron-ealarms-notify.sample ${STAGEDIR}${PREFIX}/GNUstep/Local/Tools/Admin/)
 	(cp ${FILESDIR}/cron-expire-autoreply.sample ${STAGEDIR}${PREFIX}/GNUstep/Local/Tools/Admin/)
