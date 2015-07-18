@@ -54,7 +54,6 @@ RUN_DEPENDS+=	${LOCALBASE}/bin/memcached:${PORTSDIR}/databases/memcached
 .endif
 
 post-patch:
-	@${REINPLACE_CMD} -e 's|/usr/local/pgsql/lib|/usr/local/lib/postgresql|' ${WRKSRC}/configure
 .if ! ${PORT_OPTIONS:MLDAP}
 	@${REINPLACE_CMD} -e '/checkLinking "ldap"/d' ${WRKSRC}/configure
 .endif
