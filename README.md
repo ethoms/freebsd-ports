@@ -1,7 +1,21 @@
 # freebsd-ports
 Euan Thoms' FreeBSD ports development
 
-**Instructions:**
+## Instructions:
+
+**Bootstrap (Automatic)**
+
+1.) Run the bootstrap script to copy the development tree into the /usr/ports tree.
+
+*NOTE: it expects your full ports tree to be installed to /usr/ports.*
+
+````
+# ./bootstrap.sh
+````
+3.) Now you're ready to build the port as usual.
+
+
+**Manual way**
 
 1.) Copy the port directories you need into the correct ports tree path.
 
