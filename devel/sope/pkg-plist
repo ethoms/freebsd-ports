@@ -162,7 +162,6 @@ GNUstep/Local/Library/Headers/NGExtensions/NSString+Encoding.h
 GNUstep/Local/Library/Headers/NGExtensions/NSString+Escaping.h
 GNUstep/Local/Library/Headers/NGExtensions/NSString+Ext.h
 GNUstep/Local/Library/Headers/NGExtensions/NSString+Formatting.h
-GNUstep/Local/Library/Headers/NGExtensions/NSString+German.h
 GNUstep/Local/Library/Headers/NGExtensions/NSString+misc.h
 GNUstep/Local/Library/Headers/NGExtensions/NSURL+misc.h
 GNUstep/Local/Library/Headers/NGHttp/NGHttp.h
