@@ -1,3 +1,4 @@
+etc/rc.d/rtpproxy
 bin/makeann
 bin/rtpproxy
 bin/rtpproxy_debug

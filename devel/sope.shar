@@ -6,547 +6,44 @@
 # This archive contains:
 #
 #	sope
+#	sope/pkg-plist
 #	sope/Makefile
-#	sope/distinfo
 #	sope/files
-#	sope/files/patch-configure
-#	sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentContent_m
-#	sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentReference_m
-#	sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_decommon_h
-#	sope/files/patch-sope-appserver_NGObjWeb_NSObject+WO_m
-#	sope/files/patch-sope-appserver_NGObjWeb_WOSession_m
-#	sope/files/patch-sope-appserver_NGObjWeb_common_h
-#	sope/files/patch-sope-core_EOControl_EOKeyValueCoding_m
-#	sope/files/patch-sope-core_EOControl_EOSortOrdering_m
-#	sope/files/patch-sope-core_EOControl_EOValidation_m
-#	sope/files/patch-sope-core_EOControl_common_h
-#	sope/files/patch-sope-core_NGExtensions_EOExt_subproj_EOQualifier+CtxEval_m
 #	sope/files/patch-sope-core_NGExtensions_NGExtensions_NGBundleManager_h
 #	sope/files/patch-sope-core_NGExtensions_NGExtensions_NSException+misc_h
-#	sope/files/patch-sope-core_NGStreams_NGStreamCoder_m
-#	sope/files/patch-sope-gdl1_GDLAccess_common_h
-#	sope/files/patch-sope-ldap_NGLdap_EOQualifier+LDAP_m
-#	sope/files/patch-sope-mime_NGImap4_imCommon_h
-#	sope/files/patch-sope-mime_NGMime_common_h
+#	sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentContent_m
 #	sope/files/patch-sope-core_NGStreams_NGActiveSocket_m
+#	sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentReference_m
+#	sope/files/patch-sope-mime_NGImap4_imCommon_h
+#	sope/files/patch-configure
+#	sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_decommon_h
+#	sope/files/patch-sope-mime_NGMime_common_h
+#	sope/files/patch-sope-appserver_NGObjWeb_WOSession_m
+#	sope/files/patch-sope-core_EOControl_EOSortOrdering_m
+#	sope/files/patch-sope-appserver_NGObjWeb_common_h
+#	sope/files/patch-sope-ldap_NGLdap_EOQualifier+LDAP_m
+#	sope/files/patch-sope-core_EOControl_EOValidation_m
+#	sope/files/patch-sope-core_NGStreams_NGStreamCoder_m
+#	sope/files/patch-sope-core_EOControl_common_h
+#	sope/files/patch-sope-gdl1_GDLAccess_common_h
+#	sope/files/patch-sope-core_EOControl_EOKeyValueCoding_m
+#	sope/files/patch-sope-appserver_NGObjWeb_NSObject+WO_m
+#	sope/files/patch-sope-core_NGExtensions_EOExt_subproj_EOQualifier+CtxEval_m
+#	sope/distinfo
 #	sope/pkg-descr
-#	sope/pkg-plist
 #
 echo c - sope
 mkdir -p sope > /dev/null 2>&1
-echo x - sope/Makefile
-sed 's/^X//' >sope/Makefile << '71d594d412a7a20f7f95bc5d51f0c00f'
-X# Created by: Euan Thoms <euan@potensol.com>
-X# $FreeBSD$
-X
-XPORTNAME=		sope
-XPORTVERSION=		2.2.14
-XCATEGORIES=		devel gnustep
-XMASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
-XDISTNAME=		SOPE-${PORTVERSION}
-X
-XMAINTAINER=		euan@potensol.com
-XCOMMENT=		Extensive set of GNUstep web application frameworks
-X
-XLICENSE=		LGPL20
-X
-XLIB_DEPENDS=		libxml2.so:${PORTSDIR}/textproc/libxml2 \
-X			libmemcached.so:${PORTSDIR}/databases/libmemcached
-X
-XWRKSRC=			${WRKDIR}/SOPE
-X
-XOPTIONS_DEFINE=		LDAP MYSQL PGSQL MEMCACHED
-XOPTIONS_DEFAULT=	LDAP PGSQL MEMCACHED
-XOPTIONS_SUB=		yes
-X
-XLDAP_DESC=		Build with LDAP support
-XMYSQL_DESC=		Build with MySQL support
-XPGSQL_DESC=		Build with PostgreSQL support
-XMEMCACHED_DESC=		Install memcached
-X
-XUSES=			gmake gnustep
-XUSE_GNUSTEP=		base build
-XUSE_LDCONFIG=		${GNUSTEP_LOCAL_LIBRARIES}
-X
-XSUB_LIST+=              GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
-X                        GNUSTEP_MAKEFILES=${GNUSTEP_MAKEFILES}
-X
-XCONFIGURE_ARGS=		--with-gnustep --disable-debug --enable-strip
-X
-X.include <bsd.port.options.mk>
-X
-X.if ${PORT_OPTIONS:MLDAP}
-XUSE_OPENLDAP=	client
-X.endif
-X
-X.if ${PORT_OPTIONS:MPGSQL}
-XUSES+=		pgsql
-X.endif
-X
-X.if ${PORT_OPTIONS:MMYSQL}
-XUSE_MYSQL=	client
-X.endif
-X
-X.if ${PORT_OPTIONS:MMEMCACHED}
-XRUN_DEPENDS+=	${LOCALBASE}/bin/memcached:${PORTSDIR}/databases/memcached
-X.endif
-X
-Xpost-patch:
-X	@${REINPLACE_CMD} -e 's|/usr/local/pgsql/lib|/usr/local/lib/postgresql|' ${WRKSRC}/configure
-X.if ! ${PORT_OPTIONS:MLDAP}
-X	@${REINPLACE_CMD} -e '/checkLinking "ldap"/d' ${WRKSRC}/configure
-X.endif
-X.if ! ${PORT_OPTIONS:MPGSQL}
-X	@${REINPLACE_CMD} -e '/checkLinking "pq"/d' ${WRKSRC}/configure
-X.endif
-X.if ! ${PORT_OPTIONS:MMYSQL}
-X	@${REINPLACE_CMD} -e '/checkLinking "mysqlclient"/d' ${WRKSRC}/configure
-X.endif
-X
-Xdo-configure:   
-X	cd ${WRKSRC} ; . ${GNUSTEP_MAKEFILES}/GNUstep.sh ; ./configure ${CONFIGURE_ARGS}
-X
-X.include <bsd.port.mk>
-71d594d412a7a20f7f95bc5d51f0c00f
-echo x - sope/distinfo
-sed 's/^X//' >sope/distinfo << '6fef449be01ca23355d10c9109b44c75'
-XSHA256 (SOPE-2.2.14.tar.gz) = 939095045f73700e27cb253128c72f5516328695b6528e9508d82e57eff284ea
-XSIZE (SOPE-2.2.14.tar.gz) = 2266872
-6fef449be01ca23355d10c9109b44c75
-echo c - sope/files
-mkdir -p sope/files > /dev/null 2>&1
-echo x - sope/files/patch-configure
-sed 's/^X//' >sope/files/patch-configure << 'fe1e450c82a81b6863466cee05f90b51'
-X$FreeBSD$
-X
-Xdo not link against gnustep-gui in case its installed
-X
-X--- configure.orig	Wed Oct 24 21:00:15 2012
-X+++ configure	Fri Oct 26 09:52:19 2012
-X@@ -1,4 +1,4 @@
-X-#!/bin/bash
-X+#!/bin/sh
-X 
-X #
-X # Note: When adding make options to this script, ensure that the source still
-X@@ -396,6 +396,7 @@ genConfigMake() {
-X     cfgwrite "debug:=no"
-X   fi
-X   cfgwrite ""
-X+  cfgwrite "NEEDS_GUI=no"
-X   
-X   if test $ARG_WITH_STRIP = 1; then
-X     cfgwrite "# configured to produce stripped code";
-fe1e450c82a81b6863466cee05f90b51
-echo x - sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentContent_m
-sed 's/^X//' >sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentContent_m << '143f12aafcde23cb7987337e1354fc70'
-X$FreeBSD$
-X
-Xfix build with libobjc2-1.7
-X
-X--- sope-appserver/NGObjWeb/DynamicElements/WOComponentContent.m.orig	Sun Oct 13 16:59:47 2013
-X+++ sope-appserver/NGObjWeb/DynamicElements/WOComponentContent.m	Sun Oct 13 17:00:20 2013
-X@@ -75,11 +75,7 @@ static Class NSDateClass = Nil;
-X         printf("  ");
-X       printf("content: [%s %s]: %0.3fs\n",
-X              [[component name] cString], 
-X-#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
-X-	     sel_getName(_cmd), 
-X-#else
-X 	     sel_get_name(_cmd), 
-X-#endif
-X 	     diff);
-X     }
-143f12aafcde23cb7987337e1354fc70
-echo x - sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentReference_m
-sed 's/^X//' >sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentReference_m << '8a47eafb34334333cd58ae950b73f4cd'
-X--- sope-appserver/NGObjWeb/DynamicElements/WOComponentReference.m.orig	2014-10-12 07:35:39 UTC
-X+++ sope-appserver/NGObjWeb/DynamicElements/WOComponentReference.m
-X@@ -172,7 +172,7 @@
-X         printf("  ");
-X       printf("[%s %s]: %0.3fs\n",
-X              [[child name] cString], 
-X-#if APPLE_RUNTIME || NeXT_RUNTIME || (__GNU_LIBOBJC__ >= 20100911)
-X+#if APPLE_RUNTIME || NeXT_RUNTIME || (__GNU_LIBOBJC__ >= 20100911) || defined(__GNUSTEP_RUNTIME__)
-X 	     sel_getName(_cmd), 
-X #else
-X 	     sel_get_name(_cmd), 
-8a47eafb34334333cd58ae950b73f4cd
-echo x - sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_decommon_h
-sed 's/^X//' >sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_decommon_h << '97bbcc39d19555756e137dd3234f0717'
-X$FreeBSD$
-X
-Xfix build with libobjc2-1.7
-X
-X--- sope-appserver/NGObjWeb/DynamicElements/decommon.h.orig	Mon Jul 22 15:03:07 2013
-X+++ sope-appserver/NGObjWeb/DynamicElements/decommon.h	Sun Oct 13 17:48:51 2013
-X@@ -35,6 +35,10 @@
-X @end
-X #endif
-X 
-X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
-X+#  define sel_get_name(__XXX__) sel_getName(__XXX__)
-X+#endif
-X+
-X #include <NGExtensions/NGExtensions.h>
-X #include "WOResponse+private.h"
-X #include <NGObjWeb/WOContext.h>
-X
-97bbcc39d19555756e137dd3234f0717
-echo x - sope/files/patch-sope-appserver_NGObjWeb_NSObject+WO_m
-sed 's/^X//' >sope/files/patch-sope-appserver_NGObjWeb_NSObject+WO_m << '0716270d3b4df0674d63a7db6dcc65c5'
-X$FreeBSD$
-X
-Xfix for build with libobjc2-1.7
-Xpatch from David Chisnall
-X
-X--- sope-appserver/NGObjWeb/NSObject+WO.m.orig	Wed Dec  4 17:51:26 2013
-X+++ sope-appserver/NGObjWeb/NSObject+WO.m	Thu May 15 18:21:20 2014
-X@@ -259,7 +259,7 @@ IMP WOGetKVCGetMethod(id object, NSString *_key) {
-X   if (object == nil) return NULL;
-X   if (_key   == nil) return NULL;
-X 
-X-#if GNU_RUNTIME && !(defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911))
-X+#if GNU_RUNTIME && !(defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) && !defined(__GNUSTEP_RUNTIME__)
-X   {
-X     unsigned keyLen;
-X     char     *buf;
-X@@ -317,7 +317,9 @@ id WOGetKVCValueUsingMethod(id object, NSString *_key)
-X       return nil;
-X     free(buf); buf = NULL;
-X   }
-X-#if GNUSTEP_BASE_LIBRARY
-X+// This appears to be a work around for an old version of GNUstep-base not
-X+// correctly handling the case where there is no method.
-X+#if GNUSTEP_BASE_LIBRARY && !defined(__GNUSTEP_RUNTIME__)
-X   if (!__objc_responds_to(object, getSel))
-X     return nil;
-X #endif
-X
-0716270d3b4df0674d63a7db6dcc65c5
-echo x - sope/files/patch-sope-appserver_NGObjWeb_WOSession_m
-sed 's/^X//' >sope/files/patch-sope-appserver_NGObjWeb_WOSession_m << '1797fcd8626c77c030eb3f43ba0f5462'
-X$FreeBSD$
-X
-Xfix build with libobc2-1.7
-X
-X--- sope-appserver/NGObjWeb/WOSession.m.orig	Sun Oct 13 16:36:40 2013
-X+++ sope-appserver/NGObjWeb/WOSession.m	Sun Oct 13 16:36:51 2013
-X@@ -33,10 +33,6 @@
-X #include "common.h"
-X #include <string.h>
-X 
-X-#if !defined(sel_get_name) && ((defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__))
-X-#  define sel_get_name sel_getName
-X-#endif
-X-
-X #if APPLE_FOUNDATION_LIBRARY || NeXT_Foundation_LIBRARY
-X @interface NSObject(Miss)
-X - (id)notImplemented:(SEL)cmd;
-X
-1797fcd8626c77c030eb3f43ba0f5462
-echo x - sope/files/patch-sope-appserver_NGObjWeb_common_h
-sed 's/^X//' >sope/files/patch-sope-appserver_NGObjWeb_common_h << '07561d883efd3a58d8875a734bf919ea'
-X$FreeBSD$
-X
-Xfix for build with libobjc2-1.7
-X
-X--- sope-appserver/NGObjWeb/common.h.orig	Sun Oct 13 10:18:46 2013
-X+++ sope-appserver/NGObjWeb/common.h	Sun Oct 13 10:24:47 2013
-X@@ -51,11 +51,15 @@
-X #include <NGExtensions/NGLogging.h>
-X #include <NGStreams/NGStreams.h>
-X 
-X-#if NeXT_RUNTIME || APPLE_RUNTIME || (__GNU_LIBOBJC__ >= 20100911)
-X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
-X #  ifndef sel_get_name
-X #    define sel_get_name(__XXX__)    sel_getName(__XXX__)
-X #    define sel_get_any_uid(__XXX__) sel_getUid(__XXX__)
-X #  endif
-X+#endif
-X+
-X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
-X+#    define sel_get_uid(__XXX__)   sel_getUid(__XXX__);
-X #endif
-X 
-X #define IS_DEPRECATED \
-X
-07561d883efd3a58d8875a734bf919ea
-echo x - sope/files/patch-sope-core_EOControl_EOKeyValueCoding_m
-sed 's/^X//' >sope/files/patch-sope-core_EOControl_EOKeyValueCoding_m << '9f4f81b90ac5117340b25b3e2d96f45a'
-X$FreeBSD$
-X
-Xfix build with libobjc2-1.7
-X
-X--- sope-core/EOControl/EOKeyValueCoding.m.orig	Sun Oct 13 15:46:37 2013
-X+++ sope-core/EOControl/EOKeyValueCoding.m	Sun Oct 13 15:46:47 2013
-X@@ -26,7 +26,6 @@
-X #if GNU_RUNTIME
-X 
-X #if __GNU_LIBOBJC__ >= 20100911
-X-#  define sel_get_any_uid sel_getUid
-X #  include <objc/runtime.h>
-X #else
-X #  include <objc/encoding.h>
-X
-9f4f81b90ac5117340b25b3e2d96f45a
-echo x - sope/files/patch-sope-core_EOControl_EOSortOrdering_m
-sed 's/^X//' >sope/files/patch-sope-core_EOControl_EOSortOrdering_m << '30413495c6b6dd2cf36df02d75a38e8a'
-X$FreeBSD$
-X
-Xfix build with libobjc2-1.7
-X
-X--- sope-core/EOControl/EOSortOrdering.m.orig	Sun Oct 13 15:43:30 2013
-X+++ sope-core/EOControl/EOSortOrdering.m	Sun Oct 13 15:43:55 2013
-X@@ -28,14 +28,6 @@
-X #  include <objc/objc.h>
-X #endif
-X 
-X-#ifndef SEL_EQ
-X-#  if GNU_RUNTIME
-X-#    define SEL_EQ(sel1,sel2) sel_eq(sel1,sel2)
-X-#  else
-X-#    define SEL_EQ(sel1,sel2) (sel1 == sel2)
-X-#  endif
-X-#endif
-X-
-X @implementation EOSortOrdering
-X /*"
-X   This class specifies a sort-ordering as used with
-X@@ -83,7 +75,7 @@
-X /* equality */
-X 
-X - (BOOL)isEqualToSortOrdering:(EOSortOrdering *)_sortOrdering {
-X-  if (!SEL_EQ([_sortOrdering selector], [self selector]))
-X+  if (!sel_eq([_sortOrdering selector], [self selector]))
-X     return NO;
-X   if (![[_sortOrdering key] isEqualToString:[self key]])
-X     return NO;
-X
-30413495c6b6dd2cf36df02d75a38e8a
-echo x - sope/files/patch-sope-core_EOControl_EOValidation_m
-sed 's/^X//' >sope/files/patch-sope-core_EOControl_EOValidation_m << 'c139886f38553161c3e3a7197b679498'
-X$FreeBSD$
-X
-Xfix build with libobjc2-1.7
-X
-X--- sope-core/EOControl/EOValidation.m.orig	Sun Oct 13 15:44:43 2013
-X+++ sope-core/EOControl/EOValidation.m	Sun Oct 13 15:45:01 2013
-X@@ -24,10 +24,6 @@
-X #include "EONull.h"
-X #include "common.h"
-X 
-X-#if __GNU_LIBOBJC__ >= 20100911
-X-#  define sel_get_any_uid sel_getUid
-X-#endif
-X-
-X #if !LIB_FOUNDATION_LIBRARY
-X 
-X @interface NSException(UsedSetUI) /* does Jaguar allow -setUserInfo: ? */
-X
-c139886f38553161c3e3a7197b679498
-echo x - sope/files/patch-sope-core_EOControl_common_h
-sed 's/^X//' >sope/files/patch-sope-core_EOControl_common_h << '9ce351e5cfad0a2afb34f11ad70451fd'
-X$FreeBSD$
-X
-Xfix build with libobjc2-1.7
-X
-X--- sope-core/EOControl/common.h.orig	Fri Sep 26 20:38:11 2014
-X+++ sope-core/EOControl/common.h	Tue Sep 30 12:38:09 2014
-X@@ -40,10 +40,11 @@
-X #  endif
-X #endif
-X 
-X-#if __GNU_LIBOBJC__ >= 20100911
-X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
-X #  ifndef sel_eq
-X #    define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
-X #  endif
-X+#  define sel_get_any_uid(__XXX__) sel_getUid(__XXX__)
-X #endif
-X 
-X #ifndef ASSIGN
-X
-9ce351e5cfad0a2afb34f11ad70451fd
-echo x - sope/files/patch-sope-core_NGExtensions_EOExt_subproj_EOQualifier+CtxEval_m
-sed 's/^X//' >sope/files/patch-sope-core_NGExtensions_EOExt_subproj_EOQualifier+CtxEval_m << 'd1cf1192b3b0618f071afcd39b7def8a'
-X$FreeBSD$
-X
-Xfix build with libobjc2-1.7
-X
-X--- sope-core/NGExtensions/EOExt.subproj/EOQualifier+CtxEval.m.orig	Sun Oct 13 18:08:20 2013
-X+++ sope-core/NGExtensions/EOExt.subproj/EOQualifier+CtxEval.m	Sun Oct 13 18:10:08 2013
-X@@ -29,7 +29,7 @@
-X #  import <objc/objc.h>
-X #  import <extensions/objc-runtime.h>
-X #elif GNUSTEP_BASE_LIBRARY
-X-#if __GNU_LIBOBJC__ >= 20100911
-X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(__GNUSTEP_RUNTIME__)
-X #  define sel_get_name sel_getName
-X #  import <objc/runtime.h>
-X #else
-X
-d1cf1192b3b0618f071afcd39b7def8a
-echo x - sope/files/patch-sope-core_NGExtensions_NGExtensions_NGBundleManager_h
-sed 's/^X//' >sope/files/patch-sope-core_NGExtensions_NGExtensions_NGBundleManager_h << 'dc8166acb58bedca660cc2983e7f6179'
-X--- sope-core/NGExtensions/NGExtensions/NGBundleManager.h.orig	2014-09-26 18:35:45 UTC
-X+++ sope-core/NGExtensions/NGExtensions/NGBundleManager.h
-X@@ -23,6 +23,7 @@
-X #define __NGExtensions_NGBundleManager_H__
-X 
-X #import <Foundation/NSObject.h>
-X+#define EXPOSE_NSBundle_IVARS
-X #import <Foundation/NSBundle.h>
-X #import <Foundation/NSMapTable.h>
-X #include <NGExtensions/NGExtensionsDecls.h>
-dc8166acb58bedca660cc2983e7f6179
-echo x - sope/files/patch-sope-core_NGExtensions_NGExtensions_NSException+misc_h
-sed 's/^X//' >sope/files/patch-sope-core_NGExtensions_NGExtensions_NSException+misc_h << '4165378d5ba6285a0ae5bb2fb8a8dde3'
-X--- sope-core/NGExtensions/NGExtensions/NSException+misc.h.orig	2014-09-26 18:35:45 UTC
-X+++ sope-core/NGExtensions/NGExtensions/NSException+misc.h
-X@@ -22,6 +22,7 @@
-X #ifndef __NGExtensions_NSException_misc_H__
-X #define __NGExtensions_NSException_misc_H__
-X 
-X+#define EXPOSE_NSException_IVARS
-X #import <Foundation/NSException.h>
-X #import <Foundation/NSLock.h>
-X 
-4165378d5ba6285a0ae5bb2fb8a8dde3
-echo x - sope/files/patch-sope-core_NGStreams_NGStreamCoder_m
-sed 's/^X//' >sope/files/patch-sope-core_NGStreams_NGStreamCoder_m << '5333c6c3dcd17e81e8ce4c9e01ca9758'
-X$FreeBSD$
-X
-Xfix build with libobjc2-1.7
-X
-X--- sope-core/NGStreams/NGStreamCoder.m.orig	Sun Oct 13 18:10:47 2013
-X+++ sope-core/NGStreams/NGStreamCoder.m	Sun Oct 13 18:11:35 2013
-X@@ -28,6 +28,10 @@
-X #  include <objc/objc-class.h>
-X #endif
-X 
-X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
-X+#  define sel_get_name(__XXX__) sel_getName(__XXX__)
-X+#endif
-X+
-X #define FINAL static inline
-X 
-X extern id nil_method(id, SEL, ...);
-X
-5333c6c3dcd17e81e8ce4c9e01ca9758
-echo x - sope/files/patch-sope-gdl1_GDLAccess_common_h
-sed 's/^X//' >sope/files/patch-sope-gdl1_GDLAccess_common_h << '7eaff90aa9113f4a2bca420f7e70f3e5'
-X$FreeBSD$
-X
-Xfix building with libobjc2-1.7
-X
-X--- sope-gdl1/GDLAccess/common.h.orig	Sun Oct 13 18:16:32 2013
-X+++ sope-gdl1/GDLAccess/common.h	Sun Oct 13 18:17:48 2013
-X@@ -55,7 +55,7 @@
-X #  endif
-X #endif
-X 
-X-#if __GNU_LIBOBJC__ >= 20100911
-X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(__GNUSTEP_RUNTIME__)
-X #  define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
-X #  ifndef SEL_EQ
-X #    define SEL_EQ(__A__,__B__) sel_isEqual(__A__,__B__)
-X
-7eaff90aa9113f4a2bca420f7e70f3e5
-echo x - sope/files/patch-sope-ldap_NGLdap_EOQualifier+LDAP_m
-sed 's/^X//' >sope/files/patch-sope-ldap_NGLdap_EOQualifier+LDAP_m << 'da003ffa5fe5be5d24581018856bcdca'
-X$FreeBSD$
-X
-Xfix build with libobjc2-1.7
-X
-X--- sope-ldap/NGLdap/EOQualifier+LDAP.m.orig	Sun Oct 13 19:19:03 2013
-X+++ sope-ldap/NGLdap/EOQualifier+LDAP.m	Sun Oct 13 19:19:33 2013
-X@@ -26,7 +26,7 @@
-X #define sel_eq(sel1, sel2) ((sel1)) == ((sel2))
-X #endif
-X 
-X-#if __GNU_LIBOBJC__ >= 20100911
-X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
-X #  define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
-X #endif
-da003ffa5fe5be5d24581018856bcdca
-echo x - sope/files/patch-sope-mime_NGImap4_imCommon_h
-sed 's/^X//' >sope/files/patch-sope-mime_NGImap4_imCommon_h << '0d4a90ecad9c279859cc8a602421e459'
-X$FreeBSD$
-X
-Xfix build with libobjc2-1.7
-X
-X--- sope-mime/NGImap4/imCommon.h.orig	Sun Oct 13 16:21:42 2013
-X+++ sope-mime/NGImap4/imCommon.h	Sun Oct 13 16:22:35 2013
-X@@ -37,13 +37,13 @@
-X #include <NGMime/NGMime.h>
-X #include <NGMail/NGMail.h>
-X 
-X-#if NeXT_RUNTIME || APPLE_RUNTIME
-X+#if NeXT_RUNTIME
-X #  ifndef sel_eq
-X #    define sel_eq(__A__,__B__) (__A__==__B__)
-X #  endif
-X #endif
-X 
-X-#if __GNU_LIBOBJC__ >= 20100911
-X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
-X #  ifndef sel_eq
-X #    define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
-X #  endif
-X
-0d4a90ecad9c279859cc8a602421e459
-echo x - sope/files/patch-sope-mime_NGMime_common_h
-sed 's/^X//' >sope/files/patch-sope-mime_NGMime_common_h << '23bc5b8450b11de680c5ee1450ac80ee'
-X$FreeBSD$
-X
-Xfix build with libobjc2-1.7
-X
-X--- sope-mime/NGMime/common.h.orig	Sun Oct 13 16:18:04 2013
-X+++ sope-mime/NGMime/common.h	Sun Oct 13 16:21:27 2013
-X@@ -37,7 +37,9 @@
-X #include "NGMimeType.h"
-X 
-X #if !GNU_RUNTIME
-X-#  ifndef sel_eq
-X+#  if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
-X+#    define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
-X+#  else ifndef sel_eq
-X #    define sel_eq(__A__, __B__) (__A__==__B__)
-X #  endif
-X #endif
-X
-23bc5b8450b11de680c5ee1450ac80ee
-echo x - sope/files/patch-sope-core_NGStreams_NGActiveSocket_m
-sed 's/^X//' >sope/files/patch-sope-core_NGStreams_NGActiveSocket_m << '0fe48fc68aebbcbdcf31e1b1e7145ecb'
-X--- sope-core/NGStreams/NGActiveSocket.m.orig	Sun Oct 13 18:10:47 2013
-X+++ sope-core/NGStreams/NGActiveSocket.m	Sun Oct 13 18:10:47 2013
-X@@ -19,6 +19,7 @@
-X   02111-1307, USA.
-X */
-X 
-X+#include <sys/types.h>
-X #include <netinet/in.h>
-X #include <netinet/tcp.h>
-X 
-0fe48fc68aebbcbdcf31e1b1e7145ecb
-echo x - sope/pkg-descr
-sed 's/^X//' >sope/pkg-descr << '44acddc044257504500c6a951e8fbb69'
-XSOPE is an extensive set of frameworks which form a complete Web
-Xapplication server environment. Besides the Apple WebObjects
-Xcompatible appserver extended with Zope concepts, it contains a large
-Xset of reusable classes: XML processing (SAX, DOM, XML-RPC),
-XMIME/IMAP4 processing, LDAP connectivity, RDBMS connectivity, and
-XiCalendar parsing.
-X
-XWWW: http://sogo.nu/
-44acddc044257504500c6a951e8fbb69
 echo x - sope/pkg-plist
 sed 's/^X//' >sope/pkg-plist << 'f33a10152a26e8c1dcda33e260d9c6fd'
-XGNUstep/Local/Library/GDLAdaptors-4.9/PostgreSQL.gdladaptor/PostgreSQL
-XGNUstep/Local/Library/GDLAdaptors-4.9/PostgreSQL.gdladaptor/Resources/Info-gnustep.plist
-XGNUstep/Local/Library/GDLAdaptors-4.9/PostgreSQL.gdladaptor/Resources/Version
-XGNUstep/Local/Library/GDLAdaptors-4.9/PostgreSQL.gdladaptor/stamp.make
+X%%MYSQL%%GNUstep/Local/Library/GDLAdaptors-4.9/MySQL.gdladaptor/MySQL
+X%%MYSQL%%GNUstep/Local/Library/GDLAdaptors-4.9/MySQL.gdladaptor/Resources/Info-gnustep.plist
+X%%MYSQL%%GNUstep/Local/Library/GDLAdaptors-4.9/MySQL.gdladaptor/Resources/Version
+X%%MYSQL%%GNUstep/Local/Library/GDLAdaptors-4.9/MySQL.gdladaptor/stamp.make
+X%%PGSQL%%GNUstep/Local/Library/GDLAdaptors-4.9/PostgreSQL.gdladaptor/PostgreSQL
+X%%PGSQL%%GNUstep/Local/Library/GDLAdaptors-4.9/PostgreSQL.gdladaptor/Resources/Info-gnustep.plist
+X%%PGSQL%%GNUstep/Local/Library/GDLAdaptors-4.9/PostgreSQL.gdladaptor/Resources/Version
+X%%PGSQL%%GNUstep/Local/Library/GDLAdaptors-4.9/PostgreSQL.gdladaptor/stamp.make
 XGNUstep/Local/Library/Headers/DOM/DOM.h
 XGNUstep/Local/Library/Headers/DOM/DOMAttribute.h
 XGNUstep/Local/Library/Headers/DOM/DOMBuilder.h
@@ -703,7 +200,6 @@ XGNUstep/Local/Library/Headers/NGExtensions/NSString+Encoding.h
 XGNUstep/Local/Library/Headers/NGExtensions/NSString+Escaping.h
 XGNUstep/Local/Library/Headers/NGExtensions/NSString+Ext.h
 XGNUstep/Local/Library/Headers/NGExtensions/NSString+Formatting.h
-XGNUstep/Local/Library/Headers/NGExtensions/NSString+German.h
 XGNUstep/Local/Library/Headers/NGExtensions/NSString+misc.h
 XGNUstep/Local/Library/Headers/NGExtensions/NSURL+misc.h
 XGNUstep/Local/Library/Headers/NGHttp/NGHttp.h
@@ -734,18 +230,18 @@ XGNUstep/Local/Library/Headers/NGImap4/NGImap4ServerRoot.h
 XGNUstep/Local/Library/Headers/NGImap4/NGImap4Support.h
 XGNUstep/Local/Library/Headers/NGImap4/NGSieveClient.h
 XGNUstep/Local/Library/Headers/NGImap4/NSString+Imap4.h
-XGNUstep/Local/Library/Headers/NGLdap/EOQualifier+LDAP.h
-XGNUstep/Local/Library/Headers/NGLdap/NGLdap.h
-XGNUstep/Local/Library/Headers/NGLdap/NGLdapAttribute.h
-XGNUstep/Local/Library/Headers/NGLdap/NGLdapConnection.h
-XGNUstep/Local/Library/Headers/NGLdap/NGLdapDataSource.h
-XGNUstep/Local/Library/Headers/NGLdap/NGLdapEntry.h
-XGNUstep/Local/Library/Headers/NGLdap/NGLdapFileManager.h
-XGNUstep/Local/Library/Headers/NGLdap/NGLdapGlobalID.h
-XGNUstep/Local/Library/Headers/NGLdap/NGLdapModification.h
-XGNUstep/Local/Library/Headers/NGLdap/NGLdapSearchResultEnumerator.h
-XGNUstep/Local/Library/Headers/NGLdap/NGLdapURL.h
-XGNUstep/Local/Library/Headers/NGLdap/NSString+DN.h
+X%%LDAP%%GNUstep/Local/Library/Headers/NGLdap/EOQualifier+LDAP.h
+X%%LDAP%%GNUstep/Local/Library/Headers/NGLdap/NGLdap.h
+X%%LDAP%%GNUstep/Local/Library/Headers/NGLdap/NGLdapAttribute.h
+X%%LDAP%%GNUstep/Local/Library/Headers/NGLdap/NGLdapConnection.h
+X%%LDAP%%GNUstep/Local/Library/Headers/NGLdap/NGLdapDataSource.h
+X%%LDAP%%GNUstep/Local/Library/Headers/NGLdap/NGLdapEntry.h
+X%%LDAP%%GNUstep/Local/Library/Headers/NGLdap/NGLdapFileManager.h
+X%%LDAP%%GNUstep/Local/Library/Headers/NGLdap/NGLdapGlobalID.h
+X%%LDAP%%GNUstep/Local/Library/Headers/NGLdap/NGLdapModification.h
+X%%LDAP%%GNUstep/Local/Library/Headers/NGLdap/NGLdapSearchResultEnumerator.h
+X%%LDAP%%GNUstep/Local/Library/Headers/NGLdap/NGLdapURL.h
+X%%LDAP%%GNUstep/Local/Library/Headers/NGLdap/NSString+DN.h
 XGNUstep/Local/Library/Headers/NGMail/NGMBoxReader.h
 XGNUstep/Local/Library/Headers/NGMail/NGMail.h
 XGNUstep/Local/Library/Headers/NGMail/NGMailAddress.h
@@ -955,9 +451,9 @@ XGNUstep/Local/Library/Libraries/libGDLAccess.so.4.9.63
 XGNUstep/Local/Library/Libraries/libNGExtensions.so
 XGNUstep/Local/Library/Libraries/libNGExtensions.so.4.9
 XGNUstep/Local/Library/Libraries/libNGExtensions.so.4.9.203
-XGNUstep/Local/Library/Libraries/libNGLdap.so
-XGNUstep/Local/Library/Libraries/libNGLdap.so.4.9
-XGNUstep/Local/Library/Libraries/libNGLdap.so.4.9.35
+X%%LDAP%%GNUstep/Local/Library/Libraries/libNGLdap.so
+X%%LDAP%%GNUstep/Local/Library/Libraries/libNGLdap.so.4.9
+X%%LDAP%%GNUstep/Local/Library/Libraries/libNGLdap.so.4.9.35
 XGNUstep/Local/Library/Libraries/libNGMime.so
 XGNUstep/Local/Library/Libraries/libNGMime.so.4.9
 XGNUstep/Local/Library/Libraries/libNGMime.so.4.9.3
@@ -1013,5 +509,516 @@ XGNUstep/System/Library/Makefiles/Additional/ngobjweb.make
 XGNUstep/System/Library/Makefiles/woapp.make
 XGNUstep/System/Library/Makefiles/wobundle.make
 f33a10152a26e8c1dcda33e260d9c6fd
+echo x - sope/Makefile
+sed 's/^X//' >sope/Makefile << '71d594d412a7a20f7f95bc5d51f0c00f'
+X# Created by: Euan Thoms <euan@potensol.com>
+X# $FreeBSD$
+X
+XPORTNAME=		sope
+XPORTVERSION=		2.3.2
+XCATEGORIES=		devel gnustep
+XMASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
+XDISTNAME=		SOPE-${PORTVERSION}
+X
+XMAINTAINER=		euan@potensol.com
+XCOMMENT=		Extensive set of GNUstep web application frameworks
+X
+XLICENSE=		LGPL20
+X
+XLIB_DEPENDS=		libxml2.so:${PORTSDIR}/textproc/libxml2 \
+X			libmemcached.so:${PORTSDIR}/databases/libmemcached
+X
+XWRKSRC=			${WRKDIR}/SOPE
+X
+XOPTIONS_DEFINE=		LDAP MYSQL PGSQL MEMCACHED
+XOPTIONS_DEFAULT=	LDAP PGSQL MEMCACHED
+XOPTIONS_SUB=		yes
+X
+XLDAP_DESC=		Build with LDAP support
+XMYSQL_DESC=		Build with MySQL support
+XPGSQL_DESC=		Build with PostgreSQL support
+XMEMCACHED_DESC=		Install memcached
+X
+XUSES=			gmake gnustep
+XUSE_GNUSTEP=		base build
+XUSE_LDCONFIG=		${GNUSTEP_LOCAL_LIBRARIES}
+X
+XSUB_LIST+=              GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
+X                        GNUSTEP_MAKEFILES=${GNUSTEP_MAKEFILES}
+X
+XCONFIGURE_ARGS=		--with-gnustep --disable-debug --enable-strip
+X
+X.include <bsd.port.options.mk>
+X
+X.if ${PORT_OPTIONS:MLDAP}
+XUSE_OPENLDAP=	client
+X.endif
+X
+X.if ${PORT_OPTIONS:MPGSQL}
+XUSES+=		pgsql
+X.endif
+X
+X.if ${PORT_OPTIONS:MMYSQL}
+XUSE_MYSQL=	client
+X.endif
+X
+X.if ${PORT_OPTIONS:MMEMCACHED}
+XRUN_DEPENDS+=	${LOCALBASE}/bin/memcached:${PORTSDIR}/databases/memcached
+X.endif
+X
+Xpost-patch:
+X.if ! ${PORT_OPTIONS:MLDAP}
+X	@${REINPLACE_CMD} -e '/checkLinking "ldap"/d' ${WRKSRC}/configure
+X.endif
+X.if ! ${PORT_OPTIONS:MPGSQL}
+X	@${REINPLACE_CMD} -e '/checkLinking "pq"/d' ${WRKSRC}/configure
+X.endif
+X.if ! ${PORT_OPTIONS:MMYSQL}
+X	@${REINPLACE_CMD} -e '/checkLinking "mysqlclient"/d' ${WRKSRC}/configure
+X.endif
+X
+Xdo-configure:   
+X	cd ${WRKSRC} ; . ${GNUSTEP_MAKEFILES}/GNUstep.sh ; ./configure ${CONFIGURE_ARGS}
+X
+X.include <bsd.port.mk>
+71d594d412a7a20f7f95bc5d51f0c00f
+echo c - sope/files
+mkdir -p sope/files > /dev/null 2>&1
+echo x - sope/files/patch-sope-core_NGExtensions_NGExtensions_NGBundleManager_h
+sed 's/^X//' >sope/files/patch-sope-core_NGExtensions_NGExtensions_NGBundleManager_h << 'dc8166acb58bedca660cc2983e7f6179'
+X--- sope-core/NGExtensions/NGExtensions/NGBundleManager.h.orig	2014-09-26 18:35:45 UTC
+X+++ sope-core/NGExtensions/NGExtensions/NGBundleManager.h
+X@@ -23,6 +23,7 @@
+X #define __NGExtensions_NGBundleManager_H__
+X 
+X #import <Foundation/NSObject.h>
+X+#define EXPOSE_NSBundle_IVARS
+X #import <Foundation/NSBundle.h>
+X #import <Foundation/NSMapTable.h>
+X #include <NGExtensions/NGExtensionsDecls.h>
+dc8166acb58bedca660cc2983e7f6179
+echo x - sope/files/patch-sope-core_NGExtensions_NGExtensions_NSException+misc_h
+sed 's/^X//' >sope/files/patch-sope-core_NGExtensions_NGExtensions_NSException+misc_h << '4165378d5ba6285a0ae5bb2fb8a8dde3'
+X--- sope-core/NGExtensions/NGExtensions/NSException+misc.h.orig	2014-09-26 18:35:45 UTC
+X+++ sope-core/NGExtensions/NGExtensions/NSException+misc.h
+X@@ -22,6 +22,7 @@
+X #ifndef __NGExtensions_NSException_misc_H__
+X #define __NGExtensions_NSException_misc_H__
+X 
+X+#define EXPOSE_NSException_IVARS
+X #import <Foundation/NSException.h>
+X #import <Foundation/NSLock.h>
+X 
+4165378d5ba6285a0ae5bb2fb8a8dde3
+echo x - sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentContent_m
+sed 's/^X//' >sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentContent_m << '143f12aafcde23cb7987337e1354fc70'
+X$FreeBSD$
+X
+Xfix build with libobjc2-1.7
+X
+X--- sope-appserver/NGObjWeb/DynamicElements/WOComponentContent.m.orig	Sun Oct 13 16:59:47 2013
+X+++ sope-appserver/NGObjWeb/DynamicElements/WOComponentContent.m	Sun Oct 13 17:00:20 2013
+X@@ -75,11 +75,7 @@ static Class NSDateClass = Nil;
+X         printf("  ");
+X       printf("content: [%s %s]: %0.3fs\n",
+X              [[component name] cString], 
+X-#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+X-	     sel_getName(_cmd), 
+X-#else
+X 	     sel_get_name(_cmd), 
+X-#endif
+X 	     diff);
+X     }
+143f12aafcde23cb7987337e1354fc70
+echo x - sope/files/patch-sope-core_NGStreams_NGActiveSocket_m
+sed 's/^X//' >sope/files/patch-sope-core_NGStreams_NGActiveSocket_m << '0fe48fc68aebbcbdcf31e1b1e7145ecb'
+X--- sope-core/NGStreams/NGActiveSocket.m.orig	Sun Oct 13 18:10:47 2013
+X+++ sope-core/NGStreams/NGActiveSocket.m	Sun Oct 13 18:10:47 2013
+X@@ -19,6 +19,7 @@
+X   02111-1307, USA.
+X */
+X 
+X+#include <sys/types.h>
+X #include <netinet/in.h>
+X #include <netinet/tcp.h>
+X 
+0fe48fc68aebbcbdcf31e1b1e7145ecb
+echo x - sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentReference_m
+sed 's/^X//' >sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentReference_m << '8a47eafb34334333cd58ae950b73f4cd'
+X--- sope-appserver/NGObjWeb/DynamicElements/WOComponentReference.m.orig	2014-10-12 07:35:39 UTC
+X+++ sope-appserver/NGObjWeb/DynamicElements/WOComponentReference.m
+X@@ -172,7 +172,7 @@
+X         printf("  ");
+X       printf("[%s %s]: %0.3fs\n",
+X              [[child name] cString], 
+X-#if APPLE_RUNTIME || NeXT_RUNTIME || (__GNU_LIBOBJC__ >= 20100911)
+X+#if APPLE_RUNTIME || NeXT_RUNTIME || (__GNU_LIBOBJC__ >= 20100911) || defined(__GNUSTEP_RUNTIME__)
+X 	     sel_getName(_cmd), 
+X #else
+X 	     sel_get_name(_cmd), 
+8a47eafb34334333cd58ae950b73f4cd
+echo x - sope/files/patch-sope-mime_NGImap4_imCommon_h
+sed 's/^X//' >sope/files/patch-sope-mime_NGImap4_imCommon_h << '0d4a90ecad9c279859cc8a602421e459'
+X$FreeBSD$
+X
+Xfix build with libobjc2-1.7
+X
+X--- sope-mime/NGImap4/imCommon.h.orig	Sun Oct 13 16:21:42 2013
+X+++ sope-mime/NGImap4/imCommon.h	Sun Oct 13 16:22:35 2013
+X@@ -37,13 +37,13 @@
+X #include <NGMime/NGMime.h>
+X #include <NGMail/NGMail.h>
+X 
+X-#if NeXT_RUNTIME || APPLE_RUNTIME
+X+#if NeXT_RUNTIME
+X #  ifndef sel_eq
+X #    define sel_eq(__A__,__B__) (__A__==__B__)
+X #  endif
+X #endif
+X 
+X-#if __GNU_LIBOBJC__ >= 20100911
+X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+X #  ifndef sel_eq
+X #    define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
+X #  endif
+X
+0d4a90ecad9c279859cc8a602421e459
+echo x - sope/files/patch-configure
+sed 's/^X//' >sope/files/patch-configure << 'fe1e450c82a81b6863466cee05f90b51'
+X--- configure.orig	2015-01-20 13:39:57.000000000 +0000
+X+++ configure	2015-07-18 08:39:26.000000000 +0000
+X@@ -1,4 +1,4 @@
+X-#!/bin/bash
+X+#!/bin/sh
+X 
+X #
+X # Note: When adding make options to this script, ensure that the source still
+X@@ -41,7 +41,7 @@ else
+X fi
+X 
+X # TODO: add pg_config, mysql_config etc!
+X-LINK_SYSLIBDIRS="-L/usr/local/pgsql/lib -L/usr/local/lib -L/usr/lib"
+X+LINK_SYSLIBDIRS="-L/usr/local/lib/postgresql -L/usr/local/lib/mysql -L/usr/local/lib -L/usr/lib"
+X 
+X # ******************** usage ********************
+X 
+X@@ -396,6 +396,7 @@ genConfigMake() {
+X     cfgwrite "debug:=no"
+X   fi
+X   cfgwrite ""
+X+  cfgwrite "NEEDS_GUI=no"
+X   
+X   if test $ARG_WITH_STRIP = 1; then
+X     cfgwrite "# configured to produce stripped code";
+fe1e450c82a81b6863466cee05f90b51
+echo x - sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_decommon_h
+sed 's/^X//' >sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_decommon_h << '97bbcc39d19555756e137dd3234f0717'
+X$FreeBSD$
+X
+Xfix build with libobjc2-1.7
+X
+X--- sope-appserver/NGObjWeb/DynamicElements/decommon.h.orig	Mon Jul 22 15:03:07 2013
+X+++ sope-appserver/NGObjWeb/DynamicElements/decommon.h	Sun Oct 13 17:48:51 2013
+X@@ -35,6 +35,10 @@
+X @end
+X #endif
+X 
+X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+X+#  define sel_get_name(__XXX__) sel_getName(__XXX__)
+X+#endif
+X+
+X #include <NGExtensions/NGExtensions.h>
+X #include "WOResponse+private.h"
+X #include <NGObjWeb/WOContext.h>
+X
+97bbcc39d19555756e137dd3234f0717
+echo x - sope/files/patch-sope-mime_NGMime_common_h
+sed 's/^X//' >sope/files/patch-sope-mime_NGMime_common_h << '23bc5b8450b11de680c5ee1450ac80ee'
+X$FreeBSD$
+X
+Xfix build with libobjc2-1.7
+X
+X--- sope-mime/NGMime/common.h.orig	Sun Oct 13 16:18:04 2013
+X+++ sope-mime/NGMime/common.h	Sun Oct 13 16:21:27 2013
+X@@ -37,7 +37,9 @@
+X #include "NGMimeType.h"
+X 
+X #if !GNU_RUNTIME
+X-#  ifndef sel_eq
+X+#  if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+X+#    define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
+X+#  else ifndef sel_eq
+X #    define sel_eq(__A__, __B__) (__A__==__B__)
+X #  endif
+X #endif
+X
+23bc5b8450b11de680c5ee1450ac80ee
+echo x - sope/files/patch-sope-appserver_NGObjWeb_WOSession_m
+sed 's/^X//' >sope/files/patch-sope-appserver_NGObjWeb_WOSession_m << '1797fcd8626c77c030eb3f43ba0f5462'
+X$FreeBSD$
+X
+Xfix build with libobc2-1.7
+X
+X--- sope-appserver/NGObjWeb/WOSession.m.orig	Sun Oct 13 16:36:40 2013
+X+++ sope-appserver/NGObjWeb/WOSession.m	Sun Oct 13 16:36:51 2013
+X@@ -33,10 +33,6 @@
+X #include "common.h"
+X #include <string.h>
+X 
+X-#if !defined(sel_get_name) && ((defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__))
+X-#  define sel_get_name sel_getName
+X-#endif
+X-
+X #if APPLE_FOUNDATION_LIBRARY || NeXT_Foundation_LIBRARY
+X @interface NSObject(Miss)
+X - (id)notImplemented:(SEL)cmd;
+X
+1797fcd8626c77c030eb3f43ba0f5462
+echo x - sope/files/patch-sope-core_EOControl_EOSortOrdering_m
+sed 's/^X//' >sope/files/patch-sope-core_EOControl_EOSortOrdering_m << '30413495c6b6dd2cf36df02d75a38e8a'
+X$FreeBSD$
+X
+Xfix build with libobjc2-1.7
+X
+X--- sope-core/EOControl/EOSortOrdering.m.orig	Sun Oct 13 15:43:30 2013
+X+++ sope-core/EOControl/EOSortOrdering.m	Sun Oct 13 15:43:55 2013
+X@@ -28,14 +28,6 @@
+X #  include <objc/objc.h>
+X #endif
+X 
+X-#ifndef SEL_EQ
+X-#  if GNU_RUNTIME
+X-#    define SEL_EQ(sel1,sel2) sel_eq(sel1,sel2)
+X-#  else
+X-#    define SEL_EQ(sel1,sel2) (sel1 == sel2)
+X-#  endif
+X-#endif
+X-
+X @implementation EOSortOrdering
+X /*"
+X   This class specifies a sort-ordering as used with
+X@@ -83,7 +75,7 @@
+X /* equality */
+X 
+X - (BOOL)isEqualToSortOrdering:(EOSortOrdering *)_sortOrdering {
+X-  if (!SEL_EQ([_sortOrdering selector], [self selector]))
+X+  if (!sel_eq([_sortOrdering selector], [self selector]))
+X     return NO;
+X   if (![[_sortOrdering key] isEqualToString:[self key]])
+X     return NO;
+X
+30413495c6b6dd2cf36df02d75a38e8a
+echo x - sope/files/patch-sope-appserver_NGObjWeb_common_h
+sed 's/^X//' >sope/files/patch-sope-appserver_NGObjWeb_common_h << '07561d883efd3a58d8875a734bf919ea'
+X$FreeBSD$
+X
+Xfix for build with libobjc2-1.7
+X
+X--- sope-appserver/NGObjWeb/common.h.orig	Sun Oct 13 10:18:46 2013
+X+++ sope-appserver/NGObjWeb/common.h	Sun Oct 13 10:24:47 2013
+X@@ -51,11 +51,15 @@
+X #include <NGExtensions/NGLogging.h>
+X #include <NGStreams/NGStreams.h>
+X 
+X-#if NeXT_RUNTIME || APPLE_RUNTIME || (__GNU_LIBOBJC__ >= 20100911)
+X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+X #  ifndef sel_get_name
+X #    define sel_get_name(__XXX__)    sel_getName(__XXX__)
+X #    define sel_get_any_uid(__XXX__) sel_getUid(__XXX__)
+X #  endif
+X+#endif
+X+
+X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+X+#    define sel_get_uid(__XXX__)   sel_getUid(__XXX__);
+X #endif
+X 
+X #define IS_DEPRECATED \
+X
+07561d883efd3a58d8875a734bf919ea
+echo x - sope/files/patch-sope-ldap_NGLdap_EOQualifier+LDAP_m
+sed 's/^X//' >sope/files/patch-sope-ldap_NGLdap_EOQualifier+LDAP_m << 'da003ffa5fe5be5d24581018856bcdca'
+X$FreeBSD$
+X
+Xfix build with libobjc2-1.7
+X
+X--- sope-ldap/NGLdap/EOQualifier+LDAP.m.orig	Sun Oct 13 19:19:03 2013
+X+++ sope-ldap/NGLdap/EOQualifier+LDAP.m	Sun Oct 13 19:19:33 2013
+X@@ -26,7 +26,7 @@
+X #define sel_eq(sel1, sel2) ((sel1)) == ((sel2))
+X #endif
+X 
+X-#if __GNU_LIBOBJC__ >= 20100911
+X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+X #  define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
+X #endif
+da003ffa5fe5be5d24581018856bcdca
+echo x - sope/files/patch-sope-core_EOControl_EOValidation_m
+sed 's/^X//' >sope/files/patch-sope-core_EOControl_EOValidation_m << 'c139886f38553161c3e3a7197b679498'
+X$FreeBSD$
+X
+Xfix build with libobjc2-1.7
+X
+X--- sope-core/EOControl/EOValidation.m.orig	Sun Oct 13 15:44:43 2013
+X+++ sope-core/EOControl/EOValidation.m	Sun Oct 13 15:45:01 2013
+X@@ -24,10 +24,6 @@
+X #include "EONull.h"
+X #include "common.h"
+X 
+X-#if __GNU_LIBOBJC__ >= 20100911
+X-#  define sel_get_any_uid sel_getUid
+X-#endif
+X-
+X #if !LIB_FOUNDATION_LIBRARY
+X 
+X @interface NSException(UsedSetUI) /* does Jaguar allow -setUserInfo: ? */
+X
+c139886f38553161c3e3a7197b679498
+echo x - sope/files/patch-sope-core_NGStreams_NGStreamCoder_m
+sed 's/^X//' >sope/files/patch-sope-core_NGStreams_NGStreamCoder_m << '5333c6c3dcd17e81e8ce4c9e01ca9758'
+X$FreeBSD$
+X
+Xfix build with libobjc2-1.7
+X
+X--- sope-core/NGStreams/NGStreamCoder.m.orig	Sun Oct 13 18:10:47 2013
+X+++ sope-core/NGStreams/NGStreamCoder.m	Sun Oct 13 18:11:35 2013
+X@@ -28,6 +28,10 @@
+X #  include <objc/objc-class.h>
+X #endif
+X 
+X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+X+#  define sel_get_name(__XXX__) sel_getName(__XXX__)
+X+#endif
+X+
+X #define FINAL static inline
+X 
+X extern id nil_method(id, SEL, ...);
+X
+5333c6c3dcd17e81e8ce4c9e01ca9758
+echo x - sope/files/patch-sope-core_EOControl_common_h
+sed 's/^X//' >sope/files/patch-sope-core_EOControl_common_h << '9ce351e5cfad0a2afb34f11ad70451fd'
+X$FreeBSD$
+X
+Xfix build with libobjc2-1.7
+X
+X--- sope-core/EOControl/common.h.orig	Fri Sep 26 20:38:11 2014
+X+++ sope-core/EOControl/common.h	Tue Sep 30 12:38:09 2014
+X@@ -40,10 +40,11 @@
+X #  endif
+X #endif
+X 
+X-#if __GNU_LIBOBJC__ >= 20100911
+X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+X #  ifndef sel_eq
+X #    define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
+X #  endif
+X+#  define sel_get_any_uid(__XXX__) sel_getUid(__XXX__)
+X #endif
+X 
+X #ifndef ASSIGN
+X
+9ce351e5cfad0a2afb34f11ad70451fd
+echo x - sope/files/patch-sope-gdl1_GDLAccess_common_h
+sed 's/^X//' >sope/files/patch-sope-gdl1_GDLAccess_common_h << '7eaff90aa9113f4a2bca420f7e70f3e5'
+X$FreeBSD$
+X
+Xfix building with libobjc2-1.7
+X
+X--- sope-gdl1/GDLAccess/common.h.orig	Sun Oct 13 18:16:32 2013
+X+++ sope-gdl1/GDLAccess/common.h	Sun Oct 13 18:17:48 2013
+X@@ -55,7 +55,7 @@
+X #  endif
+X #endif
+X 
+X-#if __GNU_LIBOBJC__ >= 20100911
+X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(__GNUSTEP_RUNTIME__)
+X #  define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
+X #  ifndef SEL_EQ
+X #    define SEL_EQ(__A__,__B__) sel_isEqual(__A__,__B__)
+X
+7eaff90aa9113f4a2bca420f7e70f3e5
+echo x - sope/files/patch-sope-core_EOControl_EOKeyValueCoding_m
+sed 's/^X//' >sope/files/patch-sope-core_EOControl_EOKeyValueCoding_m << '9f4f81b90ac5117340b25b3e2d96f45a'
+X$FreeBSD$
+X
+Xfix build with libobjc2-1.7
+X
+X--- sope-core/EOControl/EOKeyValueCoding.m.orig	Sun Oct 13 15:46:37 2013
+X+++ sope-core/EOControl/EOKeyValueCoding.m	Sun Oct 13 15:46:47 2013
+X@@ -26,7 +26,6 @@
+X #if GNU_RUNTIME
+X 
+X #if __GNU_LIBOBJC__ >= 20100911
+X-#  define sel_get_any_uid sel_getUid
+X #  include <objc/runtime.h>
+X #else
+X #  include <objc/encoding.h>
+X
+9f4f81b90ac5117340b25b3e2d96f45a
+echo x - sope/files/patch-sope-appserver_NGObjWeb_NSObject+WO_m
+sed 's/^X//' >sope/files/patch-sope-appserver_NGObjWeb_NSObject+WO_m << '0716270d3b4df0674d63a7db6dcc65c5'
+X$FreeBSD$
+X
+Xfix for build with libobjc2-1.7
+Xpatch from David Chisnall
+X
+X--- sope-appserver/NGObjWeb/NSObject+WO.m.orig	Wed Dec  4 17:51:26 2013
+X+++ sope-appserver/NGObjWeb/NSObject+WO.m	Thu May 15 18:21:20 2014
+X@@ -259,7 +259,7 @@ IMP WOGetKVCGetMethod(id object, NSString *_key) {
+X   if (object == nil) return NULL;
+X   if (_key   == nil) return NULL;
+X 
+X-#if GNU_RUNTIME && !(defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911))
+X+#if GNU_RUNTIME && !(defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) && !defined(__GNUSTEP_RUNTIME__)
+X   {
+X     unsigned keyLen;
+X     char     *buf;
+X@@ -317,7 +317,9 @@ id WOGetKVCValueUsingMethod(id object, NSString *_key)
+X       return nil;
+X     free(buf); buf = NULL;
+X   }
+X-#if GNUSTEP_BASE_LIBRARY
+X+// This appears to be a work around for an old version of GNUstep-base not
+X+// correctly handling the case where there is no method.
+X+#if GNUSTEP_BASE_LIBRARY && !defined(__GNUSTEP_RUNTIME__)
+X   if (!__objc_responds_to(object, getSel))
+X     return nil;
+X #endif
+X
+0716270d3b4df0674d63a7db6dcc65c5
+echo x - sope/files/patch-sope-core_NGExtensions_EOExt_subproj_EOQualifier+CtxEval_m
+sed 's/^X//' >sope/files/patch-sope-core_NGExtensions_EOExt_subproj_EOQualifier+CtxEval_m << 'd1cf1192b3b0618f071afcd39b7def8a'
+X$FreeBSD$
+X
+Xfix build with libobjc2-1.7
+X
+X--- sope-core/NGExtensions/EOExt.subproj/EOQualifier+CtxEval.m.orig	Sun Oct 13 18:08:20 2013
+X+++ sope-core/NGExtensions/EOExt.subproj/EOQualifier+CtxEval.m	Sun Oct 13 18:10:08 2013
+X@@ -29,7 +29,7 @@
+X #  import <objc/objc.h>
+X #  import <extensions/objc-runtime.h>
+X #elif GNUSTEP_BASE_LIBRARY
+X-#if __GNU_LIBOBJC__ >= 20100911
+X+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(__GNUSTEP_RUNTIME__)
+X #  define sel_get_name sel_getName
+X #  import <objc/runtime.h>
+X #else
+X
+d1cf1192b3b0618f071afcd39b7def8a
+echo x - sope/distinfo
+sed 's/^X//' >sope/distinfo << '6fef449be01ca23355d10c9109b44c75'
+XSHA256 (SOPE-2.3.2.tar.gz) = 9d2072c6ee2b864d57d30f43079ff7c0921f8a94de066f32753337aef74e85d8
+XSIZE (SOPE-2.3.2.tar.gz) = 2269903
+6fef449be01ca23355d10c9109b44c75
+echo x - sope/pkg-descr
+sed 's/^X//' >sope/pkg-descr << '44acddc044257504500c6a951e8fbb69'
+XSOPE is an extensive set of frameworks which form a complete Web
+Xapplication server environment. Besides the Apple WebObjects
+Xcompatible appserver extended with Zope concepts, it contains a large
+Xset of reusable classes: XML processing (SAX, DOM, XML-RPC),
+XMIME/IMAP4 processing, LDAP connectivity, RDBMS connectivity, and
+XiCalendar parsing.
+X
+XWWW: http://sogo.nu/
+44acddc044257504500c6a951e8fbb69
 exit
 

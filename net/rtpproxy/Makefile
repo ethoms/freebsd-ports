@@ -1,22 +1,21 @@
-# Created by: Euan Thoms <euan@potensol.com>
+# Created by: sobomax
 # $FreeBSD$
 
 PORTNAME=	rtpproxy
 PORTVERSION=	2.0.0
+PORTREVISION=	1
+DISTVERSIONPREFIX=	v
 CATEGORIES=	net
-MASTER_SITES=	https://github.com/sippy/rtpproxy/archive/
-DISTNAME=	v${PORTVERSION}
 
-MAINTAINER=	euan@potensol.com
-COMMENT=	High-performance RTP proxy server for the SIP Routers
+MAINTAINER=	farrokhi@FreeBSD.org
+COMMENT=	High-performance RTP proxy server for the SIP Express Router (SER)
 
 LICENSE=	BSD2CLAUSE
 
 LIB_DEPENDS=	libgsm.so:${PORTSDIR}/audio/gsm
 
-WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
-
-USE_RC_SUBR=	rtpproxy
+USE_GITHUB=	yes
+GH_ACCOUNT=	sippy
 
 GNU_CONFIGURE=	yes
 CPPFLAGS+=	-I${LOCALBASE}/include
@@ -24,5 +23,12 @@ LIBS+=		-L${LOCALBASE}/lib
 
 USERS=		${PORTNAME}
 GROUPS=		${PORTNAME}
+
+post-build:
+	${SED} 's|%%PREFIX%%|${PREFIX}|g ; s|%%RC_SUBR%%|/etc/rc.subr|g' \
+	    ${WRKSRC}/scripts/rtpproxy.in.freebsd > ${WRKDIR}/rtpproxy
+
+post-install:
+	${INSTALL_SCRIPT} ${WRKDIR}/rtpproxy ${STAGEDIR}${PREFIX}/etc/rc.d/rtpproxy
 
 .include <bsd.port.mk>

@@ -1,0 +1,25 @@
+--- scripts/rtpproxy.in.freebsd.orig	2015-09-22 08:08:06.105815204 +0800
++++ scripts/rtpproxy.in.freebsd	2015-09-22 08:13:54.138790215 +0800
+@@ -6,7 +6,7 @@
+ 
+ # PROVIDE: rtpproxy
+ # REQUIRE: DAEMON
+-# BEFORE: ser openser
++# BEFORE: kamailio opensips
+ 
+ prefix=%%PREFIX%%
+ 
+@@ -22,7 +22,12 @@
+ 
+ rtpproxy_enable=${rtpproxy_enable:-"NO"}
+ rtpproxy_laddr=${rtpproxy_laddr:-"0.0.0.0"}
++rtpproxy_ctrl_socket=${rtpproxy_ctrl_socket:-"udp:0.0.0.0:7722"}
++rtpproxy_paddr=${rtpproxy_paddr:-"0.0.0.0"}
++rtpproxy_usr=${rtpproxy_usr:-"rtpproxy"}
++rtpproxy_grp=${rtpproxy_grp:-"rtpproxy"}
+ 
+-command_args="-l ${rtpproxy_laddr} -p /var/run/rtpproxy.pid"
++command_args="-u ${rtpproxy_usr}:${rtpproxy_grp} -A ${rtpproxy_paddr} -F -l ${rtpproxy_laddr} \
++  -s ${rtpproxy_ctrl_socket} -d INFO -p /var/run/rtpproxy.pid"
+ 
+ run_rc_command "${1}"

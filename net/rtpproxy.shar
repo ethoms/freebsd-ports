@@ -1,665 +1,120 @@
-#!/bin/sh
-# This is a shell archive (produced by GNU sharutils 4.14).
-# To extract the files from this archive, save it to some FILE, remove
-# everything before the '#!/bin/sh' line above, then type 'sh FILE'.
+# This is a shell archive.  Save it in a file, remove anything before
+# this line, and then unpack it by entering "sh file".  Note, it may
+# create directories; files and directories will be owned by you and
+# have default permissions.
 #
-lock_dir=_sh25921
-# Made on 2015-06-10 10:05 SGT by <euan.thoms@potensol2>.
-# Source directory was '/home/euan.thoms/LocalDev/freebsd-ports/net'.
+# This archive contains:
 #
-# Existing files will *not* be overwritten, unless '-c' is specified.
+#	rtpproxy
+#	rtpproxy/pkg-descr
+#	rtpproxy/files
+#	rtpproxy/files/patch-scripts_rtpproxy.in.freebsd
+#	rtpproxy/distinfo
+#	rtpproxy/Makefile
+#	rtpproxy/pkg-plist
 #
-# This shar contains:
-# length mode       name
-# ------ ---------- ------------------------------------------
-#    908 -rw-r--r-- rtpproxy/pkg-descr
-#    843 -rw-r--r-- rtpproxy/files/rtpproxy.in
-#    573 -rw-r--r-- rtpproxy/Makefile
-#    121 -rw-r--r-- rtpproxy/distinfo
-#     67 -rw-r--r-- rtpproxy/pkg-plist
-#    908 -rw-r--r-- rtpproxy/pkg-descr
-#    843 -rw-r--r-- rtpproxy/files/rtpproxy.in
-#    843 -rw-r--r-- rtpproxy/files/rtpproxy.in
-#    573 -rw-r--r-- rtpproxy/Makefile
-#    121 -rw-r--r-- rtpproxy/distinfo
-#     67 -rw-r--r-- rtpproxy/pkg-plist
-#
-MD5SUM=${MD5SUM-md5sum}
-f=`${MD5SUM} --version | egrep '^md5sum .*(core|text)utils'`
-test -n "${f}" && md5check=true || md5check=false
-${md5check} || \
-  echo 'Note: not verifying md5sums.  Consider installing GNU coreutils.'
-if test "X$1" = "X-c"
-then keep_file=''
-else keep_file=true
-fi
-echo=echo
-save_IFS="${IFS}"
-IFS="${IFS}:"
-gettext_dir=
-locale_dir=
-set_echo=false
-
-for dir in $PATH
-do
-  if test -f $dir/gettext \
-     && ($dir/gettext --version >/dev/null 2>&1)
-  then
-    case `$dir/gettext --version 2>&1 | sed 1q` in
-      *GNU*) gettext_dir=$dir
-      set_echo=true
-      break ;;
-    esac
-  fi
-done
-
-if ${set_echo}
-then
-  set_echo=false
-  for dir in $PATH
-  do
-    if test -f $dir/shar \
-       && ($dir/shar --print-text-domain-dir >/dev/null 2>&1)
-    then
-      locale_dir=`$dir/shar --print-text-domain-dir`
-      set_echo=true
-      break
-    fi
-  done
-
-  if ${set_echo}
-  then
-    TEXTDOMAINDIR=$locale_dir
-    export TEXTDOMAINDIR
-    TEXTDOMAIN=sharutils
-    export TEXTDOMAIN
-    echo="$gettext_dir/gettext -s"
-  fi
-fi
-IFS="$save_IFS"
-if (echo "testing\c"; echo 1,2,3) | grep c >/dev/null
-then if (echo -n test; echo 1,2,3) | grep n >/dev/null
-     then shar_n= shar_c='
-'
-     else shar_n=-n shar_c= ; fi
-else shar_n= shar_c='\c' ; fi
-f=shar-touch.$$
-st1=200112312359.59
-st2=123123592001.59
-st2tr=123123592001.5 # old SysV 14-char limit
-st3=1231235901
-
-if   touch -am -t ${st1} ${f} >/dev/null 2>&1 && \
-     test ! -f ${st1} && test -f ${f}; then
-  shar_touch='touch -am -t $1$2$3$4$5$6.$7 "$8"'
-
-elif touch -am ${st2} ${f} >/dev/null 2>&1 && \
-     test ! -f ${st2} && test ! -f ${st2tr} && test -f ${f}; then
-  shar_touch='touch -am $3$4$5$6$1$2.$7 "$8"'
-
-elif touch -am ${st3} ${f} >/dev/null 2>&1 && \
-     test ! -f ${st3} && test -f ${f}; then
-  shar_touch='touch -am $3$4$5$6$2 "$8"'
-
-else
-  shar_touch=:
-  echo
-  ${echo} 'WARNING: not restoring timestamps.  Consider getting and
-installing GNU '\''touch'\'', distributed in GNU coreutils...'
-  echo
-fi
-rm -f ${st1} ${st2} ${st2tr} ${st3} ${f}
-#
-if test ! -d ${lock_dir} ; then :
-else ${echo} "lock directory ${lock_dir} exists"
-     exit 1
-fi
-if mkdir ${lock_dir}
-then ${echo} "x - created lock directory ${lock_dir}."
-else ${echo} "x - failed to create lock directory ${lock_dir}."
-     exit 1
-fi
-# ============= rtpproxy/pkg-descr ==============
-if test ! -d 'rtpproxy'; then
-  mkdir 'rtpproxy'
-if test $? -eq 0
-then ${echo} "x - created directory rtpproxy."
-else ${echo} "x - failed to create directory rtpproxy."
-     exit 1
-fi
-fi
-if test -n "${keep_file}" && test -f 'rtpproxy/pkg-descr'
-then
-${echo} "x - SKIPPING rtpproxy/pkg-descr (file already exists)"
-
-else
-${echo} "x - extracting rtpproxy/pkg-descr (text)"
-  sed 's/^X//' << 'SHAR_EOF' > 'rtpproxy/pkg-descr' &&
-The Sippy RTPproxy is a high-performance software proxy for RTP streams that
-can work together with Kamailio, OpenSIPS or Sippy B2BUA or any other SIP 
-proxy or SIP B2BUA capable of rewriting SDP bodies in SIP messages that it 
-relays.
+echo c - rtpproxy
+mkdir -p rtpproxy > /dev/null 2>&1
+echo x - rtpproxy/pkg-descr
+sed 's/^X//' >rtpproxy/pkg-descr << '2ffc315d1f9392c46ac18f2643c42c88'
+XThe Sippy RTPproxy is a high-performance software proxy for RTP streams that
+Xcan work together with SIP Express Router (SER), OpenSER or Sippy B2BUA or
+Xany other SIP proxy or SIP B2BUA capable of rewriting SDP bodies in SIP
+Xmessages that it relays.
 X
-The main purpose of RTPproxy is to make the communication between SIP user
-agents behind NAT(s) (Network Address Translator) possible. Several cases
-exists when direct end-to-end communication is not possible and RTP streams
-have to be relayed through another host. The RTPproxy can be used to setup
-such a relaying host.
+XThe main purpose of RTPproxy is to make the communication between SIP user
+Xagents behind NAT(s) (Network Address Translator) possible. Several cases
+Xexists when direct end-to-end communication is not possible and RTP streams
+Xhave to be relayed through another host. The RTPproxy can be used to setup
+Xsuch a relaying host.
 X
-Originally created for handling NAT scenarious it can also act as a generic
-media relay as well as gateway RTP sessions between IPv4 and IPv6 networks.
-It can also perform number of additional functions, including call recording,
-playing pre-encoded announcements, real-time stream copying and RTP payload
-reframing.
+XOriginally created for handling NAT scenarious it can also act as a generic
+Xmedia relay as well as gateway RTP sessions between IPv4 and IPv6 networks.
+XIt can also perform number of additional functions, including call recording,
+Xplaying pre-encoded announcements, real-time stream copying and RTP payload
+Xreframing.
 X
-WWW: http://www.rtpproxy.org/
-SHAR_EOF
-  (set 20 15 06 10 08 37 27 'rtpproxy/pkg-descr'
-   eval "${shar_touch}") && \
-  chmod 0644 'rtpproxy/pkg-descr'
-if test $? -ne 0
-then ${echo} "restore of rtpproxy/pkg-descr failed"
-fi
-  if ${md5check}
-  then (
-       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'rtpproxy/pkg-descr': 'MD5 check failed'
-       ) << \SHAR_EOF
-d8ddacba73819be3eaeab839e9fea582  rtpproxy/pkg-descr
-SHAR_EOF
-
-else
-test `LC_ALL=C wc -c < 'rtpproxy/pkg-descr'` -ne 908 && \
-  ${echo} "restoration warning:  size of 'rtpproxy/pkg-descr' is not 908"
-  fi
-fi
-# ============= rtpproxy/files/rtpproxy.in ==============
-if test ! -d 'rtpproxy'; then
-  mkdir 'rtpproxy'
-if test $? -eq 0
-then ${echo} "x - created directory rtpproxy."
-else ${echo} "x - failed to create directory rtpproxy."
-     exit 1
-fi
-fi
-if test ! -d 'rtpproxy/files'; then
-  mkdir 'rtpproxy/files'
-if test $? -eq 0
-then ${echo} "x - created directory rtpproxy/files."
-else ${echo} "x - failed to create directory rtpproxy/files."
-     exit 1
-fi
-fi
-if test -n "${keep_file}" && test -f 'rtpproxy/files/rtpproxy.in'
-then
-${echo} "x - SKIPPING rtpproxy/files/rtpproxy.in (file already exists)"
-
-else
-${echo} "x - extracting rtpproxy/files/rtpproxy.in (text)"
-  sed 's/^X//' << 'SHAR_EOF' > 'rtpproxy/files/rtpproxy.in' &&
-#!/bin/sh
-#
-# $Id: rtpproxy.in,v 1.3 2008/06/17 03:34:50 sobomax Exp $
-#
+XWWW: http://www.rtpproxy.org/
+2ffc315d1f9392c46ac18f2643c42c88
+echo c - rtpproxy/files
+mkdir -p rtpproxy/files > /dev/null 2>&1
+echo x - rtpproxy/files/patch-scripts_rtpproxy.in.freebsd
+sed 's/^X//' >rtpproxy/files/patch-scripts_rtpproxy.in.freebsd << '1b568db198c214ef67e0d38094562e0b'
+X--- scripts/rtpproxy.in.freebsd.orig	2015-09-22 08:08:06.105815204 +0800
+X+++ scripts/rtpproxy.in.freebsd	2015-09-22 08:13:54.138790215 +0800
+X@@ -6,7 +6,7 @@
+X 
+X # PROVIDE: rtpproxy
+X # REQUIRE: DAEMON
+X-# BEFORE: ser openser
+X+# BEFORE: kamailio opensips
+X 
+X prefix=%%PREFIX%%
+X 
+X@@ -22,7 +22,12 @@
+X 
+X rtpproxy_enable=${rtpproxy_enable:-"NO"}
+X rtpproxy_laddr=${rtpproxy_laddr:-"0.0.0.0"}
+X+rtpproxy_ctrl_socket=${rtpproxy_ctrl_socket:-"udp:0.0.0.0:7722"}
+X+rtpproxy_paddr=${rtpproxy_paddr:-"0.0.0.0"}
+X+rtpproxy_usr=${rtpproxy_usr:-"rtpproxy"}
+X+rtpproxy_grp=${rtpproxy_grp:-"rtpproxy"}
+X 
+X-command_args="-l ${rtpproxy_laddr} -p /var/run/rtpproxy.pid"
+X+command_args="-u ${rtpproxy_usr}:${rtpproxy_grp} -A ${rtpproxy_paddr} -F -l ${rtpproxy_laddr} \
+X+  -s ${rtpproxy_ctrl_socket} -d INFO -p /var/run/rtpproxy.pid"
+X 
+X run_rc_command "${1}"
+1b568db198c214ef67e0d38094562e0b
+echo x - rtpproxy/distinfo
+sed 's/^X//' >rtpproxy/distinfo << 'b42a8970dba7d7e85d270b9cb03c27c6'
+XSHA256 (sippy-rtpproxy-v2.0.0_GH0.tar.gz) = b52bf2a302a8f08c269217e5d507f3c3ba38f4b627bb7029c8dac8ec268b23c6
+XSIZE (sippy-rtpproxy-v2.0.0_GH0.tar.gz) = 1091661
+b42a8970dba7d7e85d270b9cb03c27c6
+echo x - rtpproxy/Makefile
+sed 's/^X//' >rtpproxy/Makefile << 'd5d60601ccef319084708b123e3d196d'
+X# Created by: sobomax
+X# $FreeBSD$
 X
-# Add the following lines to /etc/rc.conf to enable RTPproxy:
-#
-# rtpproxy_enable="YES"
+XPORTNAME=	rtpproxy
+XPORTVERSION=	2.0.0
+XPORTREVISION=	1
+XDISTVERSIONPREFIX=	v
+XCATEGORIES=	net
 X
-# PROVIDE: rtpproxy
-# REQUIRE: DAEMON
-# BEFORE: opensips kamailio
+XMAINTAINER=	farrokhi@FreeBSD.org
+XCOMMENT=	High-performance RTP proxy server for the SIP Express Router (SER)
 X
-prefix=/usr/local
+XLICENSE=	BSD2CLAUSE
 X
-X. /etc/rc.subr
+XLIB_DEPENDS=	libgsm.so:${PORTSDIR}/audio/gsm
 X
-name=rtpproxy
-rcvar=`set_rcvar`
+XUSE_GITHUB=	yes
+XGH_ACCOUNT=	sippy
 X
-command="${prefix}/bin/rtpproxy"
-pidfile="/var/run/rtpproxy.pid"
+XGNU_CONFIGURE=	yes
+XCPPFLAGS+=	-I${LOCALBASE}/include
+XLIBS+=		-L${LOCALBASE}/lib
 X
-load_rc_config ${name}
+XUSERS=		${PORTNAME}
+XGROUPS=		${PORTNAME}
 X
-rtpproxy_enable=${rtpproxy_enable:-"NO"}
-rtpproxy_laddr=${rtpproxy_laddr:-"0.0.0.0"}
-rtpproxy_ctrl_socket=${rtpproxy_ctrl_socket:-"udp:0.0.0.0:7722"}
-rtpproxy_paddr=${rtpproxy_paddr:-"0.0.0.0"}
-rtpproxy_usr=${rtpproxy_usr:-"rtpproxy"}
-rtpproxy_grp=${rtpproxy_grp:-"rtpproxy"}
+Xpost-build:
+X	${SED} 's|%%PREFIX%%|${PREFIX}|g ; s|%%RC_SUBR%%|/etc/rc.subr|g' \
+X	    ${WRKSRC}/scripts/rtpproxy.in.freebsd > ${WRKDIR}/rtpproxy
 X
-command_args="-u ${rtpproxy_usr}:${rtpproxy_grp} -A ${rtpproxy_paddr} -F -l ${rtpproxy_laddr} -s ${rtpproxy_ctrl_socket} -d INFO -p /var/run/rtpproxy.pid"
-X
-run_rc_command "${1}"
-SHAR_EOF
-  (set 20 15 06 10 08 43 45 'rtpproxy/files/rtpproxy.in'
-   eval "${shar_touch}") && \
-  chmod 0644 'rtpproxy/files/rtpproxy.in'
-if test $? -ne 0
-then ${echo} "restore of rtpproxy/files/rtpproxy.in failed"
-fi
-  if ${md5check}
-  then (
-       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'rtpproxy/files/rtpproxy.in': 'MD5 check failed'
-       ) << \SHAR_EOF
-0b4cfc32168d47d4a1e65779a624035d  rtpproxy/files/rtpproxy.in
-SHAR_EOF
-
-else
-test `LC_ALL=C wc -c < 'rtpproxy/files/rtpproxy.in'` -ne 843 && \
-  ${echo} "restoration warning:  size of 'rtpproxy/files/rtpproxy.in' is not 843"
-  fi
-fi
-# ============= rtpproxy/Makefile ==============
-if test -n "${keep_file}" && test -f 'rtpproxy/Makefile'
-then
-${echo} "x - SKIPPING rtpproxy/Makefile (file already exists)"
-
-else
-${echo} "x - extracting rtpproxy/Makefile (text)"
-  sed 's/^X//' << 'SHAR_EOF' > 'rtpproxy/Makefile' &&
-# Created by: Euan Thoms <euan@potensol.com>
-# $FreeBSD$
-X
-PORTNAME=	rtpproxy
-PORTVERSION=	2.0.0
-CATEGORIES=	net
-MASTER_SITES=	https://github.com/sippy/rtpproxy/archive/
-DISTNAME=	v${PORTVERSION}
-X
-MAINTAINER=	euan@potensol.com
-COMMENT=	High-performance RTP proxy server for the SIP Routers
-X
-LICENSE=	BSD2CLAUSE
-X
-LIB_DEPENDS=	libgsm.so:${PORTSDIR}/audio/gsm
-X
-WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
-X
-USE_RC_SUBR=	rtpproxy
-X
-GNU_CONFIGURE=	yes
-CPPFLAGS+=	-I${LOCALBASE}/include
-LIBS+=		-L${LOCALBASE}/lib
-X
-USERS=		${PORTNAME}
-GROUPS=		${PORTNAME}
+Xpost-install:
+X	${INSTALL_SCRIPT} ${WRKDIR}/rtpproxy ${STAGEDIR}${PREFIX}/etc/rc.d/rtpproxy
 X
 X.include <bsd.port.mk>
-SHAR_EOF
-  (set 20 15 06 10 09 46 42 'rtpproxy/Makefile'
-   eval "${shar_touch}") && \
-  chmod 0644 'rtpproxy/Makefile'
-if test $? -ne 0
-then ${echo} "restore of rtpproxy/Makefile failed"
-fi
-  if ${md5check}
-  then (
-       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'rtpproxy/Makefile': 'MD5 check failed'
-       ) << \SHAR_EOF
-f45f183cb5d11b362e964fa75230d50b  rtpproxy/Makefile
-SHAR_EOF
+d5d60601ccef319084708b123e3d196d
+echo x - rtpproxy/pkg-plist
+sed 's/^X//' >rtpproxy/pkg-plist << '167a900435a9c608b2b22df9162d5293'
+Xetc/rc.d/rtpproxy
+Xbin/makeann
+Xbin/rtpproxy
+Xbin/rtpproxy_debug
+Xman/man8/rtpproxy.8.gz
+167a900435a9c608b2b22df9162d5293
+exit
 
-else
-test `LC_ALL=C wc -c < 'rtpproxy/Makefile'` -ne 573 && \
-  ${echo} "restoration warning:  size of 'rtpproxy/Makefile' is not 573"
-  fi
-fi
-# ============= rtpproxy/distinfo ==============
-if test -n "${keep_file}" && test -f 'rtpproxy/distinfo'
-then
-${echo} "x - SKIPPING rtpproxy/distinfo (file already exists)"
-
-else
-${echo} "x - extracting rtpproxy/distinfo (text)"
-  sed 's/^X//' << 'SHAR_EOF' > 'rtpproxy/distinfo' &&
-SHA256 (v2.0.0.tar.gz) = b52bf2a302a8f08c269217e5d507f3c3ba38f4b627bb7029c8dac8ec268b23c6
-SIZE (v2.0.0.tar.gz) = 1091661
-SHAR_EOF
-  (set 20 15 06 10 08 36 05 'rtpproxy/distinfo'
-   eval "${shar_touch}") && \
-  chmod 0644 'rtpproxy/distinfo'
-if test $? -ne 0
-then ${echo} "restore of rtpproxy/distinfo failed"
-fi
-  if ${md5check}
-  then (
-       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'rtpproxy/distinfo': 'MD5 check failed'
-       ) << \SHAR_EOF
-ed1240d5a7934ca1e5844daf039310b2  rtpproxy/distinfo
-SHAR_EOF
-
-else
-test `LC_ALL=C wc -c < 'rtpproxy/distinfo'` -ne 121 && \
-  ${echo} "restoration warning:  size of 'rtpproxy/distinfo' is not 121"
-  fi
-fi
-# ============= rtpproxy/pkg-plist ==============
-if test -n "${keep_file}" && test -f 'rtpproxy/pkg-plist'
-then
-${echo} "x - SKIPPING rtpproxy/pkg-plist (file already exists)"
-
-else
-${echo} "x - extracting rtpproxy/pkg-plist (text)"
-  sed 's/^X//' << 'SHAR_EOF' > 'rtpproxy/pkg-plist' &&
-bin/makeann
-bin/rtpproxy
-bin/rtpproxy_debug
-man/man8/rtpproxy.8.gz
-SHAR_EOF
-  (set 20 15 06 10 09 03 28 'rtpproxy/pkg-plist'
-   eval "${shar_touch}") && \
-  chmod 0644 'rtpproxy/pkg-plist'
-if test $? -ne 0
-then ${echo} "restore of rtpproxy/pkg-plist failed"
-fi
-  if ${md5check}
-  then (
-       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'rtpproxy/pkg-plist': 'MD5 check failed'
-       ) << \SHAR_EOF
-98cab6dfa5f819de7e8d6acdd0dde032  rtpproxy/pkg-plist
-SHAR_EOF
-
-else
-test `LC_ALL=C wc -c < 'rtpproxy/pkg-plist'` -ne 67 && \
-  ${echo} "restoration warning:  size of 'rtpproxy/pkg-plist' is not 67"
-  fi
-fi
-# ============= rtpproxy/pkg-descr ==============
-if test -n "${keep_file}" && test -f 'rtpproxy/pkg-descr'
-then
-${echo} "x - SKIPPING rtpproxy/pkg-descr (file already exists)"
-
-else
-${echo} "x - extracting rtpproxy/pkg-descr (text)"
-  sed 's/^X//' << 'SHAR_EOF' > 'rtpproxy/pkg-descr' &&
-The Sippy RTPproxy is a high-performance software proxy for RTP streams that
-can work together with Kamailio, OpenSIPS or Sippy B2BUA or any other SIP 
-proxy or SIP B2BUA capable of rewriting SDP bodies in SIP messages that it 
-relays.
-X
-The main purpose of RTPproxy is to make the communication between SIP user
-agents behind NAT(s) (Network Address Translator) possible. Several cases
-exists when direct end-to-end communication is not possible and RTP streams
-have to be relayed through another host. The RTPproxy can be used to setup
-such a relaying host.
-X
-Originally created for handling NAT scenarious it can also act as a generic
-media relay as well as gateway RTP sessions between IPv4 and IPv6 networks.
-It can also perform number of additional functions, including call recording,
-playing pre-encoded announcements, real-time stream copying and RTP payload
-reframing.
-X
-WWW: http://www.rtpproxy.org/
-SHAR_EOF
-  (set 20 15 06 10 08 37 27 'rtpproxy/pkg-descr'
-   eval "${shar_touch}") && \
-  chmod 0644 'rtpproxy/pkg-descr'
-if test $? -ne 0
-then ${echo} "restore of rtpproxy/pkg-descr failed"
-fi
-  if ${md5check}
-  then (
-       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'rtpproxy/pkg-descr': 'MD5 check failed'
-       ) << \SHAR_EOF
-d8ddacba73819be3eaeab839e9fea582  rtpproxy/pkg-descr
-SHAR_EOF
-
-else
-test `LC_ALL=C wc -c < 'rtpproxy/pkg-descr'` -ne 908 && \
-  ${echo} "restoration warning:  size of 'rtpproxy/pkg-descr' is not 908"
-  fi
-fi
-# ============= rtpproxy/files/rtpproxy.in ==============
-if test ! -d 'rtpproxy/files'; then
-  mkdir 'rtpproxy/files'
-if test $? -eq 0
-then ${echo} "x - created directory rtpproxy/files."
-else ${echo} "x - failed to create directory rtpproxy/files."
-     exit 1
-fi
-fi
-if test -n "${keep_file}" && test -f 'rtpproxy/files/rtpproxy.in'
-then
-${echo} "x - SKIPPING rtpproxy/files/rtpproxy.in (file already exists)"
-
-else
-${echo} "x - extracting rtpproxy/files/rtpproxy.in (text)"
-  sed 's/^X//' << 'SHAR_EOF' > 'rtpproxy/files/rtpproxy.in' &&
-#!/bin/sh
-#
-# $Id: rtpproxy.in,v 1.3 2008/06/17 03:34:50 sobomax Exp $
-#
-X
-# Add the following lines to /etc/rc.conf to enable RTPproxy:
-#
-# rtpproxy_enable="YES"
-X
-# PROVIDE: rtpproxy
-# REQUIRE: DAEMON
-# BEFORE: opensips kamailio
-X
-prefix=/usr/local
-X
-X. /etc/rc.subr
-X
-name=rtpproxy
-rcvar=`set_rcvar`
-X
-command="${prefix}/bin/rtpproxy"
-pidfile="/var/run/rtpproxy.pid"
-X
-load_rc_config ${name}
-X
-rtpproxy_enable=${rtpproxy_enable:-"NO"}
-rtpproxy_laddr=${rtpproxy_laddr:-"0.0.0.0"}
-rtpproxy_ctrl_socket=${rtpproxy_ctrl_socket:-"udp:0.0.0.0:7722"}
-rtpproxy_paddr=${rtpproxy_paddr:-"0.0.0.0"}
-rtpproxy_usr=${rtpproxy_usr:-"rtpproxy"}
-rtpproxy_grp=${rtpproxy_grp:-"rtpproxy"}
-X
-command_args="-u ${rtpproxy_usr}:${rtpproxy_grp} -A ${rtpproxy_paddr} -F -l ${rtpproxy_laddr} -s ${rtpproxy_ctrl_socket} -d INFO -p /var/run/rtpproxy.pid"
-X
-run_rc_command "${1}"
-SHAR_EOF
-  (set 20 15 06 10 08 43 45 'rtpproxy/files/rtpproxy.in'
-   eval "${shar_touch}") && \
-  chmod 0644 'rtpproxy/files/rtpproxy.in'
-if test $? -ne 0
-then ${echo} "restore of rtpproxy/files/rtpproxy.in failed"
-fi
-  if ${md5check}
-  then (
-       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'rtpproxy/files/rtpproxy.in': 'MD5 check failed'
-       ) << \SHAR_EOF
-0b4cfc32168d47d4a1e65779a624035d  rtpproxy/files/rtpproxy.in
-SHAR_EOF
-
-else
-test `LC_ALL=C wc -c < 'rtpproxy/files/rtpproxy.in'` -ne 843 && \
-  ${echo} "restoration warning:  size of 'rtpproxy/files/rtpproxy.in' is not 843"
-  fi
-fi
-# ============= rtpproxy/files/rtpproxy.in ==============
-if test -n "${keep_file}" && test -f 'rtpproxy/files/rtpproxy.in'
-then
-${echo} "x - SKIPPING rtpproxy/files/rtpproxy.in (file already exists)"
-
-else
-${echo} "x - extracting rtpproxy/files/rtpproxy.in (text)"
-  sed 's/^X//' << 'SHAR_EOF' > 'rtpproxy/files/rtpproxy.in' &&
-#!/bin/sh
-#
-# $Id: rtpproxy.in,v 1.3 2008/06/17 03:34:50 sobomax Exp $
-#
-X
-# Add the following lines to /etc/rc.conf to enable RTPproxy:
-#
-# rtpproxy_enable="YES"
-X
-# PROVIDE: rtpproxy
-# REQUIRE: DAEMON
-# BEFORE: opensips kamailio
-X
-prefix=/usr/local
-X
-X. /etc/rc.subr
-X
-name=rtpproxy
-rcvar=`set_rcvar`
-X
-command="${prefix}/bin/rtpproxy"
-pidfile="/var/run/rtpproxy.pid"
-X
-load_rc_config ${name}
-X
-rtpproxy_enable=${rtpproxy_enable:-"NO"}
-rtpproxy_laddr=${rtpproxy_laddr:-"0.0.0.0"}
-rtpproxy_ctrl_socket=${rtpproxy_ctrl_socket:-"udp:0.0.0.0:7722"}
-rtpproxy_paddr=${rtpproxy_paddr:-"0.0.0.0"}
-rtpproxy_usr=${rtpproxy_usr:-"rtpproxy"}
-rtpproxy_grp=${rtpproxy_grp:-"rtpproxy"}
-X
-command_args="-u ${rtpproxy_usr}:${rtpproxy_grp} -A ${rtpproxy_paddr} -F -l ${rtpproxy_laddr} -s ${rtpproxy_ctrl_socket} -d INFO -p /var/run/rtpproxy.pid"
-X
-run_rc_command "${1}"
-SHAR_EOF
-  (set 20 15 06 10 08 43 45 'rtpproxy/files/rtpproxy.in'
-   eval "${shar_touch}") && \
-  chmod 0644 'rtpproxy/files/rtpproxy.in'
-if test $? -ne 0
-then ${echo} "restore of rtpproxy/files/rtpproxy.in failed"
-fi
-  if ${md5check}
-  then (
-       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'rtpproxy/files/rtpproxy.in': 'MD5 check failed'
-       ) << \SHAR_EOF
-0b4cfc32168d47d4a1e65779a624035d  rtpproxy/files/rtpproxy.in
-SHAR_EOF
-
-else
-test `LC_ALL=C wc -c < 'rtpproxy/files/rtpproxy.in'` -ne 843 && \
-  ${echo} "restoration warning:  size of 'rtpproxy/files/rtpproxy.in' is not 843"
-  fi
-fi
-# ============= rtpproxy/Makefile ==============
-if test -n "${keep_file}" && test -f 'rtpproxy/Makefile'
-then
-${echo} "x - SKIPPING rtpproxy/Makefile (file already exists)"
-
-else
-${echo} "x - extracting rtpproxy/Makefile (text)"
-  sed 's/^X//' << 'SHAR_EOF' > 'rtpproxy/Makefile' &&
-# Created by: Euan Thoms <euan@potensol.com>
-# $FreeBSD$
-X
-PORTNAME=	rtpproxy
-PORTVERSION=	2.0.0
-CATEGORIES=	net
-MASTER_SITES=	https://github.com/sippy/rtpproxy/archive/
-DISTNAME=	v${PORTVERSION}
-X
-MAINTAINER=	euan@potensol.com
-COMMENT=	High-performance RTP proxy server for the SIP Routers
-X
-LICENSE=	BSD2CLAUSE
-X
-LIB_DEPENDS=	libgsm.so:${PORTSDIR}/audio/gsm
-X
-WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
-X
-USE_RC_SUBR=	rtpproxy
-X
-GNU_CONFIGURE=	yes
-CPPFLAGS+=	-I${LOCALBASE}/include
-LIBS+=		-L${LOCALBASE}/lib
-X
-USERS=		${PORTNAME}
-GROUPS=		${PORTNAME}
-X
-X.include <bsd.port.mk>
-SHAR_EOF
-  (set 20 15 06 10 09 46 42 'rtpproxy/Makefile'
-   eval "${shar_touch}") && \
-  chmod 0644 'rtpproxy/Makefile'
-if test $? -ne 0
-then ${echo} "restore of rtpproxy/Makefile failed"
-fi
-  if ${md5check}
-  then (
-       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'rtpproxy/Makefile': 'MD5 check failed'
-       ) << \SHAR_EOF
-f45f183cb5d11b362e964fa75230d50b  rtpproxy/Makefile
-SHAR_EOF
-
-else
-test `LC_ALL=C wc -c < 'rtpproxy/Makefile'` -ne 573 && \
-  ${echo} "restoration warning:  size of 'rtpproxy/Makefile' is not 573"
-  fi
-fi
-# ============= rtpproxy/distinfo ==============
-if test -n "${keep_file}" && test -f 'rtpproxy/distinfo'
-then
-${echo} "x - SKIPPING rtpproxy/distinfo (file already exists)"
-
-else
-${echo} "x - extracting rtpproxy/distinfo (text)"
-  sed 's/^X//' << 'SHAR_EOF' > 'rtpproxy/distinfo' &&
-SHA256 (v2.0.0.tar.gz) = b52bf2a302a8f08c269217e5d507f3c3ba38f4b627bb7029c8dac8ec268b23c6
-SIZE (v2.0.0.tar.gz) = 1091661
-SHAR_EOF
-  (set 20 15 06 10 08 36 05 'rtpproxy/distinfo'
-   eval "${shar_touch}") && \
-  chmod 0644 'rtpproxy/distinfo'
-if test $? -ne 0
-then ${echo} "restore of rtpproxy/distinfo failed"
-fi
-  if ${md5check}
-  then (
-       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'rtpproxy/distinfo': 'MD5 check failed'
-       ) << \SHAR_EOF
-ed1240d5a7934ca1e5844daf039310b2  rtpproxy/distinfo
-SHAR_EOF
-
-else
-test `LC_ALL=C wc -c < 'rtpproxy/distinfo'` -ne 121 && \
-  ${echo} "restoration warning:  size of 'rtpproxy/distinfo' is not 121"
-  fi
-fi
-# ============= rtpproxy/pkg-plist ==============
-if test -n "${keep_file}" && test -f 'rtpproxy/pkg-plist'
-then
-${echo} "x - SKIPPING rtpproxy/pkg-plist (file already exists)"
-
-else
-${echo} "x - extracting rtpproxy/pkg-plist (text)"
-  sed 's/^X//' << 'SHAR_EOF' > 'rtpproxy/pkg-plist' &&
-bin/makeann
-bin/rtpproxy
-bin/rtpproxy_debug
-man/man8/rtpproxy.8.gz
-SHAR_EOF
-  (set 20 15 06 10 09 03 28 'rtpproxy/pkg-plist'
-   eval "${shar_touch}") && \
-  chmod 0644 'rtpproxy/pkg-plist'
-if test $? -ne 0
-then ${echo} "restore of rtpproxy/pkg-plist failed"
-fi
-  if ${md5check}
-  then (
-       ${MD5SUM} -c >/dev/null 2>&1 || ${echo} 'rtpproxy/pkg-plist': 'MD5 check failed'
-       ) << \SHAR_EOF
-98cab6dfa5f819de7e8d6acdd0dde032  rtpproxy/pkg-plist
-SHAR_EOF
-
-else
-test `LC_ALL=C wc -c < 'rtpproxy/pkg-plist'` -ne 67 && \
-  ${echo} "restoration warning:  size of 'rtpproxy/pkg-plist' is not 67"
-  fi
-fi
-if rm -fr ${lock_dir}
-then ${echo} "x - removed lock directory ${lock_dir}."
-else ${echo} "x - failed to remove lock directory ${lock_dir}."
-     exit 1
-fi
-exit 0

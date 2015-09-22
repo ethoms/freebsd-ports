@@ -1,7 +1,7 @@
 The Sippy RTPproxy is a high-performance software proxy for RTP streams that
-can work together with Kamailio, OpenSIPS or Sippy B2BUA or any other SIP 
-proxy or SIP B2BUA capable of rewriting SDP bodies in SIP messages that it 
-relays.
+can work together with SIP Express Router (SER), OpenSER or Sippy B2BUA or
+any other SIP proxy or SIP B2BUA capable of rewriting SDP bodies in SIP
+messages that it relays.
 
 The main purpose of RTPproxy is to make the communication between SIP user
 agents behind NAT(s) (Network Address Translator) possible. Several cases
