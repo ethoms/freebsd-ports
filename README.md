@@ -3,9 +3,9 @@ Euan Thoms' FreeBSD ports development
 
 ## News:
 
-**Updated www/sogo and devel/sope to v2.3.2 [22/09/2015]**
-
-**Updated net/rtpproxy to official ports tree version (2.0.0) and applied improvements to rc script.**
+**[22/09/2015]**
+Updated www/sogo and devel/sope to v2.3.2.
+Updated net/rtpproxy to official ports tree version (2.0.0) and applied improvements to rc script.
 
 ## Instructions:
 
