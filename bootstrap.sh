@@ -17,7 +17,7 @@ done
 for i in `ls UIDs.*`
 do
   USERID=`cat ${i} | cut -d: -f1`
-  cat /usr/ports/UIDs | grep "^${USERID}"
+  cat /usr/ports/UIDs | grep "^${USERID}" > /dev/null 2>&1
   if [ $? != 0 ]
   then
     cat ${i} >> /usr/ports/UIDs
@@ -27,7 +27,7 @@ done
 for i in `ls GIDs.*`
 do
   USERID=`cat ${i} | cut -d: -f1`
-  cat /usr/ports/GIDs | grep "^${USERID}"
+  cat /usr/ports/GIDs | grep "^${USERID}" > /dev/null 2>&1
   if [ $? != 0 ]
   then
     cat ${i} >> /usr/ports/GIDs
