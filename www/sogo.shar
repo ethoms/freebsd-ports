@@ -6,81 +6,27 @@
 # This archive contains:
 #
 #	sogo
-#	sogo/distinfo
-#	sogo/Makefile
 #	sogo/pkg-plist
 #	sogo/files
+#	sogo/files/cron-expire-autoreply.sample
+#	sogo/files/cron-ealarms-notify.sample
+#	sogo/files/patch-SoObjects_SOGo_master-framework.make
+#	sogo/files/expire-autoreply.creds.sample
+#	sogo/files/patch-Tools_GNUmakefile.preamble
+#	sogo/files/patch-Main_GNUmakefile.preamble
+#	sogo/files/patch-SoObjects_SOGo_GNUmakefile
+#	sogo/files/patch-Tests_Unit_GNUmakefile
 #	sogo/files/sogod.in
 #	sogo/files/ealarms-notify.creds.sample
-#	sogo/files/patch-SoObjects_SOGo_NSData+Crypto_m
-#	sogo/files/expire-autoreply.creds.sample
-#	sogo/files/cron-ealarms-notify.sample
-#	sogo/files/cron-expire-autoreply.sample
-#	sogo/pkg-message
+#	sogo/files/patch-SoObjects_SOGo_NSData+Crypto.m
+#	sogo/files/patch-SoObjects_SOGo_instance-framework.make
 #	sogo/pkg-descr
+#	sogo/Makefile
+#	sogo/distinfo
+#	sogo/pkg-message
 #
 echo c - sogo
 mkdir -p sogo > /dev/null 2>&1
-echo x - sogo/distinfo
-sed 's/^X//' >sogo/distinfo << '55e82ee4823ec0f63f1b76a323d4731b'
-XSHA256 (SOGo-2.3.2.tar.gz) = 7830e2ad684b54c89a4720edf7e73250a076885a3e25052c093e7894227939ac
-XSIZE (SOGo-2.3.2.tar.gz) = 11781695
-55e82ee4823ec0f63f1b76a323d4731b
-echo x - sogo/Makefile
-sed 's/^X//' >sogo/Makefile << 'b498ca5444d30a1048df702ddf4d84a4'
-X# Created by: Euan Thoms <euan@potensol.com>
-X# $FreeBSD$
-X
-XPORTNAME=		sogo
-XPORTVERSION=		2.3.2
-XCATEGORIES=		www gnustep
-XMASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
-XDISTNAME=		SOGo-${PORTVERSION}
-X
-XMAINTAINER=		euan@potensol.com
-XCOMMENT=		Groupware server with a focus on scalability and open standards
-X
-XLICENSE=		GPLv2
-X
-XBUILD_DEPENDS=		${GNUSTEP_LOCAL_LIBRARIES}/libDOM.so:${PORTSDIR}/devel/sope
-XLIB_DEPENDS=		libmemcached.so:${PORTSDIR}/databases/libmemcached \
-X			libcurl.so:${PORTSDIR}/ftp/curl
-XRUN_DEPENDS:=		${BUILD_DEPENDS}
-X
-XUSERS=			sogod
-XGROUPS=			sogod
-X
-XUSES=                   gnustep objc
-XUSE_GNUSTEP=            base build
-XUSE_LDCONFIG=           ${GNUSTEP_LOCAL_LIBRARIES}/sogo
-X
-XUSE_RC_SUBR=		sogod
-X
-XSUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
-X			GNUSTEP_MAKEFILES=${GNUSTEP_MAKEFILES}
-X
-XCONFIGURE_ARGS=		--disable-debug --enable-strip
-X
-X.include <bsd.port.options.mk>
-X
-Xpost-patch:
-X	@${GREP} -rlF '/etc/sogo' ${WRKSRC} \
-X		| ${XARGS} ${REINPLACE_CMD} 's#/etc/sogo#${PREFIX}/etc/sogo#g'
-X
-Xdo-configure:
-X	cd ${WRKSRC} ; . ${GNUSTEP_MAKEFILES}/GNUstep.sh ; ./configure ${CONFIGURE_ARGS}
-X
-Xpost-stage:
-X	@${MKDIR} ${STAGEDIR}/var/spool/sogo
-X	@${MKDIR} ${STAGEDIR}${ETCDIR}
-X	(cp ${WRKSRC}/Scripts/sogo.conf ${STAGEDIR}${ETCDIR}/sogo.conf.sample)
-X	(cp ${FILESDIR}/expire-autoreply.creds.sample ${STAGEDIR}${ETCDIR}/)
-X	(cp ${FILESDIR}/ealarms-notify.creds.sample ${STAGEDIR}${ETCDIR}/)
-X	(cp ${FILESDIR}/cron-ealarms-notify.sample ${STAGEDIR}${PREFIX}/GNUstep/Local/Tools/Admin/)
-X	(cp ${FILESDIR}/cron-expire-autoreply.sample ${STAGEDIR}${PREFIX}/GNUstep/Local/Tools/Admin/)
-X
-X.include <bsd.port.mk>
-b498ca5444d30a1048df702ddf4d84a4
 echo x - sogo/pkg-plist
 sed 's/^X//' >sogo/pkg-plist << '3d9d661c640bb60713036d90e884f3e5'
 XGNUstep/Local/Library/Frameworks/SOGo.framework/Headers
@@ -1840,23 +1786,137 @@ XGNUstep/Local/Tools/Admin/sogo-ealarms-notify
 XGNUstep/Local/Tools/Admin/sogo-slapd-sockd
 XGNUstep/Local/Tools/Admin/sogo-tool
 XGNUstep/Local/Tools/Admin/sogod
-X%%ETCDIR%%/sogo.conf.sample
+X@sample %%ETCDIR%%/sogo.conf.sample
 X@dir GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/WebServer
 X@dir GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/WebServer
 X@owner sogod
 X@group sogod
 X@mode 0700
 X@dir /var/spool/sogo
-X@dirrm /var/spool/sogo
 X@mode 0600
-X%%ETCDIR%%/expire-autoreply.creds.sample
-X%%ETCDIR%%/ealarms-notify.creds.sample
+X@sample %%ETCDIR%%/expire-autoreply.creds.sample
+X@sample %%ETCDIR%%/ealarms-notify.creds.sample
 X@mode 0755
-XGNUstep/Local/Tools/Admin/cron-ealarms-notify.sample
-XGNUstep/Local/Tools/Admin/cron-expire-autoreply.sample
+X@sample GNUstep/Local/Tools/Admin/cron-ealarms-notify.sample
+X@sample GNUstep/Local/Tools/Admin/cron-expire-autoreply.sample
 3d9d661c640bb60713036d90e884f3e5
 echo c - sogo/files
 mkdir -p sogo/files > /dev/null 2>&1
+echo x - sogo/files/cron-expire-autoreply.sample
+sed 's/^X//' >sogo/files/cron-expire-autoreply.sample << '6c9bc2fe28c91b9496fbc55aee894ed8'
+X#!/bin/sh
+X
+XTZ=Europe/London; export TZ
+XPATH=$PATH:/usr/local/GNUstep/System/Tools; export PATH
+X. /usr/local/GNUstep/System/Library/Makefiles/GNUstep.sh
+X
+X/usr/local/GNUstep/Local/Tools/Admin/sogo-tool expire-autoreply -p /usr/local/etc/sogo/expire-autoreply.creds > /var/log/sogo/cron-expire-autoreply.out 2>&1
+6c9bc2fe28c91b9496fbc55aee894ed8
+echo x - sogo/files/cron-ealarms-notify.sample
+sed 's/^X//' >sogo/files/cron-ealarms-notify.sample << 'b524c81b01f549cfc602fef62956eaa2'
+X#!/bin/sh
+X
+XTZ=Europe/London; export TZ
+XPATH=$PATH:/usr/local/GNUstep/System/Tools; export PATH
+X. /usr/local/GNUstep/System/Library/Makefiles/GNUstep.sh
+X
+X/usr/local/GNUstep/Local/Tools/Admin/sogo-ealarms-notify -p /usr/local/etc/sogo/ealarms-notify.creds >> /var/log/sogo/cron-ealarms-notify.log 2>&1
+b524c81b01f549cfc602fef62956eaa2
+echo x - sogo/files/patch-SoObjects_SOGo_master-framework.make
+sed 's/^X//' >sogo/files/patch-SoObjects_SOGo_master-framework.make << '2dc6b200975ff98bb122285c10777493'
+X--- SoObjects/SOGo/master-framework.make.orig	2015-09-23 03:38:31 UTC
+X+++ SoObjects/SOGo/master-framework.make
+X@@ -0,0 +1,30 @@
+X+#
+X+#   framework.make
+X+#
+X+#   Makefile rules to build GNUstep-based frameworks.
+X+#
+X+#   Copyright (C) 2002 Free Software Foundation, Inc.
+X+#
+X+#   Author:  Nicola Pero <nicola@brainstorm.co.uk>
+X+#
+X+#   This file is part of the GNUstep Makefile Package.
+X+#
+X+#   This library is free software; you can redistribute it and/or
+X+#   modify it under the terms of the GNU General Public License
+X+#   as published by the Free Software Foundation; either version 3
+X+#   of the License, or (at your option) any later version.
+X+#   
+X+#   You should have received a copy of the GNU General Public
+X+#   License along with this library; see the file COPYING.
+X+#   If not, write to the Free Software Foundation,
+X+#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+X+
+X+ifeq ($(GNUSTEP_INSTANCE),)
+X+include $(GNUSTEP_MAKEFILES)/Master/framework.make
+X+else
+X+
+X+ifeq ($(GNUSTEP_TYPE),framework)
+X+include instance-framework.make
+X+endif
+X+
+X+endif
+2dc6b200975ff98bb122285c10777493
+echo x - sogo/files/expire-autoreply.creds.sample
+sed 's/^X//' >sogo/files/expire-autoreply.creds.sample << '8fb07d270a9c724063b3db72a1011274'
+Xusername:password
+8fb07d270a9c724063b3db72a1011274
+echo x - sogo/files/patch-Tools_GNUmakefile.preamble
+sed 's/^X//' >sogo/files/patch-Tools_GNUmakefile.preamble << '2ef5ff712a818a09465b28331fea8058'
+X--- Tools/GNUmakefile.preamble.orig	2015-09-16 18:41:31 UTC
+X+++ Tools/GNUmakefile.preamble
+X@@ -13,4 +13,5 @@ ADDITIONAL_LIB_DIRS += \
+X 	-L../SoObjects/SOGo/SOGo.framework/sogo -lSOGo \
+X 	-L../SOPE/GDLContentStore/$(GNUSTEP_OBJ_DIR)/ -lGDLContentStore \
+X 	-L../SOPE/NGCards/$(GNUSTEP_OBJ_DIR)/ -lNGCards \
+X-        -lEOControl -lNGStreams -lNGMime -lNGExtensions -lNGObjWeb
+X+        -lEOControl -lNGStreams -lNGMime -lNGExtensions -lNGObjWeb \
+X+	-lGDLAccess -lDOM -lSaxObjC -lNGLdap -lSBJson
+2ef5ff712a818a09465b28331fea8058
+echo x - sogo/files/patch-Main_GNUmakefile.preamble
+sed 's/^X//' >sogo/files/patch-Main_GNUmakefile.preamble << 'cc88165fdf65345aa5a340ca93218a47'
+X--- Main/GNUmakefile.preamble.orig	2015-09-16 18:41:29 UTC
+X+++ Main/GNUmakefile.preamble
+X@@ -22,4 +22,4 @@ $(SOGOD)_TOOL_LIBS += \
+X 	-lNGObjWeb		\
+X 	-lNGMime -lNGLdap	\
+X 	-lNGStreams -lNGExtensions -lEOControl \
+X-	-lDOM -lSaxObjC
+X+	-lDOM -lSaxObjC -lSBJson
+cc88165fdf65345aa5a340ca93218a47
+echo x - sogo/files/patch-SoObjects_SOGo_GNUmakefile
+sed 's/^X//' >sogo/files/patch-SoObjects_SOGo_GNUmakefile << '9719c8ff02f316c1eb769f6fdf1d65d2'
+X--- SoObjects/SOGo/GNUmakefile.orig	2015-09-16 18:41:36 UTC
+X+++ SoObjects/SOGo/GNUmakefile
+X@@ -203,7 +203,8 @@ ifneq ($(FHS_INSTALL_ROOT),)
+X GNUSTEP_HEADERS=$(DESTDIR)$(FHS_INSTALL_ROOT)/include
+X endif
+X GNUSTEP_TARGET_LDIR=sogo
+X-include $(GNUSTEP_MAKEFILES)/framework.make
+X+
+X+include master-framework.make
+X include $(GNUSTEP_MAKEFILES)/library.make
+X include $(GNUSTEP_MAKEFILES)/tool.make
+X -include GNUmakefile.postamble
+9719c8ff02f316c1eb769f6fdf1d65d2
+echo x - sogo/files/patch-Tests_Unit_GNUmakefile
+sed 's/^X//' >sogo/files/patch-Tests_Unit_GNUmakefile << '9bd972e715f7eeba8032333b77cc8ad4'
+X--- Tests/Unit/GNUmakefile.orig	2015-09-16 18:41:31 UTC
+X+++ Tests/Unit/GNUmakefile
+X@@ -35,7 +35,10 @@ $(TEST_TOOL)_CPPFLAGS += \
+X 	-Wall -D_GNU_SOURCE -I../../SOPE/ -I../../SoObjects/ -I../../UI/
+X 
+X ADDITIONAL_LIB_DIRS += \
+X-	-L../../SoObjects/SOGo/SOGo.framework/Versions/Current/sogo -L../../SOPE/NGCards/obj -L../../SOPE/GDLContentStore/obj -lSOGo -lNGMime -lNGCards -lGDLContentStore -lNGExtensions -lSBJson -lobjc \
+X+	-L../../SoObjects/SOGo/SOGo.framework/Versions/Current/sogo -L../../SOPE/NGCards/obj -L../../SOPE/GDLContentStore/obj \
+X+	-lSOGo -lNGMime -lNGCards -lGDLContentStore -lNGExtensions \
+X+	-lSBJson -lGDLAccess -lNGObjWeb -lNGStreams -lEOControl -lDOM \
+X+	-lNGLdap -lobjc \
+X 	-L/usr/local/lib  -lSaxObjC \
+X 	-Wl,-rpath,../../SoObjects/SOGo/SOGo.framework/Versions/Current/sogo -Wl,-rpath,../../SOPE/NGCards/obj -Wl,-rpath,../../SOPE/GDLContentStore/obj
+X ADDITIONAL_LDFLAGS += -Wl,--no-as-needed
+9bd972e715f7eeba8032333b77cc8ad4
 echo x - sogo/files/sogod.in
 sed 's/^X//' >sogo/files/sogod.in << '2c5dd20db82d20d22e2d8855c7d6d0d8'
 X#!/bin/sh
@@ -1892,9 +1952,9 @@ echo x - sogo/files/ealarms-notify.creds.sample
 sed 's/^X//' >sogo/files/ealarms-notify.creds.sample << 'd34f0d7eff813d644ce1e748977dad01'
 Xusername:password
 d34f0d7eff813d644ce1e748977dad01
-echo x - sogo/files/patch-SoObjects_SOGo_NSData+Crypto_m
-sed 's/^X//' >sogo/files/patch-SoObjects_SOGo_NSData+Crypto_m << '4c98dddfae25d15beb2a467406c23c03'
-X--- SoObjects/SOGo/NSData+Crypto.m.orig	2014-10-12 11:48:01 UTC
+echo x - sogo/files/patch-SoObjects_SOGo_NSData+Crypto.m
+sed 's/^X//' >sogo/files/patch-SoObjects_SOGo_NSData+Crypto.m << '5a25d74f07bc1f33af0e23cac2d305da'
+X--- SoObjects/SOGo/NSData+Crypto.m.orig	2015-09-16 18:41:31 UTC
 X+++ SoObjects/SOGo/NSData+Crypto.m
 X@@ -23,10 +23,6 @@
 X  * Boston, MA 02111-1307, USA.
@@ -1907,81 +1967,953 @@ X-
 X #include <sys/types.h>
 X #include <sys/stat.h>
 X #include <fcntl.h>
-4c98dddfae25d15beb2a467406c23c03
-echo x - sogo/files/expire-autoreply.creds.sample
-sed 's/^X//' >sogo/files/expire-autoreply.creds.sample << '8fb07d270a9c724063b3db72a1011274'
-Xusername:password
-8fb07d270a9c724063b3db72a1011274
-echo x - sogo/files/cron-ealarms-notify.sample
-sed 's/^X//' >sogo/files/cron-ealarms-notify.sample << 'b524c81b01f549cfc602fef62956eaa2'
-X#!/bin/sh
+5a25d74f07bc1f33af0e23cac2d305da
+echo x - sogo/files/patch-SoObjects_SOGo_instance-framework.make
+sed 's/^X//' >sogo/files/patch-SoObjects_SOGo_instance-framework.make << '800f321033fe3ce994d051ff32ad797a'
+X--- SoObjects/SOGo/instance-framework.make.orig	2015-09-23 03:39:02 UTC
+X+++ SoObjects/SOGo/instance-framework.make
+X@@ -0,0 +1,821 @@
+X+#   -*-makefile-*-
+X+#   Instance/framework.make
+X+#
+X+#   Instance Makefile rules to build GNUstep-based frameworks.
+X+#
+X+#   Copyright (C) 2000, 2001, 2002, 2003, 2004, 2010 Free Software Foundation, Inc.
+X+#
+X+#   Author: Mirko Viviani <mirko.viviani@rccr.cremona.it>
+X+#   Author: Nicola Pero <nicola.pero@meta-innovation.com>
+X+#
+X+#   This file is part of the GNUstep Makefile Package.
+X+#
+X+#   This library is free software; you can redistribute it and/or
+X+#   modify it under the terms of the GNU General Public License
+X+#   as published by the Free Software Foundation; either version 3
+X+#   of the License, or (at your option) any later version.
+X+#   
+X+#   You should have received a copy of the GNU General Public
+X+#   License along with this library; see the file COPYING.
+X+#   If not, write to the Free Software Foundation,
+X+#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+X+
+X+# Frameworks usually link against a gui library (if available).  If
+X+# you don't need a gui library, use xxx_NEEDS_GUI = no.
+X+ifeq ($(NEEDS_GUI),)
+X+  NEEDS_GUI = yes
+X+endif
+X+
+X+ifeq ($(RULES_MAKE_LOADED),)
+X+include $(GNUSTEP_MAKEFILES)/rules.make
+X+endif
+X+
+X+.PHONY: internal-framework-all_ \
+X+        build-framework \
+X+        internal-framework-build-headers \
+X+        build-framework-dirs \
+X+        internal-framework-install_ \
+X+        internal-framework-distclean \
+X+        internal-framework-clean \
+X+        internal-framework-uninstall_ \
+X+        internal-framework-run-compile-submake \
+X+        internal-framework-compile
+X+
+X+# The name of the framework is in the FRAMEWORK_NAME variable.
+X+# The list of framework resource files are in xxx_RESOURCE_FILES
+X+# The list of framework web server resource files are in
+X+#    xxx_WEBSERVER_RESOURCE_FILES
+X+# The list of localized framework resource files is in
+X+#    xxx_LOCALIZED_RESOURCE_FILES
+X+# The list of localized framework web server resource files is in
+X+#    xxx_WEBSERVER_LOCALIZED_RESOURCE_FILES
+X+# The list of framework GSWeb components are in xxx_COMPONENTS
+X+# The list of languages the framework supports is in xxx_LANGUAGES
+X+# The list of framework resource directories are in xxx_RESOURCE_DIRS
+X+# The list of framework subprojects directories are in xxx_SUBPROJECTS
+X+# The name of the principal class is xxx_PRINCIPAL_CLASS
+X+# The header files are in xxx_HEADER_FILES
+X+# The directory where the header files are located is xxx_HEADER_FILES_DIR
+X+#   (defaults to ./)
+X+# The directory where to install the header files inside the library
+X+#   installation directory is xxx_HEADER_FILES_INSTALL_DIR
+X+#   (defaults to the framework name [without .framework]).  Can't be `.'
+X+# The list of framework web server resource directories are in
+X+#    xxx_WEBSERVER_RESOURCE_DIRS
+X+# The list of localized framework web server GSWeb components are in
+X+#    xxx_WEBSERVER_LOCALIZED_RESOURCE_DIRS
+X+# xxx_CURRENT_VERSION_NAME is the compiled version name (default "0")
+X+# xxx_MAKE_CURRENT_VERSION is used to decide if the framework version
+X+#   we compiling should be made the current/default version or not
+X+#   (default is "yes")
+X+#
+X+# where xxx is the framework name
+X+#
+X+#
+X+# The HEADER_FILES_INSTALL_DIR might look somewhat weird - because in
+X+# most if not all cases, you want it to be the framework name.  At the
+X+# moment, it allows you to put headers for framework XXX in directory
+X+# YYY, so that you can refer to them by using #include
+X+# <YYY/MyHeader.h> rather than #include <XXX/MyHeader.h>.  It seems to
+X+# be mostly used to have a framework with name XXX work as a drop-in
+X+# replacement for another framework, which has name YYY -- and which
+X+# might be installed at the same time :-).
+X+#
+X+# If you want to insert your own entries into Info.plist (or
+X+# Info-gnustep.plist) you should create a xxxInfo.plist file (where
+X+# xxx is the framework name) and gnustep-make will automatically
+X+# read it and merge it into Info-gnustep.plist.
+X+#
+X+
+X+# Set VERSION from xxx_VERSION
+X+ifneq ($($(GNUSTEP_INSTANCE)_VERSION),)
+X+  VERSION = $($(GNUSTEP_INSTANCE)_VERSION)
+X+endif
+X+
+X+ifeq ($(VERSION),)
+X+  VERSION = 0.0.1
+X+endif
+X+
+X+# By setting xxx_INTERFACE_VERSION you can change the soversion used
+X+# when linking the library.  See comments in library.make for the
+X+# variables with the same name for libraries.
+X+ifeq ($($(GNUSTEP_INSTANCE)_INTERFACE_VERSION),)
+X+  # By default, if VERSION is 1.0.0, INTERFACE_VERSION is 1
+X+  INTERFACE_VERSION = $(word 1,$(subst ., ,$(VERSION)))
+X+else
+X+  INTERFACE_VERSION = $($(GNUSTEP_INSTANCE)_INTERFACE_VERSION)
+X+endif
+X+
+X+# CURRENT_VERSION_NAME is the name of the version as used when
+X+# building the library structure.  We recommend just using
+X+# INTERFACE_VERSION for that, so your resources and your shared
+X+# library have the same versioning.
+X+
+X+# Warning - the following variable is also used in Master/rules.make
+X+# to build the OWNING_PROJECT_HEADER_DIR for the framework's
+X+# subprojects.  Make sure you keep them in sync if you change them.
+X+CURRENT_VERSION_NAME = $($(GNUSTEP_INSTANCE)_CURRENT_VERSION_NAME)
+X+ifeq ($(CURRENT_VERSION_NAME),)
+X+  CURRENT_VERSION_NAME = $(INTERFACE_VERSION)
+X+endif
+X+
+X+# xxx_MAKE_CURRENT_VERSION can be set to 'no' if you do not want the
+X+# framework version that we are building from becoming the Current
+X+# one.
+X+ifneq ($($(GNUSTEP_INSTANCE)_MAKE_CURRENT_VERSION),)
+X+  MAKE_CURRENT_VERSION = $($(GNUSTEP_INSTANCE)_MAKE_CURRENT_VERSION)
+X+endif
+X+
+X+ifeq ($(MAKE_CURRENT_VERSION),)
+X+  MAKE_CURRENT_VERSION = yes
+X+endif
+X+
+X+# If there are no working symlinks, common.make sets
+X+# FRAMEWORK_VERSION_SUPPORT to no, which unconditionally turn
+X+# versioning off.  This means that we create no symlinks inside the
+X+# xxx.framework directory for the various versions; that everything is
+X+# put top-level as in the case of bundles.  So with
+X+# FRAMEWORK_VERSION_SUPPORT = no, the Directory structure is:
+X+#
+X+# xxx.framework/libframework.dll.a
+X+# xxx.framework/framework.dll
+X+# xxx.framework/Resources
+X+# xxx.framework/Headers
+X+#
+X+# The Headers, libframework.dll.a and framework.dll are then copied into
+X+# the standard header/library locations so that they can be found by
+X+# compiler/linker.  Given that there are no symlinks, there is no other
+X+# way of doing this.
+X+ifeq ($(FRAMEWORK_VERSION_SUPPORT),no)
+X+  MAKE_CURRENT_VERSION = no
+X+endif
+X+
+X+# This is used on Apple to build frameworks which can be embedded into
+X+# applications.  You usually set it to something like
+X+# @executable_path/../Frameworks and then you can embed the framework
+X+# in an application.
+X+DYLIB_INSTALL_NAME_BASE = $($(GNUSTEP_INSTANCE)_DYLIB_INSTALL_NAME_BASE)
+X+
+X+FRAMEWORK_DIR_NAME = $(GNUSTEP_INSTANCE).framework
+X+FRAMEWORK_DIR = $(GNUSTEP_BUILD_DIR)/$(FRAMEWORK_DIR_NAME)
+X+
+X+ifeq ($(FRAMEWORK_VERSION_SUPPORT), yes)
+X+  FRAMEWORK_VERSION_DIR_NAME = $(FRAMEWORK_DIR_NAME)/Versions/$(CURRENT_VERSION_NAME)
+X+else
+X+  FRAMEWORK_VERSION_DIR_NAME = $(FRAMEWORK_DIR_NAME)
+X+endif
+X+
+X+FRAMEWORK_VERSION_DIR = $(GNUSTEP_BUILD_DIR)/$(FRAMEWORK_VERSION_DIR_NAME)
+X+
+X+# This is not doing much at the moment, it is only defining
+X+# HEADER_FILES, HEADER_SUBDIRS, HEADER_FILES_DIR and
+X+# HEADER_FILES_INSTALL_DIR in the standard way.  Please note that
+X+# HEADER_FILES might be empty even if we have headers in subprojects
+X+# that we need to manage and install.  So we assume by default that we
+X+# have some headers even if HEADER_FILES is empty.
+X+include $(GNUSTEP_MAKEFILES)/Instance/Shared/headers.make
+X+
+X+# On windows, this is unfortunately required.
+X+ifeq ($(BUILD_DLL), yes)
+X+  LINK_AGAINST_ALL_LIBS = yes
+X+endif
+X+
+X+ifeq ($(LINK_AGAINST_ALL_LIBS), yes)
+X+  # Link against all libs ... but not the one we're compiling! (not sure
+X+  # when this could happen with frameworks, anyway it makes sense)
+X+  LIBRARIES_DEPEND_UPON += $(filter-out -l$(GNUSTEP_INSTANCE), $(ALL_LIBS))
+X+endif
+X+
+X+INTERNAL_LIBRARIES_DEPEND_UPON =				\
+X+   $(ALL_LIB_DIRS)						\
+X+   $(LIBRARIES_DEPEND_UPON)
+X+
+X+ifeq ($(FOUNDATION_LIB),gnu)
+X+
+X+  # On GNUstep, build our dummy class to store information which
+X+  # gnustep-base can find at run time.
+X+
+X+  # An ObjC class name can not contain '-', but some people '-' this
+X+  # in framework names.  So we need to encode the '-' in some way
+X+  # into an ObjC class name. (since we're there, we also encode '+'
+X+  # even if that's not really common).
+X+
+X+  # What we do is, we use '_' as an escape character, and encode (in the 
+X+  # order) as follows:
+X+  #
+X+  #  '_' is converted to '__'
+X+  #  '-' is converted to '_0'
+X+  #  '+' is converted to '_1'
+X+  #
+X+
+X+  # For example, 'Renaissance-Experimental' becomes 
+X+  # 'Renaissance_0Experimental'.
+X+
+X+  # GNUstep-base will convert the name back by applying the reverse rules 
+X+  # in the reverse order.
+X+
+X+  DUMMY_FRAMEWORK = NSFramework_$(subst +,_1,$(subst -,_0,$(subst _,__,$(GNUSTEP_INSTANCE))))
+X+  DUMMY_FRAMEWORK_FILE = $(DERIVED_SOURCES_DIR)/$(DUMMY_FRAMEWORK).m
+X+  DUMMY_FRAMEWORK_OBJ_FILE = $(addprefix $(GNUSTEP_OBJ_INSTANCE_DIR)/,$(DUMMY_FRAMEWORK).o)
+X+
+X+  # The following file will hold the list of classes compiled into the
+X+  # framework, ready to be included in the .plist file.  We include the
+X+  # list of classes twice, in the object file itself (for when the
+X+  # framework is loaded) and in the .plist (for tools which let you
+X+  # browse in frameworks on disk and see lists of classes).  Please note
+X+  # that reading the class list from the .plist requires gnustep-base to
+X+  # have properly located the framework bundle on disk, while reading
+X+  # the list from the object file itself does not (and so it's more
+X+  # likely to work in a portable way), which is why we still save the
+X+  # list in the object file rather than only putting it in the .plist.
+X+  # Maybe this point should be discarded, and we should only store the class
+X+  # list in the .plist file.
+X+  DUMMY_FRAMEWORK_CLASS_LIST = $(DERIVED_SOURCES_DIR)/$(GNUSTEP_INSTANCE)-class-list
+X+endif
+X+
+X+FRAMEWORK_HEADER_FILES = $(addprefix $(FRAMEWORK_VERSION_DIR)/Headers/,$(HEADER_FILES))
+X+FRAMEWORK_HEADER_SUBDIRS = $(addprefix $(FRAMEWORK_VERSION_DIR)/Headers/,$(HEADER_SUBDIRS))
+X+
+X+# FIXME - do we really those variables too ?
+X+ifeq ($(FRAMEWORK_VERSION_SUPPORT), yes)
+X+  FRAMEWORK_CURRENT_DIR_NAME = $(FRAMEWORK_DIR_NAME)/Versions/Current
+X+else
+X+  FRAMEWORK_CURRENT_DIR_NAME = $(FRAMEWORK_DIR_NAME)
+X+endif
+X+
+X+FRAMEWORK_CURRENT_DIR = $(GNUSTEP_BUILD_DIR)/$(FRAMEWORK_CURRENT_DIR_NAME)
+X+FRAMEWORK_LIBRARY_DIR_NAME = $(FRAMEWORK_VERSION_DIR_NAME)/$(GNUSTEP_TARGET_LDIR)
+X+FRAMEWORK_LIBRARY_DIR = $(GNUSTEP_BUILD_DIR)/$(FRAMEWORK_LIBRARY_DIR_NAME)
+X+FRAMEWORK_CURRENT_LIBRARY_DIR_NAME = $(FRAMEWORK_CURRENT_DIR_NAME)/$(GNUSTEP_TARGET_LDIR)
+X+FRAMEWORK_CURRENT_LIBRARY_DIR = $(GNUSTEP_BUILD_DIR)/$(FRAMEWORK_CURRENT_LIBRARY_DIR_NAME)
+X+
+X+ifneq ($(BUILD_DLL), yes)
+X+
+X+FRAMEWORK_LIBRARY_FILE = lib$(GNUSTEP_INSTANCE)$(SHARED_LIBEXT)
+X+ifeq ($(findstring darwin, $(GNUSTEP_TARGET_OS)), darwin)
+X+# On Mac OS X the version number conventionally precedes the shared
+X+# library suffix, e.g., libgnustep-base.1.16.1.dylib.
+X+VERSION_FRAMEWORK_LIBRARY_FILE = lib$(GNUSTEP_INSTANCE).$(VERSION)$(SHARED_LIBEXT)
+X+SONAME_FRAMEWORK_FILE = lib$(GNUSTEP_INSTANCE).$(INTERFACE_VERSION)$(SHARED_LIBEXT)
+X+else
+X+VERSION_FRAMEWORK_LIBRARY_FILE = $(FRAMEWORK_LIBRARY_FILE).$(VERSION)
+X+SONAME_FRAMEWORK_FILE = $(FRAMEWORK_LIBRARY_FILE).$(INTERFACE_VERSION)
+X+endif
+X+
+X+else # BUILD_DLL
+X+
+X+# When you build a DLL, you have to install it in a directory which is
+X+# in your PATH.
+X+ifeq ($(DLL_INSTALLATION_DIR),)
+X+  DLL_INSTALLATION_DIR = $(GNUSTEP_TOOLS)/$(GNUSTEP_TARGET_LDIR)
+X+endif
+X+
+X+# When we build a DLL, we also pass -DBUILD_lib{library_name}_DLL=1 to
+X+# the preprocessor.  With the new DLL support, this is usually not
+X+# needed; but in some cases some symbols are difficult and have to be
+X+# exported/imported manually.  For these cases, the library header
+X+# files can use this preprocessor define to know that they are
+X+# included during compilation of the library itself, or are being
+X+# imported by external code.  Typically with the new DLL support if a
+X+# symbol can't be imported you have to mark it with
+X+# __declspec(dllimport) when the library is not being compiled.
+X+# __declspec(dllexport) is not particularly useful instead.
+X+
+X+CLEAN_framework_NAME = $(subst -,_,$(GNUSTEP_INSTANCE))
+X+SHARED_CFLAGS += -DBUILD_$(CLEAN_framework_NAME)_DLL=1
+X+
+X+# FRAMEWORK_LIBRARY_FILE is the import library, libRenaissance.dll.a
+X+FRAMEWORK_LIBRARY_FILE         = lib$(GNUSTEP_INSTANCE)$(DLL_LIBEXT)$(LIBEXT)
+X+VERSION_FRAMEWORK_LIBRARY_FILE = $(FRAMEWORK_LIBRARY_FILE)
+X+SONAME_FRAMEWORK_FILE  = $(FRAMEWORK_LIBRARY_FILE)
+X+
+X+# LIB_LINK_DLL_FILE is the DLL library, Renaissance-0.dll
+X+# (cygRenaissance-0.dll on Cygwin).  Include the INTERFACE_VERSION in
+X+# the DLL library name.  Applications are linked explicitly to this
+X+# INTERFACE_VERSION of the library; this works exactly in the same way
+X+# as under Unix.
+X+LIB_LINK_DLL_FILE    = $(DLL_PREFIX)$(GNUSTEP_INSTANCE)-$(subst .,_,$(INTERFACE_VERSION))$(DLL_LIBEXT)
+X+
+X+FRAMEWORK_OBJ_EXT = $(DLL_LIBEXT)
+X+endif # BUILD_DLL
+X+
+X+FRAMEWORK_FILE_NAME = $(FRAMEWORK_LIBRARY_DIR_NAME)/$(VERSION_FRAMEWORK_LIBRARY_FILE)
+X+FRAMEWORK_FILE = $(GNUSTEP_BUILD_DIR)/$(FRAMEWORK_FILE_NAME)
+X+
+X+ifneq ($($(GNUSTEP_INSTANCE)_INSTALL_DIR),)
+X+  FRAMEWORK_INSTALL_DIR = $($(GNUSTEP_INSTANCE)_INSTALL_DIR)
+X+endif
+X+
+X+ifeq ($(FRAMEWORK_INSTALL_DIR),)
+X+  FRAMEWORK_INSTALL_DIR = $(GNUSTEP_FRAMEWORKS)
+X+endif
+X+
+X+#
+X+# Now prepare the variables which are used by target-dependent commands
+X+# defined in target.make
+X+#
+X+LIB_LINK_OBJ_DIR = $(FRAMEWORK_LIBRARY_DIR)
+X+LIB_LINK_VERSION_FILE = $(VERSION_FRAMEWORK_LIBRARY_FILE)
+X+LIB_LINK_SONAME_FILE = $(SONAME_FRAMEWORK_FILE)
+X+LIB_LINK_FILE = $(FRAMEWORK_LIBRARY_FILE)
+X+LIB_LINK_INSTALL_DIR = $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_LIBRARY_DIR_NAME)
+X+
+X+ifneq ($(DYLIB_INSTALL_NAME_BASE),)
+X+  LIB_LINK_INSTALL_NAME = $(DYLIB_INSTALL_NAME_BASE)/$(FRAMEWORK_FILE_NAME)
+X+else
+X+  # Use a relative path for easy relocation.
+X+  LIB_LINK_INSTALL_NAME = $(GNUSTEP_INSTANCE).framework/$(GNUSTEP_INSTANCE)
+X+
+X+  # On Mac OS X, set absolute install_name if requested
+X+  ifeq ($(findstring darwin, $(GNUSTEP_TARGET_OS)), darwin)
+X+    ifeq ($(GNUSTEP_ABSOLUTE_INSTALL_PATHS), yes)
+X+      LIB_LINK_INSTALL_NAME = $(LIB_LINK_INSTALL_DIR)/$(GNUSTEP_INSTANCE)
+X+    endif
+X+  endif
+X+endif
+X+
+X+
+X+GNUSTEP_SHARED_BUNDLE_RESOURCE_PATH = $(FRAMEWORK_VERSION_DIR)/Resources
+X+include $(GNUSTEP_MAKEFILES)/Instance/Shared/bundle.make
+X+
+X+internal-framework-all_:: $(GNUSTEP_OBJ_INSTANCE_DIR) $(OBJ_DIRS_TO_CREATE) \
+X+                          build-framework
+X+# If they specified Info-gnustep.plist in the xxx_RESOURCE_FILES,
+X+# print a warning. They are supposed to provide a xxxInfo.plist which
+X+# gets merged with the automatically generated entries to generate
+X+# Info-gnustep.plist.
+X+ifneq ($(FOUNDATION_LIB), apple)
+X+  ifneq ($(filter Info-gnustep.plist,$($(GNUSTEP_INSTANCE)_RESOURCE_FILES)),)
+X+	$(WARNING_INFO_GNUSTEP_PLIST)
+X+  endif
+X+else
+X+  ifneq ($(filter Info.plist,$($(GNUSTEP_INSTANCE)_RESOURCE_FILES)),)
+X+	$(WARNING_INFO_PLIST)
+X+  endif
+X+endif
+X+
+X+internal-framework-build-headers:: $(FRAMEWORK_VERSION_DIR)/Headers \
+X+                                   $(FRAMEWORK_HEADER_SUBDIRS) \
+X+                                   $(FRAMEWORK_HEADER_FILES) \
+X+                                   build-framework-dirs
+X+
+X+ifeq ($(MAKE_CURRENT_VERSION),yes)
+X+
+X+# A target to build/reset the Current symlink to point to the newly
+X+# compiled framework.  Only executed if MAKE_CURRENT_VERSION is yes,
+X+# and only executed if the symlink doesn't exist yet, or if
+X+# FRAMEWORK_VERSION_DIR is newer than the symlink.  This is to avoid
+X+# rebuilding the symlink every single time, which is a waste of time.
+X+UPDATE_CURRENT_SYMLINK_RULE = $(FRAMEWORK_DIR)/Versions/Current
+X+$(FRAMEWORK_DIR)/Versions/Current: $(FRAMEWORK_VERSION_DIR)
+X+	$(ECHO_UPDATING_VERSION_SYMLINK)cd $(FRAMEWORK_DIR)/Versions; \
+X+	$(RM_LN_S) Current; \
+X+	$(LN_S) $(CURRENT_VERSION_NAME) Current$(END_ECHO)
+X+
+X+else
+X+UPDATE_CURRENT_SYMLINK_RULE = 
+X+endif
+X+
+X+# FIXME/TODO - the following rule is always executed.  This is stupid.
+X+# We should have some decent dependencies so that it's not executed if
+X+# there is nothing to build. :-)
+X+
+X+# Please note that test -h must be used instead of test -L because on
+X+# old Sun Solaris, test -h works but test -L does not.
+X+build-framework-dirs: $(DERIVED_SOURCES_DIR) \
+X+                      $(FRAMEWORK_LIBRARY_DIR) \
+X+                      $(FRAMEWORK_VERSION_DIR)/Resources \
+X+                      $(FRAMEWORK_RESOURCE_DIRS) \
+X+                      $(UPDATE_CURRENT_SYMLINK_RULE)
+X+ifeq ($(FRAMEWORK_VERSION_SUPPORT), yes)
+X+	$(ECHO_NOTHING)cd $(FRAMEWORK_DIR); \
+X+	  if [ ! -h "Resources" ]; then \
+X+	    $(RM_LN_S) Resources; \
+X+	    $(LN_S_RECURSIVE) Versions/Current/Resources Resources; \
+X+	  fi; \
+X+	  if [ ! -h "Headers" ]; then \
+X+	    $(RM_LN_S) Headers; \
+X+	    $(LN_S_RECURSIVE) Versions/Current/Headers Headers; \
+X+	  fi$(END_ECHO)
+X+endif
+X+	$(ECHO_NOTHING)cd $(DERIVED_SOURCES_DIR); \
+X+	  if [ ! -h "$(HEADER_FILES_INSTALL_DIR)" ]; then \
+X+	    $(RM_LN_S) ./$(HEADER_FILES_INSTALL_DIR); \
+X+	    $(LN_S_RECURSIVE) ../$(FRAMEWORK_DIR_NAME)/Headers \
+X+                    ./$(HEADER_FILES_INSTALL_DIR); \
+X+	  fi$(END_ECHO)
+X+
+X+$(FRAMEWORK_LIBRARY_DIR):
+X+	$(ECHO_CREATING)$(MKDIRS) $@$(END_ECHO)
+X+
+X+$(FRAMEWORK_VERSION_DIR)/Headers:
+X+	$(ECHO_CREATING)$(MKDIRS) $@$(END_ECHO)
+X+
+X+$(FRAMEWORK_HEADER_SUBDIRS):
+X+	$(ECHO_CREATING)$(MKDIRS) $@$(END_ECHO)
+X+
+X+$(DERIVED_SOURCES_DIR): $(DERIVED_SOURCES_DIR)/.stamp
+X+$(DERIVED_SOURCES_DIR)/.stamp:
+X+	$(ECHO_CREATING)$(MKDIRS) $(DERIVED_SOURCES_DIR); \
+X+	touch $@$(END_ECHO)
+X+
+X+# Need to share this code with the headers code ... but how.
+X+
+X+# IMPORTANT: It is tempting to have a file (a header, in this case)
+X+# depend on the directory in which we want to create it (the
+X+# .../Headers/ directory in this case).  The idea being that make
+X+# would automatically create the directory before the file.  That
+X+# might work for a single file, but could trigger spurious rebuilds if
+X+# you have more than one file in the directory.  The first file will
+X+# create the directory, then create the file.  The second file will be
+X+# created inside the directory; but on some filesystems, creating the
+X+# file inside the directory then updates the 'last modified' timestamp
+X+# of the directory.  So next time you run make, the directory is
+X+# 'newer' than the first file, and because the first file depends on
+X+# the directory, make will determine that it needs to be updated,
+X+# triggering a spurious recreation of the file.  If you also have
+X+# auto-dependencies turned on, this might in turn cause recompilation
+X+# and further spurious rebuilding to happen.
+X+$(FRAMEWORK_VERSION_DIR)/Headers/%.h: $(HEADER_FILES_DIR)/%.h
+X+	$(ECHO_CREATING)$(INSTALL_DATA) $< $@$(END_ECHO)
+X+
+X+OBJC_OBJ_FILES_TO_INSPECT = $(OBJC_OBJ_FILES) $(SUBPROJECT_OBJ_FILES)
+X+
+X+# FIXME - We should not depend on GNUmakefile - rather we should use
+X+# Instance/Shared/stamp-string.make if we need to depend on the value
+X+# of some make variables.  That would also detect a change in
+X+# FRAMEWORK_INSTALL_DIR from the command line, not currently covered
+X+# at the moment!
+X+#
+X+# To get the list of all classes, we use
+X+# $(EXTRACT_CLASS_NAMES_COMMAND), which is defined in target.make
+X+#
+X+#
+X+# The following rule will also build the DUMMY_FRAMEWORK_CLASS_LIST
+X+# file.  This file is always created/deleted at the same time as the
+X+# DUMMY_FRAMEWORK_FILE.
+X+$(DUMMY_FRAMEWORK_FILE): $(DERIVED_SOURCES_DIR)/.stamp $(OBJ_FILES_TO_LINK) GNUmakefile
+X+	$(ECHO_CREATING) classes=""; \
+X+	for object_file in $(OBJC_OBJ_FILES_TO_INSPECT) __dummy__; do \
+X+	  if [ "$$object_file" != "__dummy__" ]; then \
+X+	    sym=`$(EXTRACT_CLASS_NAMES_COMMAND)`; \
+X+	    classes="$$classes $$sym"; \
+X+	  fi; \
+X+	done; \
+X+	classlist=""; \
+X+	classarray=""; \
+X+	for f in $$classes __dummy__ ; do \
+X+	  if [ "$$f" != "__dummy__" ]; then \
+X+	    if [ "$$classlist" = "" ]; then \
+X+	      classlist="@\"$$f\""; \
+X+	      classarray="(\"$$f\""; \
+X+	    else \
+X+	      classlist="$$classlist, @\"$$f\""; \
+X+	      classarray="$$classarray, \"$$f\""; \
+X+	    fi; \
+X+	  fi; \
+X+	done; \
+X+	if [ "$$classlist" = "" ]; then \
+X+	  classlist="NULL"; \
+X+	  classarray="()"; \
+X+	else \
+X+	  classlist="$$classlist, NULL"; \
+X+	  classarray="$$classarray)"; \
+X+	fi; \
+X+	echo "$$classarray" > $(DUMMY_FRAMEWORK_CLASS_LIST); \
+X+	echo "#include <Foundation/NSObject.h>" > $@; \
+X+	echo "#include <Foundation/NSString.h>" > $@; \
+X+	echo "@interface $(DUMMY_FRAMEWORK) : NSObject" >> $@; \
+X+	echo "+ (NSString *)frameworkEnv;" >> $@; \
+X+	echo "+ (NSString *)frameworkPath;" >> $@; \
+X+	echo "+ (NSString *)frameworkVersion;" >> $@; \
+X+	echo "+ (NSString *const*)frameworkClasses;" >> $@; \
+X+	echo "@end" >> $@; \
+X+	echo "@implementation $(DUMMY_FRAMEWORK)" >> $@; \
+X+	echo "+ (NSString *)frameworkEnv { return nil; }" >> $@; \
+X+	echo "+ (NSString *)frameworkPath { return @\"/usr/local/GNUstep/Local/Library/Frameworks\"; }" >> $@; \
+X+	echo "+ (NSString *)frameworkVersion { return @\"$(CURRENT_VERSION_NAME)\"; }" >> $@; \
+X+	echo "static NSString *allClasses[] = {$$classlist};" >> $@; \
+X+	echo "+ (NSString *const*)frameworkClasses { return allClasses; }" >> $@;\
+X+	echo "@end" >> $@$(END_ECHO)
+X+
+X+ifeq ($(FOUNDATION_LIB),gnu)
+X+$(DUMMY_FRAMEWORK_OBJ_FILE): $(DUMMY_FRAMEWORK_FILE)
+X+	$(ECHO_COMPILING)$(CC) $< -c $(ALL_CPPFLAGS) $(ALL_OBJCFLAGS) -o $@$(END_ECHO)
+X+endif
+X+
+X+ifeq ($(FOUNDATION_LIB),gnu)
+X+  FRAMEWORK_INFO_PLIST_FILE = Info-gnustep.plist
+X+else
+X+  FRAMEWORK_INFO_PLIST_FILE = Info.plist
+X+endif
+X+
+X+ifeq ($(FRAMEWORK_VERSION_SUPPORT), yes)
+X+build-framework: internal-framework-run-compile-submake \
+X+                 shared-instance-bundle-all \
+X+                 $(FRAMEWORK_VERSION_DIR)/Resources/$(FRAMEWORK_INFO_PLIST_FILE) \
+X+                 $(GNUSTEP_BUILD_DIR)/$(GNUSTEP_INSTANCE).framework/$(GNUSTEP_TARGET_LDIR)/$(GNUSTEP_INSTANCE)
+X+else
+X+build-framework: internal-framework-run-compile-submake \
+X+                 shared-instance-bundle-all \
+X+                 $(FRAMEWORK_VERSION_DIR)/Resources/$(FRAMEWORK_INFO_PLIST_FILE)
+X+endif
+X+
+X+ifeq ($(findstring darwin, $(GNUSTEP_TARGET_OS)), darwin)
+X+# When building native frameworks on Apple, we need to create a
+X+# top-level symlink xxx.framework/xxx ---> the framework shared
+X+# library. On Darwin (non-Apple) we do this as well since we can partially
+X+# emulate frameworks (see the ld_lib_path.sh comments on this).
+X+
+X+# Please note that the following keeps the top-level symlink pointing
+X+# to the framework in Current.  This is always correct, even if what
+X+# we are compiling is not made the Current framework version, but if
+X+# what we are compiling is not made the Current framework version, I
+X+# think it's not our business to touch the Current stuff, so let's
+X+# ignore it.  It's faster to ignore it anyway. ;-)
+X+$(GNUSTEP_BUILD_DIR)/$(GNUSTEP_INSTANCE).framework/$(GNUSTEP_TARGET_LDIR):
+X+	$(ECHO_CREATING)$(MKDIRS) $@$(END_ECHO)
+X+
+X+$(GNUSTEP_BUILD_DIR)/$(GNUSTEP_INSTANCE).framework/$(GNUSTEP_TARGET_LDIR)/$(GNUSTEP_INSTANCE): $(GNUSTEP_BUILD_DIR)/$(GNUSTEP_INSTANCE).framework/$(GNUSTEP_TARGET_LDIR)
+X+ifeq ($(MAKE_CURRENT_VERSION),yes)
+X+	$(ECHO_NOTHING)cd $(GNUSTEP_BUILD_DIR)/$(GNUSTEP_INSTANCE).framework; \
+X+	$(RM_LN_S) $(GNUSTEP_INSTANCE); \
+X+	$(LN_S) Versions/Current/$(GNUSTEP_TARGET_LDIR)/$(GNUSTEP_INSTANCE) $(GNUSTEP_INSTANCE)$(END_ECHO)
+X+endif
+X+
+X+else
+X+
+X+# We create a top-level symlink (/copy)
+X+#
+X+# xxx.framework/{TARGET_LDIR}/xxx --> <the Current framework {TARGET_LDIR}/object file>
+X+#
+X+# And also
+X+#
+X+# xxx.framework/{TARGET_LDIR}/libxxx.so --> <the Current framework {TARGET_LDIR}/libxxx.so file>
+X+#
+X+# On Windows, we don't do any of this since there are no versions anyway.
+X+#
+X+# The reason for doing this is that you can link against the uninstalled framework
+X+# by just using -Lpath_to_the_framework/xxx.framework/$TARGET_LDIR
+X+#
+X+ifeq ($(FRAMEWORK_VERSION_SUPPORT), yes)
+X+$(GNUSTEP_BUILD_DIR)/$(GNUSTEP_INSTANCE).framework/$(GNUSTEP_TARGET_LDIR):
+X+	$(ECHO_CREATING)$(MKDIRS) $@$(END_ECHO)
+X+
+X+$(GNUSTEP_BUILD_DIR)/$(GNUSTEP_INSTANCE).framework/$(GNUSTEP_TARGET_LDIR)/$(GNUSTEP_INSTANCE): $(GNUSTEP_BUILD_DIR)/$(GNUSTEP_INSTANCE).framework/$(GNUSTEP_TARGET_LDIR)
+X+ifeq ($(MAKE_CURRENT_VERSION),yes)
+X+	$(ECHO_NOTHING)cd $(GNUSTEP_BUILD_DIR)/$(GNUSTEP_INSTANCE).framework/$(GNUSTEP_TARGET_LDIR); \
+X+	$(RM_LN_S) $(GNUSTEP_INSTANCE) $(FRAMEWORK_LIBRARY_FILE); \
+X+	$(LN_S) `$(REL_PATH_SCRIPT) $(GNUSTEP_TARGET_LDIR) \
+X+	                            Versions/Current/$(GNUSTEP_TARGET_LDIR)/$(GNUSTEP_INSTANCE) short` \
+X+	        $(GNUSTEP_INSTANCE); \
+X+	$(LN_S) `$(REL_PATH_SCRIPT) $(GNUSTEP_TARGET_LDIR) \
+X+	                            Versions/Current/$(GNUSTEP_TARGET_LDIR)/$(FRAMEWORK_LIBRARY_FILE) short` \
+X+	        $(FRAMEWORK_LIBRARY_FILE)$(END_ECHO)
+X+endif
+X+endif
+X+endif
+X+
+X+ifneq ($(BUILD_DLL), yes)
+X+  LIB_LINK_FRAMEWORK_FILE = $(LIB_LINK_FILE)
+X+else
+X+  LIB_LINK_FRAMEWORK_FILE = $(LIB_LINK_DLL_FILE)
+X+endif
+X+
+X+LIB_LINK_FILES_TO_LINK = $(OBJ_FILES_TO_LINK)
+X+
+X+# Important: FRAMEWORK_FILE (which is created in the parallel
+X+# 'compile' invocation) depends on DUMMY_FRAMEWORK_OBJ_FILES as well,
+X+# which depends on a lot of other rules.  These rules *must* be safe
+X+# for parallel building, because they will be used during a parallel
+X+# build.  In particular, note that DUMMY_FRAMEWORK_OBJ_FILE must
+X+# itself depend on OBJ_FILES_TO_LINK else it might be built before all
+X+# files are compiled.
+X+$(FRAMEWORK_FILE): $(DUMMY_FRAMEWORK_OBJ_FILE) $(OBJ_FILES_TO_LINK)
+X+ifeq ($(OBJ_FILES_TO_LINK),)
+X+	$(WARNING_EMPTY_LINKING)
+X+endif
+X+	$(ECHO_LINKING) \
+X+	$(LIB_LINK_CMD) || $(RM) $(FRAMEWORK_FILE) ; \
+X+	(cd $(LIB_LINK_OBJ_DIR); \
+X+	  $(RM_LN_S) $(GNUSTEP_INSTANCE); \
+X+	  $(LN_S) $(LIB_LINK_FRAMEWORK_FILE) $(GNUSTEP_INSTANCE)) \
+X+	$(END_ECHO)
+X+
+X+ifeq ($(GNUSTEP_MAKE_PARALLEL_BUILDING), no)
+X+# Standard building
+X+internal-framework-run-compile-submake: $(FRAMEWORK_FILE)
+X+else
+X+# Parallel building.  The actual compilation is delegated to a
+X+# sub-make invocation where _GNUSTEP_MAKE_PARALLEL is set to yet.
+X+# That sub-make invocation will compile files in parallel.
+X+internal-framework-run-compile-submake:
+X+	$(ECHO_NOTHING_RECURSIVE_MAKE)$(MAKE) -f $(MAKEFILE_NAME) --no-print-directory --no-keep-going \
+X+	internal-framework-compile \
+X+	GNUSTEP_TYPE=$(GNUSTEP_TYPE) \
+X+	GNUSTEP_INSTANCE=$(GNUSTEP_INSTANCE) \
+X+	GNUSTEP_OPERATION=compile \
+X+	GNUSTEP_BUILD_DIR="$(GNUSTEP_BUILD_DIR)" \
+X+	_GNUSTEP_MAKE_PARALLEL=yes$(END_ECHO_RECURSIVE_MAKE)
+X+
+X+internal-framework-compile: $(FRAMEWORK_FILE)
+X+endif
+X+
+X+PRINCIPAL_CLASS = $(strip $($(GNUSTEP_INSTANCE)_PRINCIPAL_CLASS))
+X+
+X+ifeq ($(PRINCIPAL_CLASS),)
+X+  PRINCIPAL_CLASS = $(GNUSTEP_INSTANCE)
+X+endif
+X+
+X+MAIN_MODEL_FILE = $(strip $(subst .gmodel,,$(subst .gorm,,$(subst .nib,,$($(GNUSTEP_INSTANCE)_MAIN_MODEL_FILE)))))
+X+
+X+# FIXME: Use stamp.make to depend on the value of MAIN_MODEL_FILE and PRINCIPAL_CLASS
+X+
+X+# FIXME: MacOSX frameworks should also merge xxxInfo.plist into them
+X+# MacOSX-S frameworks
+X+$(FRAMEWORK_VERSION_DIR)/Resources/Info.plist:
+X+	$(ECHO_CREATING)(echo "{"; echo '  NOTE = "Automatically generated, do not edit!";'; \
+X+	  echo "  NSExecutable = \"$(GNUSTEP_INSTANCE)\";"; \
+X+	  echo "  NSMainNibFile = \"$(MAIN_MODEL_FILE)\";"; \
+X+	  echo "  NSPrincipalClass = \"$(PRINCIPAL_CLASS)\";"; \
+X+	  echo "}") >$@$(END_ECHO)
+X+
+X+# GNUstep frameworks
+X+$(FRAMEWORK_VERSION_DIR)/Resources/Info-gnustep.plist: \
+X+                        $(DUMMY_FRAMEWORK_FILE) \
+X+                        $(GNUSTEP_PLIST_DEPEND)
+X+	$(ECHO_CREATING)(echo "{"; echo '  NOTE = "Automatically generated, do not edit!";'; \
+X+	  echo "  NSExecutable = \"$(GNUSTEP_INSTANCE)$(FRAMEWORK_OBJ_EXT)\";"; \
+X+	  echo "  NSMainNibFile = \"$(MAIN_MODEL_FILE)\";"; \
+X+	  echo "  NSPrincipalClass = \"$(PRINCIPAL_CLASS)\";"; \
+X+	  echo "  Classes = "; \
+X+	  cat $(DUMMY_FRAMEWORK_CLASS_LIST); \
+X+	  echo "  ;"; \
+X+	  echo "}") >$@$(END_ECHO)
+X+	$(ECHO_NOTHING)if [ -r "$(GNUSTEP_PLIST_DEPEND)" ]; then \
+X+	   plmerge $@ $(GNUSTEP_PLIST_DEPEND); \
+X+	 fi$(END_ECHO)
+X+
+X+ifneq ($(BUILD_DLL),yes)
+X+
+X+ifeq ($(FOUNDATION_LIB),gnu)
+X+
+X+internal-framework-install_:: $(FRAMEWORK_INSTALL_DIR) \
+X+                      $(GNUSTEP_LIBRARIES)/$(GNUSTEP_TARGET_LDIR) \
+X+                      $(GNUSTEP_HEADERS)
+X+	$(ECHO_INSTALLING)rm -rf $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_DIR_NAME); \
+X+	(cd $(GNUSTEP_BUILD_DIR); $(TAR) cfX - $(GNUSTEP_MAKEFILES)/tar-exclude-list $(FRAMEWORK_DIR_NAME)) | (cd $(FRAMEWORK_INSTALL_DIR); $(TAR) xf -)$(END_ECHO)
+X+ifneq ($(CHOWN_TO),)
+X+	$(ECHO_CHOWNING)$(CHOWN) -R $(CHOWN_TO) $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_DIR_NAME)$(END_ECHO)
+X+endif
+X+ifeq ($(strip),yes)
+X+	$(ECHO_STRIPPING)$(STRIP) $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_FILE_NAME)$(END_ECHO)
+X+endif
+X+	$(ECHO_INSTALLING_HEADERS)cd $(GNUSTEP_HEADERS); \
+X+	$(RM_LN_S) $(HEADER_FILES_INSTALL_DIR); \
+X+	$(LN_S_RECURSIVE) `$(REL_PATH_SCRIPT) $(GNUSTEP_HEADERS) $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_DIR_NAME)/Headers short` $(HEADER_FILES_INSTALL_DIR); \
+X+	$(END_ECHO)
+X+ifneq ($(CHOWN_TO),)
+X+	$(ECHO_CHOWNING)cd $(GNUSTEP_HEADERS); \
+X+	$(CHOWN) $(CHOWN_TO) $(HEADER_FILES_INSTALL_DIR); \
+X+	$(END_ECHO)
+X+endif
+X+	$(ECHO_NOTHING)cd $(GNUSTEP_LIBRARIES)/$(GNUSTEP_TARGET_LDIR); \
+X+	$(RM_LN_S) $(FRAMEWORK_LIBRARY_FILE); \
+X+	$(RM_LN_S) $(SONAME_FRAMEWORK_FILE); \
+X+	$(RM_LN_S) $(VERSION_FRAMEWORK_LIBRARY_FILE); \
+X+	$(LN_S) `$(REL_PATH_SCRIPT) $(GNUSTEP_LIBRARIES)/$(GNUSTEP_TARGET_LDIR) $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_CURRENT_LIBRARY_DIR_NAME)/$(FRAMEWORK_LIBRARY_FILE) short` $(FRAMEWORK_LIBRARY_FILE); \
+X+	if test -r "$(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_CURRENT_LIBRARY_DIR_NAME)/$(SONAME_FRAMEWORK_FILE)"; then \
+X+	  $(LN_S) `$(REL_PATH_SCRIPT) $(GNUSTEP_LIBRARIES)/$(GNUSTEP_TARGET_LDIR) $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_CURRENT_LIBRARY_DIR_NAME)/$(SONAME_FRAMEWORK_FILE) short` $(SONAME_FRAMEWORK_FILE); \
+X+	fi; \
+X+	$(LN_S) `$(REL_PATH_SCRIPT) $(GNUSTEP_LIBRARIES)/$(GNUSTEP_TARGET_LDIR) $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_CURRENT_LIBRARY_DIR_NAME)/$(VERSION_FRAMEWORK_LIBRARY_FILE) short` $(VERSION_FRAMEWORK_LIBRARY_FILE)$(END_ECHO)
+X+ifneq ($(CHOWN_TO),)
+X+	$(ECHO_CHOWNING)cd $(GNUSTEP_LIBRARIES)/$(GNUSTEP_TARGET_LDIR); \
+X+	$(CHOWN) $(CHOWN_TO) $(FRAMEWORK_LIBRARY_FILE); \
+X+	if test -r "$(SONAME_FRAMEWORK_FILE)"; then \
+X+	  $(CHOWN) $(CHOWN_TO) $(SONAME_FRAMEWORK_FILE); \
+X+	fi; \
+X+	$(CHOWN) $(CHOWN_TO) $(VERSION_FRAMEWORK_LIBRARY_FILE)$(END_ECHO)
+X+endif
+X+
+X+else
+X+
+X+# This code for Apple OSX
+X+
+X+internal-framework-install_:: $(FRAMEWORK_INSTALL_DIR)
+X+	$(ECHO_INSTALLING)rm -rf $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_DIR_NAME); \
+X+	(cd $(GNUSTEP_BUILD_DIR); $(TAR) cfX - $(GNUSTEP_MAKEFILES)/tar-exclude-list $(FRAMEWORK_DIR_NAME)) | (cd $(FRAMEWORK_INSTALL_DIR); $(TAR) xf -)$(END_ECHO)
+X+ifneq ($(CHOWN_TO),)
+X+	$(ECHO_CHOWNING)$(CHOWN) -R $(CHOWN_TO) $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_DIR_NAME)$(END_ECHO)
+X+endif
+X+ifeq ($(strip),yes)
+X+	$(ECHO_STRIPPING)$(STRIP) $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_FILE_NAME)$(END_ECHO)
+X+endif
+X+
+X+endif
+X+
+X+else # install DLL
+X+
+X+internal-framework-install_:: $(FRAMEWORK_INSTALL_DIR) \
+X+                      $(GNUSTEP_LIBRARIES)/$(GNUSTEP_TARGET_LDIR) \
+X+                      $(GNUSTEP_HEADERS) \
+X+                      $(DLL_INSTALLATION_DIR)
+X+	$(ECHO_INSTALLING)\
+X+	rm -rf $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_DIR_NAME); \
+X+	(cd $(GNUSTEP_BUILD_DIR);\
+X+	 $(TAR) cfX - $(GNUSTEP_MAKEFILES)/tar-exclude-list \
+X+	        $(FRAMEWORK_DIR_NAME)) | (cd $(FRAMEWORK_INSTALL_DIR); \
+X+	                                  $(TAR) xf -)$(END_ECHO)
+X+ifneq ($(CHOWN_TO),)
+X+	$(ECHO_CHOWNING)$(CHOWN) -R $(CHOWN_TO) $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_DIR_NAME)$(END_ECHO)
+X+endif
+X+ifeq ($(strip),yes)
+X+	$(ECHO_STRIPPING)$(STRIP) $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_FILE_NAME)$(END_ECHO)
+X+endif
+X+	$(ECHO_INSTALLING_HEADERS)cd $(GNUSTEP_HEADERS); \
+X+	if test -d "$(HEADER_FILES_INSTALL_DIR)"; then \
+X+	  rm -Rf $(HEADER_FILES_INSTALL_DIR); \
+X+	fi; \
+X+        $(MKINSTALLDIRS) $(HEADER_FILES_INSTALL_DIR); \
+X+	cd $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_VERSION_DIR_NAME)/Headers ; \
+X+          $(TAR) cfX - $(GNUSTEP_MAKEFILES)/tar-exclude-list . | (cd  $(GNUSTEP_HEADERS)/$(HEADER_FILES_INSTALL_DIR); \
+X+          $(TAR) xf - ); \
+X+	$(END_ECHO)
+X+ifneq ($(CHOWN_TO),)
+X+	$(ECHO_CHOWNING)cd $(GNUSTEP_HEADERS); \
+X+	$(CHOWN) -R $(CHOWN_TO) $(HEADER_FILES_INSTALL_DIR); \
+X+	$(END_ECHO)
+X+endif
+X+	$(ECHO_NOTHING)$(INSTALL_PROGRAM) $(FRAMEWORK_LIBRARY_DIR)/$(LIB_LINK_DLL_FILE) \
+X+          $(DLL_INSTALLATION_DIR)$(END_ECHO)
+X+	$(ECHO_NOTHING)$(INSTALL_PROGRAM) $(FRAMEWORK_FILE_NAME) \
+X+	  $(GNUSTEP_LIBRARIES)/$(GNUSTEP_TARGET_LDIR)$(END_ECHO)
+X+
+X+endif
+X+
+X+$(DLL_INSTALLATION_DIR):
+X+	$(ECHO_CREATING)$(MKINSTALLDIRS) $@$(END_ECHO)
+X+
+X+# If Version support is disabled, then this directory is the same as
+X+# the Resources directory in Shared/bundle.make for which we already
+X+# have a rule.
+X+ifeq ($(FRAMEWORK_VERSION_SUPPORT), yes)
+X+$(FRAMEWORK_DIR)/Resources:
+X+	$(ECHO_CREATING)$(MKDIRS) $@$(END_ECHO)
+X+endif
+X+
+X+$(FRAMEWORK_INSTALL_DIR):
+X+	$(ECHO_CREATING)$(MKINSTALLDIRS) $@$(END_ECHO)
+X+
+X+$(GNUSTEP_LIBRARIES)/$(GNUSTEP_TARGET_LDIR):
+X+	$(ECHO_CREATING)$(MKINSTALLDIRS) $@$(END_ECHO)
+X+
+X+$(GNUSTEP_HEADERS):
+X+	$(ECHO_CREATING)$(MKINSTALLDIRS) $@$(END_ECHO)
+X+
+X+ifneq ($(BUILD_DLL), yes)
+X+# NB: We use '$(RM_LN_S)' to remove the symlinks to insure
+X+#     that we do not remove customized real directories.  
+X+internal-framework-uninstall_::
+X+	$(ECHO_UNINSTALLING)if [ "$(HEADER_FILES)" != "" ]; then \
+X+	  for file in $(HEADER_FILES) __done; do \
+X+	    if [ $$file != __done ]; then \
+X+	      rm -rf $(GNUSTEP_HEADERS)/$(HEADER_FILES_INSTALL_DIR)/$$file ; \
+X+	    fi; \
+X+	  done; \
+X+	fi; \
+X+	$(RM_LN_S) $(GNUSTEP_HEADERS)/$(HEADER_FILES_INSTALL_DIR) ; \
+X+	rm -rf $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_DIR_NAME) ; \
+X+	cd $(GNUSTEP_LIBRARIES)/$(GNUSTEP_TARGET_LDIR); \
+X+	$(RM_LN_S) $(FRAMEWORK_LIBRARY_FILE); \
+X+	$(RM_LN_S) $(SONAME_FRAMEWORK_FILE); \
+X+	$(RM_LN_S) $(VERSION_FRAMEWORK_LIBRARY_FILE); \
+X+	$(END_ECHO)
+X+else
+X+internal-framework-uninstall_::
+X+	$(ECHO_UNINSTALLING)if [ "$(HEADER_FILES)" != "" ]; then \
+X+	  for file in $(HEADER_FILES) __done; do \
+X+	    if [ $$file != __done ]; then \
+X+	      rm -rf $(GNUSTEP_HEADERS)/$(HEADER_FILES_INSTALL_DIR)/$$file ; \
+X+	    fi; \
+X+	  done; \
+X+	fi; \
+X+	$(RM_LN_S) $(GNUSTEP_HEADERS)/$(HEADER_FILES_INSTALL_DIR) ; \
+X+	rm -rf $(FRAMEWORK_INSTALL_DIR)/$(FRAMEWORK_DIR_NAME) ; \
+X+	cd $(GNUSTEP_LIBRARIES)/$(GNUSTEP_TARGET_LDIR); \
+X+	$(RM_LN_S) $(FRAMEWORK_LIBRARY_FILE); \
+X+	cd $(DLL_INSTALLATION_DIR); \
+X+	$(RM_LN_S) $(LIB_LINK_DLL_FILE); \
+X+	$(END_ECHO)
+X+endif
+X+#
+X+# Cleaning targets
+X+#
+X+internal-framework-clean::
+X+	$(ECHO_NOTHING)rm -rf \
+X+	       $(PSWRAP_C_FILES) $(PSWRAP_H_FILES) \
+X+	       $(FRAMEWORK_DIR) $(DERIVED_SOURCES_DIR)$(END_ECHO)
+X+
+X+internal-framework-distclean::
+X+
+X+include $(GNUSTEP_MAKEFILES)/Instance/Shared/strings.make
+800f321033fe3ce994d051ff32ad797a
+echo x - sogo/pkg-descr
+sed 's/^X//' >sogo/pkg-descr << 'ceecc7ca4654ac9628567332f2bd37e8'
+XSOGo is a fully supported and trusted groupware server with a focus on
+Xscalability and open standards. It provides a rich AJAX-based Web
+Xinterface and supports multiple native clients through the use of
+Xstandard protocols such as CalDAV, CardDAV and GroupDAV.
 X
-XTZ=Europe/London; export TZ
-XPATH=$PATH:/usr/local/GNUstep/System/Tools; export PATH
-X. /usr/local/GNUstep/System/Library/Makefiles/GNUstep.sh
+XWWW: http://sogo.nu/
+ceecc7ca4654ac9628567332f2bd37e8
+echo x - sogo/Makefile
+sed 's/^X//' >sogo/Makefile << 'b498ca5444d30a1048df702ddf4d84a4'
+X# Created by: Euan Thoms <euan@potensol.com>
+X# $FreeBSD: head/www/sogo/Makefile 397608 2015-09-23 05:30:12Z pi $
 X
-X/usr/local/GNUstep/Local/Tools/Admin/sogo-ealarms-notify -p /usr/local/etc/sogo/ealarms-notify.creds >> /var/log/sogo/cron-ealarms-notify.log 2>&1
-b524c81b01f549cfc602fef62956eaa2
-echo x - sogo/files/cron-expire-autoreply.sample
-sed 's/^X//' >sogo/files/cron-expire-autoreply.sample << '6c9bc2fe28c91b9496fbc55aee894ed8'
-X#!/bin/sh
+XPORTNAME=		sogo
+XPORTVERSION=		2.3.2
+XCATEGORIES=		www gnustep
+XMASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
+XDISTNAME=		SOGo-${PORTVERSION}
 X
-XTZ=Europe/London; export TZ
-XPATH=$PATH:/usr/local/GNUstep/System/Tools; export PATH
-X. /usr/local/GNUstep/System/Library/Makefiles/GNUstep.sh
+XMAINTAINER=		euan@potensol.com
+XCOMMENT=		Groupware server with a focus on scalability and open standards
 X
-X/usr/local/GNUstep/Local/Tools/Admin/sogo-tool expire-autoreply -p /usr/local/etc/sogo/expire-autoreply.creds > /var/log/sogo/cron-expire-autoreply.out 2>&1
-6c9bc2fe28c91b9496fbc55aee894ed8
+XLICENSE=		GPLv2
+X
+XBUILD_DEPENDS=		${GNUSTEP_LOCAL_LIBRARIES}/libDOM.so:${PORTSDIR}/devel/sope
+XLIB_DEPENDS=		libmemcached.so:${PORTSDIR}/databases/libmemcached \
+X			libcurl.so:${PORTSDIR}/ftp/curl
+XRUN_DEPENDS:=		${BUILD_DEPENDS}
+X
+XMAKE_JOBS_UNSAFE=yes
+X
+XUSERS=			sogod
+XGROUPS=			sogod
+X
+XUSES=			gnustep objc
+XUSE_GNUSTEP=		base build
+XUSE_LDCONFIG=		${GNUSTEP_LOCAL_LIBRARIES}/sogo
+X
+XUSE_RC_SUBR=		sogod
+X
+XSUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
+X			GNUSTEP_MAKEFILES=${GNUSTEP_MAKEFILES}
+X
+XCONFIGURE_ARGS=		--disable-debug --enable-strip
+X
+X.include <bsd.port.options.mk>
+X
+Xpost-patch:
+X	${GREP} -rlF '/etc/sogo' ${WRKSRC} \
+X		| ${XARGS} ${REINPLACE_CMD} 's#/etc/sogo#${PREFIX}/etc/sogo#g'
+X
+Xdo-configure:
+X	cd ${WRKSRC} ; . ${GNUSTEP_MAKEFILES}/GNUstep.sh ; ./configure ${CONFIGURE_ARGS}
+X
+Xpost-stage:
+X	${MKDIR} ${STAGEDIR}/var/spool/sogo
+X	${MKDIR} ${STAGEDIR}${ETCDIR}
+X	(cp ${WRKSRC}/Scripts/sogo.conf ${STAGEDIR}${ETCDIR}/sogo.conf.sample)
+X	(cp ${FILESDIR}/expire-autoreply.creds.sample ${STAGEDIR}${ETCDIR}/)
+X	(cp ${FILESDIR}/ealarms-notify.creds.sample ${STAGEDIR}${ETCDIR}/)
+X	(cp ${FILESDIR}/cron-ealarms-notify.sample ${STAGEDIR}${PREFIX}/GNUstep/Local/Tools/Admin/)
+X	(cp ${FILESDIR}/cron-expire-autoreply.sample ${STAGEDIR}${PREFIX}/GNUstep/Local/Tools/Admin/)
+X
+X.include <bsd.port.mk>
+b498ca5444d30a1048df702ddf4d84a4
+echo x - sogo/distinfo
+sed 's/^X//' >sogo/distinfo << '55e82ee4823ec0f63f1b76a323d4731b'
+XSHA256 (SOGo-2.3.2.tar.gz) = 7830e2ad684b54c89a4720edf7e73250a076885a3e25052c093e7894227939ac
+XSIZE (SOGo-2.3.2.tar.gz) = 11781695
+55e82ee4823ec0f63f1b76a323d4731b
 echo x - sogo/pkg-message
 sed 's/^X//' >sogo/pkg-message << '3c42015f013245906b356b654bc53341'
-X
 X
 XIn order to run the sogo daemon (sogod), you will need to create and configure
 Xthe main configuration file, e.g.:
 X
-Xcp -p /usr/local/etc/sogo/sogo.conf.sample /usr/local/etc/sogo/sogo.conf
+Xcp -p ${LOCALBASE}/etc/sogo/sogo.conf.sample ${LOCALBASE}/etc/sogo/sogo.conf
 X
 XAnd to allow the service to run at system startup, add sogod_enable="YES"
-Xin your /etc/rc.conf. 
-X
+Xin your rc.conf. 
 X
 X
 XIf you need to allow email alarms (notifications) for calendar events, copy
 Xthe sample credentials file: 
 X
-Xcp -p /usr/local/etc/sogo/ealarms-notify.creds.sample \
-X /usr/local/etc/sogo/ealarms-notify.creds
+Xcp -p ${LOCALBASE}/etc/sogo/ealarms-notify.creds.sample \
+X ${LOCALBASE}/etc/sogo/ealarms-notify.creds
 X
 XThen replace the username:password with appropriate credentials for SMTP AUTH
 Xsending capabilities.
 X
 XThen copy the sample cron executable:
 X
-Xcp -p /usr/local/GNUstep/Local/Tools/Admin/cron-ealarms-notify.sample \
-X /usr/local/GNUstep/Local/Tools/Admin/cron-ealarms-notify
+Xcp -p ${LOCALBASE}/GNUstep/Local/Tools/Admin/cron-ealarms-notify.sample \
+X ${LOCALBASE}/GNUstep/Local/Tools/Admin/cron-ealarms-notify
 X
 XAnd edit this file to suit your server timezone (e.g. TZ=Africa/Algiers).
 X
 XThen add the following lines to the root users' crontab (crontab -e):
 X
 X# Process email reminders every minute
-X* * * * * /usr/local/GNUstep/Local/Tools/Admin/cron-ealarms-notify
+X* * * * * ${LOCALBASE}/GNUstep/Local/Tools/Admin/cron-ealarms-notify
 X
 X
 X
 XIf you need to automatically purge vacation messages from users sieve scripts,
 Xcopy the sample credentials file:
 X
-Xcp -p /usr/local/etc/sogo/expire-autoreply.creds.sample \
-X /usr/local/etc/sogo/expire-autoreply.creds
+Xcp -p ${LOCALBASE}/etc/sogo/expire-autoreply.creds.sample \
+X ${LOCALBASE}/etc/sogo/expire-autoreply.creds
 X
 XThen replace the username:password with appropriate credentials for your
 XIMAP servers' sieve account.
 X
 XThen copy the sample cron executable:
 X
-Xcp -p /usr/local/GNUstep/Local/Tools/Admin/cron-expire-autoreply.sample \
-X /usr/local/GNUstep/Local/Tools/Admin/cron-expire-autoreply
+Xcp -p ${LOCALBASE}/GNUstep/Local/Tools/Admin/cron-expire-autoreply.sample \
+X ${LOCALBASE}/GNUstep/Local/Tools/Admin/cron-expire-autoreply
 X
 XAnd edit this file to suit your server timezone (e.g. TZ=Africa/Algiers).
 X
@@ -1989,21 +2921,11 @@ XThen add the following lines to the root users' crontab (crontab -e):
 X
 X# Vacation messages expiration
 X# The credentials file should contain the sieve admin credentials (username:passwd)
-X0 0 * * * /usr/local/GNUstep/Local/Tools/Admin/cron-expire-autoreply
+X0 0 * * * ${LOCALBASE}/GNUstep/Local/Tools/Admin/cron-expire-autoreply
 X
 X
 XFor more information about using SOGo, visit:
 Xhttp://www.sogo.nu/downloads/documentation.html
-X
 3c42015f013245906b356b654bc53341
-echo x - sogo/pkg-descr
-sed 's/^X//' >sogo/pkg-descr << 'ceecc7ca4654ac9628567332f2bd37e8'
-XSOGo is fully supported and trusted groupware server with a focus on
-Xscalability and open standards. It provides a rich AJAX-based Web
-Xinterface and supports multiple native clients through the use of
-Xstandard protocols such as CalDAV, CardDAV and GroupDAV.
-X
-XWWW: http://sogo.nu/
-ceecc7ca4654ac9628567332f2bd37e8
 exit
 
