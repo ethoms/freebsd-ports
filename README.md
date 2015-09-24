@@ -5,9 +5,9 @@ Euan Thoms' FreeBSD ports development
 
 **[24/09/2015]**
 
-www/sogo and devel/sope have been committed to the official FreeBSd ports tree!
+www/sogo and devel/sope have been committed to the official FreeBSD ports tree!
 
-Therefore, those ports in this tree are for my development purposes. It's now recommended to use the offical ports tree.
+*NOTE: Therefore, those ports in this tree are for my development purposes. It's now recommended to use the official ports tree.*
 
 **[22/09/2015]**
 
