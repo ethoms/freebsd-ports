@@ -1755,17 +1755,16 @@ GNUstep/Local/Tools/Admin/sogo-ealarms-notify
 GNUstep/Local/Tools/Admin/sogo-slapd-sockd
 GNUstep/Local/Tools/Admin/sogo-tool
 GNUstep/Local/Tools/Admin/sogod
-%%ETCDIR%%/sogo.conf.sample
+@sample %%ETCDIR%%/sogo.conf.sample
 @dir GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/WebServer
 @dir GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/WebServer
 @owner sogod
 @group sogod
 @mode 0700
 @dir /var/spool/sogo
-@dirrm /var/spool/sogo
 @mode 0600
-%%ETCDIR%%/expire-autoreply.creds.sample
-%%ETCDIR%%/ealarms-notify.creds.sample
+@sample %%ETCDIR%%/expire-autoreply.creds.sample
+@sample %%ETCDIR%%/ealarms-notify.creds.sample
 @mode 0755
-GNUstep/Local/Tools/Admin/cron-ealarms-notify.sample
-GNUstep/Local/Tools/Admin/cron-expire-autoreply.sample
+@sample GNUstep/Local/Tools/Admin/cron-ealarms-notify.sample
+@sample GNUstep/Local/Tools/Admin/cron-expire-autoreply.sample

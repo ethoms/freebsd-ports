@@ -1,4 +1,4 @@
---- sope-core/NGExtensions/NGExtensions/NGBundleManager.h.orig	2014-09-26 18:35:45 UTC
+--- sope-core/NGExtensions/NGExtensions/NGBundleManager.h.orig	2015-09-16 18:26:49 UTC
 +++ sope-core/NGExtensions/NGExtensions/NGBundleManager.h
 @@ -23,6 +23,7 @@
  #define __NGExtensions_NGBundleManager_H__

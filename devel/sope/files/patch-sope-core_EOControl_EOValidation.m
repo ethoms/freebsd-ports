@@ -1,9 +1,5 @@
-$FreeBSD$
-
-fix build with libobjc2-1.7
-
---- sope-core/EOControl/EOValidation.m.orig	Sun Oct 13 15:44:43 2013
-+++ sope-core/EOControl/EOValidation.m	Sun Oct 13 15:45:01 2013
+--- sope-core/EOControl/EOValidation.m.orig	2015-09-16 18:26:49 UTC
++++ sope-core/EOControl/EOValidation.m
 @@ -24,10 +24,6 @@
  #include "EONull.h"
  #include "common.h"
@@ -15,4 +11,3 @@ fix build with libobjc2-1.7
  #if !LIB_FOUNDATION_LIBRARY
  
  @interface NSException(UsedSetUI) /* does Jaguar allow -setUserInfo: ? */
-

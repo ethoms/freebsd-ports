@@ -1,9 +1,5 @@
-$FreeBSD$
-
-fix build with libobjc2-1.7
-
---- sope-mime/NGImap4/imCommon.h.orig	Sun Oct 13 16:21:42 2013
-+++ sope-mime/NGImap4/imCommon.h	Sun Oct 13 16:22:35 2013
+--- sope-mime/NGImap4/imCommon.h.orig	2015-09-16 18:26:50 UTC
++++ sope-mime/NGImap4/imCommon.h
 @@ -37,13 +37,13 @@
  #include <NGMime/NGMime.h>
  #include <NGMail/NGMail.h>
@@ -20,4 +16,3 @@ fix build with libobjc2-1.7
  #  ifndef sel_eq
  #    define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
  #  endif
-

@@ -1,9 +1,5 @@
-$FreeBSD$
-
-fix build with libobjc2-1.7
-
---- sope-appserver/NGObjWeb/DynamicElements/decommon.h.orig	Mon Jul 22 15:03:07 2013
-+++ sope-appserver/NGObjWeb/DynamicElements/decommon.h	Sun Oct 13 17:48:51 2013
+--- sope-appserver/NGObjWeb/DynamicElements/decommon.h.orig	2015-09-16 18:26:49 UTC
++++ sope-appserver/NGObjWeb/DynamicElements/decommon.h
 @@ -35,6 +35,10 @@
  @end
  #endif
@@ -15,4 +11,3 @@ fix build with libobjc2-1.7
  #include <NGExtensions/NGExtensions.h>
  #include "WOResponse+private.h"
  #include <NGObjWeb/WOContext.h>
-

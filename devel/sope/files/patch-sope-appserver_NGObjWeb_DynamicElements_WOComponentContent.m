@@ -1,9 +1,5 @@
-$FreeBSD$
-
-fix build with libobjc2-1.7
-
---- sope-appserver/NGObjWeb/DynamicElements/WOComponentContent.m.orig	Sun Oct 13 16:59:47 2013
-+++ sope-appserver/NGObjWeb/DynamicElements/WOComponentContent.m	Sun Oct 13 17:00:20 2013
+--- sope-appserver/NGObjWeb/DynamicElements/WOComponentContent.m.orig	2015-09-16 18:26:49 UTC
++++ sope-appserver/NGObjWeb/DynamicElements/WOComponentContent.m
 @@ -75,11 +75,7 @@ static Class NSDateClass = Nil;
          printf("  ");
        printf("content: [%s %s]: %0.3fs\n",
@@ -15,3 +11,4 @@ fix build with libobjc2-1.7
 -#endif
  	     diff);
      }
+     

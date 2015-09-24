@@ -1,9 +1,5 @@
-$FreeBSD$
-
-fix build with libobjc2-1.7
-
---- sope-core/EOControl/EOSortOrdering.m.orig	Sun Oct 13 15:43:30 2013
-+++ sope-core/EOControl/EOSortOrdering.m	Sun Oct 13 15:43:55 2013
+--- sope-core/EOControl/EOSortOrdering.m.orig	2015-09-16 18:26:49 UTC
++++ sope-core/EOControl/EOSortOrdering.m
 @@ -28,14 +28,6 @@
  #  include <objc/objc.h>
  #endif
@@ -28,4 +24,3 @@ fix build with libobjc2-1.7
      return NO;
    if (![[_sortOrdering key] isEqualToString:[self key]])
      return NO;
-

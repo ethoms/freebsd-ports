@@ -1,9 +1,5 @@
-$FreeBSD$
-
-fix build with libobjc2-1.7
-
---- sope-mime/NGMime/common.h.orig	Sun Oct 13 16:18:04 2013
-+++ sope-mime/NGMime/common.h	Sun Oct 13 16:21:27 2013
+--- sope-mime/NGMime/common.h.orig	2015-09-16 18:26:50 UTC
++++ sope-mime/NGMime/common.h
 @@ -37,7 +37,9 @@
  #include "NGMimeType.h"
  
@@ -15,4 +11,3 @@ fix build with libobjc2-1.7
  #    define sel_eq(__A__, __B__) (__A__==__B__)
  #  endif
  #endif
-

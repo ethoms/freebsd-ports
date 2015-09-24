@@ -1,9 +1,5 @@
-$FreeBSD$
-
-fix build with libobjc2-1.7
-
---- sope-core/EOControl/common.h.orig	Fri Sep 26 20:38:11 2014
-+++ sope-core/EOControl/common.h	Tue Sep 30 12:38:09 2014
+--- sope-core/EOControl/common.h.orig	2015-09-16 18:26:49 UTC
++++ sope-core/EOControl/common.h
 @@ -40,10 +40,11 @@
  #  endif
  #endif
@@ -17,4 +13,3 @@ fix build with libobjc2-1.7
  #endif
  
  #ifndef ASSIGN
-

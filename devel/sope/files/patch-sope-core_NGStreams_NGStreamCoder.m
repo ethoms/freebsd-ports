@@ -1,9 +1,5 @@
-$FreeBSD$
-
-fix build with libobjc2-1.7
-
---- sope-core/NGStreams/NGStreamCoder.m.orig	Sun Oct 13 18:10:47 2013
-+++ sope-core/NGStreams/NGStreamCoder.m	Sun Oct 13 18:11:35 2013
+--- sope-core/NGStreams/NGStreamCoder.m.orig	2015-09-16 18:26:50 UTC
++++ sope-core/NGStreams/NGStreamCoder.m
 @@ -28,6 +28,10 @@
  #  include <objc/objc-class.h>
  #endif
@@ -15,4 +11,3 @@ fix build with libobjc2-1.7
  #define FINAL static inline
  
  extern id nil_method(id, SEL, ...);
-

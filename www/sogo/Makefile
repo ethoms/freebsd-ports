@@ -1,5 +1,5 @@
 # Created by: Euan Thoms <euan@potensol.com>
-# $FreeBSD$
+# $FreeBSD: head/www/sogo/Makefile 397608 2015-09-23 05:30:12Z pi $
 
 PORTNAME=		sogo
 PORTVERSION=		2.3.2
@@ -17,12 +17,14 @@ LIB_DEPENDS=		libmemcached.so:${PORTSDIR}/databases/libmemcached \
 			libcurl.so:${PORTSDIR}/ftp/curl
 RUN_DEPENDS:=		${BUILD_DEPENDS}
 
+MAKE_JOBS_UNSAFE=yes
+
 USERS=			sogod
 GROUPS=			sogod
 
-USES=                   gnustep objc
-USE_GNUSTEP=            base build
-USE_LDCONFIG=           ${GNUSTEP_LOCAL_LIBRARIES}/sogo
+USES=			gnustep objc
+USE_GNUSTEP=		base build
+USE_LDCONFIG=		${GNUSTEP_LOCAL_LIBRARIES}/sogo
 
 USE_RC_SUBR=		sogod
 
@@ -34,15 +36,15 @@ CONFIGURE_ARGS=		--disable-debug --enable-strip
 .include <bsd.port.options.mk>
 
 post-patch:
-	@${GREP} -rlF '/etc/sogo' ${WRKSRC} \
+	${GREP} -rlF '/etc/sogo' ${WRKSRC} \
 		| ${XARGS} ${REINPLACE_CMD} 's#/etc/sogo#${PREFIX}/etc/sogo#g'
 
 do-configure:
 	cd ${WRKSRC} ; . ${GNUSTEP_MAKEFILES}/GNUstep.sh ; ./configure ${CONFIGURE_ARGS}
 
 post-stage:
-	@${MKDIR} ${STAGEDIR}/var/spool/sogo
-	@${MKDIR} ${STAGEDIR}${ETCDIR}
+	${MKDIR} ${STAGEDIR}/var/spool/sogo
+	${MKDIR} ${STAGEDIR}${ETCDIR}
 	(cp ${WRKSRC}/Scripts/sogo.conf ${STAGEDIR}${ETCDIR}/sogo.conf.sample)
 	(cp ${FILESDIR}/expire-autoreply.creds.sample ${STAGEDIR}${ETCDIR}/)
 	(cp ${FILESDIR}/ealarms-notify.creds.sample ${STAGEDIR}${ETCDIR}/)

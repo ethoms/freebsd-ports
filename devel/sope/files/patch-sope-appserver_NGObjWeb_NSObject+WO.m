@@ -1,11 +1,6 @@
-$FreeBSD$
-
-fix for build with libobjc2-1.7
-patch from David Chisnall
-
---- sope-appserver/NGObjWeb/NSObject+WO.m.orig	Wed Dec  4 17:51:26 2013
-+++ sope-appserver/NGObjWeb/NSObject+WO.m	Thu May 15 18:21:20 2014
-@@ -259,7 +259,7 @@ IMP WOGetKVCGetMethod(id object, NSString *_key) {
+--- sope-appserver/NGObjWeb/NSObject+WO.m.orig	2015-09-16 18:26:49 UTC
++++ sope-appserver/NGObjWeb/NSObject+WO.m
+@@ -259,7 +259,7 @@ IMP WOGetKVCGetMethod(id object, NSStrin
    if (object == nil) return NULL;
    if (_key   == nil) return NULL;
  
@@ -14,7 +9,7 @@ patch from David Chisnall
    {
      unsigned keyLen;
      char     *buf;
-@@ -317,7 +317,9 @@ id WOGetKVCValueUsingMethod(id object, NSString *_key)
+@@ -317,7 +317,9 @@ id WOGetKVCValueUsingMethod(id object, N
        return nil;
      free(buf); buf = NULL;
    }
@@ -25,4 +20,3 @@ patch from David Chisnall
    if (!__objc_responds_to(object, getSel))
      return nil;
  #endif
-

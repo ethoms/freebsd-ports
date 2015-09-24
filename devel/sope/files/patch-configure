@@ -1,5 +1,5 @@
---- configure.orig	2015-01-20 13:39:57.000000000 +0000
-+++ configure	2015-07-18 08:39:26.000000000 +0000
+--- configure.orig	2015-09-16 18:26:48 UTC
++++ configure
 @@ -1,4 +1,4 @@
 -#!/bin/bash
 +#!/bin/sh

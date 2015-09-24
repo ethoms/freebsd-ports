@@ -1,6 +1,6 @@
---- sope-appserver/NGObjWeb/DynamicElements/WOComponentReference.m.orig	2014-10-12 07:35:39 UTC
+--- sope-appserver/NGObjWeb/DynamicElements/WOComponentReference.m.orig	2015-09-16 18:26:49 UTC
 +++ sope-appserver/NGObjWeb/DynamicElements/WOComponentReference.m
-@@ -172,7 +172,7 @@
+@@ -172,7 +172,7 @@ _updateComponent(WOComponentReference *s
          printf("  ");
        printf("[%s %s]: %0.3fs\n",
               [[child name] cString], 

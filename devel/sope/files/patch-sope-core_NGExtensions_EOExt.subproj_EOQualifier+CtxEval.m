@@ -1,9 +1,5 @@
-$FreeBSD$
-
-fix build with libobjc2-1.7
-
---- sope-core/NGExtensions/EOExt.subproj/EOQualifier+CtxEval.m.orig	Sun Oct 13 18:08:20 2013
-+++ sope-core/NGExtensions/EOExt.subproj/EOQualifier+CtxEval.m	Sun Oct 13 18:10:08 2013
+--- sope-core/NGExtensions/EOExt.subproj/EOQualifier+CtxEval.m.orig	2015-09-16 18:26:49 UTC
++++ sope-core/NGExtensions/EOExt.subproj/EOQualifier+CtxEval.m
 @@ -29,7 +29,7 @@
  #  import <objc/objc.h>
  #  import <extensions/objc-runtime.h>
@@ -13,4 +9,3 @@ fix build with libobjc2-1.7
  #  define sel_get_name sel_getName
  #  import <objc/runtime.h>
  #else
-

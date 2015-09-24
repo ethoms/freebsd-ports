@@ -1,9 +1,5 @@
-$FreeBSD$
-
-fix building with libobjc2-1.7
-
---- sope-gdl1/GDLAccess/common.h.orig	Sun Oct 13 18:16:32 2013
-+++ sope-gdl1/GDLAccess/common.h	Sun Oct 13 18:17:48 2013
+--- sope-gdl1/GDLAccess/common.h.orig	2015-09-16 18:26:50 UTC
++++ sope-gdl1/GDLAccess/common.h
 @@ -55,7 +55,7 @@
  #  endif
  #endif
@@ -13,4 +9,3 @@ fix building with libobjc2-1.7
  #  define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
  #  ifndef SEL_EQ
  #    define SEL_EQ(__A__,__B__) sel_isEqual(__A__,__B__)
-

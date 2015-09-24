@@ -1,5 +1,5 @@
 # Created by: Euan Thoms <euan@potensol.com>
-# $FreeBSD$
+# $FreeBSD: head/devel/sope/Makefile 397533 2015-09-22 10:32:08Z pi $
 
 PORTNAME=		sope
 PORTVERSION=		2.3.2
@@ -30,8 +30,8 @@ USES=			gmake gnustep
 USE_GNUSTEP=		base build
 USE_LDCONFIG=		${GNUSTEP_LOCAL_LIBRARIES}
 
-SUB_LIST+=              GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
-                        GNUSTEP_MAKEFILES=${GNUSTEP_MAKEFILES}
+SUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
+			GNUSTEP_MAKEFILES=${GNUSTEP_MAKEFILES}
 
 CONFIGURE_ARGS=		--with-gnustep --disable-debug --enable-strip
 
@@ -64,7 +64,7 @@ post-patch:
 	@${REINPLACE_CMD} -e '/checkLinking "mysqlclient"/d' ${WRKSRC}/configure
 .endif
 
-do-configure:   
+do-configure:
 	cd ${WRKSRC} ; . ${GNUSTEP_MAKEFILES}/GNUstep.sh ; ./configure ${CONFIGURE_ARGS}
 
 .include <bsd.port.mk>

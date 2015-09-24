@@ -1,9 +1,5 @@
-$FreeBSD$
-
-fix build with libobc2-1.7
-
---- sope-appserver/NGObjWeb/WOSession.m.orig	Sun Oct 13 16:36:40 2013
-+++ sope-appserver/NGObjWeb/WOSession.m	Sun Oct 13 16:36:51 2013
+--- sope-appserver/NGObjWeb/WOSession.m.orig	2015-09-16 18:26:49 UTC
++++ sope-appserver/NGObjWeb/WOSession.m
 @@ -33,10 +33,6 @@
  #include "common.h"
  #include <string.h>
@@ -15,4 +11,3 @@ fix build with libobc2-1.7
  #if APPLE_FOUNDATION_LIBRARY || NeXT_Foundation_LIBRARY
  @interface NSObject(Miss)
  - (id)notImplemented:(SEL)cmd;
-
