@@ -19,6 +19,7 @@ LIB_DEPENDS=		libxml2.so:${PORTSDIR}/textproc/libxml2 \
 			libconfuse.so:${PORTSDIR}/devel/libconfuse \
 			librabbitmq.so:${PORTSDIR}/net/rabbitmq-c-devel \
 			libhiredis.so:${PORTSDIR}/databases/hiredis \
+			libexpat.so:${PORTSDIR}/textproc/expat2 \
 			libjson-c.so:${PORTSDIR}/devel/json-c
 
 BUILD_DEPENDS=		ginstall:${PORTSDIR}/sysutils/coreutils \
@@ -32,6 +33,9 @@ RUN_DEPENDS=		${LOCALBASE}/bin/bash:${PORTSDIR}/shells/bash \
 			${LOCALBASE}/bin/python2:${PORTSDIR}/lang/python2 \
 			${LOCALBASE}/bin/grep:${PORTSDIR}/textproc/gnugrep
 
+#CFLAGS+=		-I${LOCALBASE}/include/json-c
+#CPPFLAGS+=		-I${LOCALBASE}/include/json-c
+
 GINSTALL=		ginstall
 
 WRKSRC=			${WRKDIR}/opensips-${PORTVERSION}
@@ -39,7 +43,7 @@ DOCSDIR=		share/doc/opensips
 
 USE_RC_SUBR=		opensips
 
-USES=			gmake shebangfix perl5
+USES=			gmake shebangfix perl5 pkgconfig
 USE_GCC=		yes
 
 OPTIONS_DEFINE=		DEBUG DOCS EXAMPLES GEOIP HTTP LDAP MEMCACHED MYSQL PGSQL RADIUS TESTS TLS UNIXODBC
@@ -143,6 +147,8 @@ EXTRA_MODULES+=		aaa_radius
 .if ${PORT_OPTIONS:MUNIXODBC}
 EXTRA_MODULES+=		db_unixodbc
 .endif
+
+
 
 OPENSIPS_MAKE_ENV=	CC="${CC}" CXX="${CXX}" CPP="${CPP}" _GCC_RUNTIME="${_GCC_RUNTIME}" CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}"
 
