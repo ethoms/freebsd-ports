@@ -1,0 +1,33 @@
+--- patch-scripts_rtpproxy.in.freebsd.orig	2015-09-28 16:03:53.957137804 +0800
++++ patch-scripts_rtpproxy.in.freebsd	2015-09-28 16:01:49.619526681 +0800
+@@ -1,14 +1,25 @@
+---- scripts/rtpproxy.in.freebsd.orig    2015-03-09 17:40:27 UTC
+-+++ scripts/rtpproxy.in.freebsd
+-@@ -22,7 +22,10 @@ load_rc_config ${name}
++--- scripts/rtpproxy.in.freebsd.orig	2015-09-22 08:08:06.105815204 +0800
+++++ scripts/rtpproxy.in.freebsd	2015-09-22 08:13:54.138790215 +0800
++@@ -6,7 +6,7 @@
++ 
++ # PROVIDE: rtpproxy
++ # REQUIRE: DAEMON
++-# BEFORE: ser openser
+++# BEFORE: kamailio opensips
++ 
++ prefix=%%PREFIX%%
++ 
++@@ -22,7 +22,12 @@
+  
+  rtpproxy_enable=${rtpproxy_enable:-"NO"}
+  rtpproxy_laddr=${rtpproxy_laddr:-"0.0.0.0"}
+++rtpproxy_ctrl_socket=${rtpproxy_ctrl_socket:-"unix:/var/run/rtpproxy.sock"}
+++rtpproxy_paddr=${rtpproxy_paddr:-"0.0.0.0"}
+ +rtpproxy_usr=${rtpproxy_usr:-"rtpproxy"}
+ +rtpproxy_grp=${rtpproxy_grp:-"rtpproxy"}
+  
+ -command_args="-l ${rtpproxy_laddr} -p /var/run/rtpproxy.pid"
+-+command_args="-l ${rtpproxy_laddr} -p /var/run/rtpproxy.pid \
+-+  -u ${rtpproxy_usr}:${rtpproxy_grp}"
+++command_args="-u ${rtpproxy_usr}:${rtpproxy_grp} -A ${rtpproxy_paddr} -F -l ${rtpproxy_laddr} \
+++  -s ${rtpproxy_ctrl_socket} -d INFO -p /var/run/rtpproxy.pid"
+  
+  run_rc_command "${1}"
