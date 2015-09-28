@@ -13,7 +13,7 @@
  
  rtpproxy_enable=${rtpproxy_enable:-"NO"}
  rtpproxy_laddr=${rtpproxy_laddr:-"0.0.0.0"}
-+rtpproxy_ctrl_socket=${rtpproxy_ctrl_socket:-"udp:0.0.0.0:22222"}
++rtpproxy_ctrl_socket=${rtpproxy_ctrl_socket:-"unix:/var/run/rtpproxy.sock"}
 +rtpproxy_paddr=${rtpproxy_paddr:-"0.0.0.0"}
 +rtpproxy_usr=${rtpproxy_usr:-"rtpproxy"}
 +rtpproxy_grp=${rtpproxy_grp:-"rtpproxy"}
