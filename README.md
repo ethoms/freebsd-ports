@@ -3,6 +3,11 @@ Euan Thoms' FreeBSD ports development
 
 ## News:
 
+**[28/09/2015]**
+
+net/opensips v2.1.0 added and submitted for approval to offical ports tree.
+
+
 **[24/09/2015]**
 
 www/sogo and devel/sope have been committed to the official FreeBSD ports tree!
