@@ -3,6 +3,12 @@ Euan Thoms' FreeBSD ports development
 
 ## News:
 
+**[02/10/2015]**
+
+net/opensips has been committed to the offficial FreeBSD ports tree!
+
+*NOTE: Therefore, that port in this tree is for my development purposes. It's now recommended to use the official ports tree.*
+
 **[28/09/2015]**
 
 net/opensips v2.1.0 added and submitted for approval to offical ports tree.
