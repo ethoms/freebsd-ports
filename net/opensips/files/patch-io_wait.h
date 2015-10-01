@@ -1,5 +1,5 @@
---- io_wait.h.orig	2015-05-07 22:13:54.000000000 +0800
-+++ io_wait.h	2015-08-14 01:56:37.215170165 +0800
+--- io_wait.h.orig	2015-05-07 14:13:54 UTC
++++ io_wait.h
 @@ -56,6 +56,7 @@
  
  #include <errno.h>
@@ -8,7 +8,7 @@
  #ifdef HAVE_SIGIO_RT
  #define __USE_GNU /* or else F_SETSIG won't be included */
  #define _GNU_SOURCE /* define this as well */
-@@ -348,19 +349,21 @@
+@@ -348,19 +349,21 @@ inline static int io_watch_add(	io_wait_
  		goto error;
  	}
  	if (prio > h->max_prio) {

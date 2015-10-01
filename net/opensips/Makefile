@@ -1,14 +1,14 @@
 # Created by: Euan Thoms <euan@potensol.com>
-# $FreeBSD$
+# $FreeBSD: head/net/opensips/Makefile 398368 2015-10-01 16:34:41Z pi $
 
 PORTNAME=		opensips
 PORTVERSION=		2.1.0
 CATEGORIES=		net
-MASTER_SITES=		http://opensips.org/pub/opensips/2.1.0/src/
-DISTNAME=		opensips-${PORTVERSION}
+MASTER_SITES=		http://opensips.org/pub/opensips/${PORTVERSION}/src/
+# DISTNAME=		opensips-${PORTVERSION}
 
 MAINTAINER=		euan@potensol.com
-COMMENT=		OpenSIPS (Open SIP Server) is a mature Open Source implementation of a SIP server.
+COMMENT=		Open SIP Server
 
 LICENSE=		GPLv2
 LICENSE_FILE=		${WRKSRC}/COPYING
@@ -21,14 +21,12 @@ LIB_DEPENDS=		libxml2.so:${PORTSDIR}/textproc/libxml2 \
 			libhiredis.so:${PORTSDIR}/databases/hiredis \
 			libexpat.so:${PORTSDIR}/textproc/expat2 \
 			libjson-c.so:${PORTSDIR}/devel/json-c
-
 BUILD_DEPENDS=		ginstall:${PORTSDIR}/sysutils/coreutils \
 			gtar:${PORTSDIR}/archivers/gtar \
 			gm4:${PORTSDIR}/devel/m4 \
 			redis-server:${PORTSDIR}/databases/redis-devel \
 			python2:${PORTSDIR}/lang/python2 \
 			python:${PORTSDIR}/lang/python
-
 RUN_DEPENDS=		${LOCALBASE}/bin/bash:${PORTSDIR}/shells/bash \
 			${LOCALBASE}/bin/python2:${PORTSDIR}/lang/python2 \
 			${LOCALBASE}/bin/grep:${PORTSDIR}/textproc/gnugrep
@@ -43,7 +41,7 @@ DOCSDIR=		share/doc/opensips
 
 USE_RC_SUBR=		opensips
 
-USES=			gmake shebangfix perl5 pkgconfig
+USES=			gmake perl5 pkgconfig shebangfix
 USE_GCC=		yes
 
 OPTIONS_DEFINE=		DEBUG DOCS EXAMPLES GEOIP HTTP LDAP MEMCACHED MYSQL PGSQL RADIUS TESTS TLS UNIXODBC
@@ -116,7 +114,7 @@ SHEBANG_FILES=		scripts/osipsconsole \
 .include <bsd.port.options.mk>
 
 .if ${PORT_OPTIONS:MGEOIP}
-EXTRA_MODULES+=		mmgeoip	
+EXTRA_MODULES+=		mmgeoip
 .endif
 
 .if ${PORT_OPTIONS:MHTTP}
@@ -147,8 +145,6 @@ EXTRA_MODULES+=		aaa_radius
 .if ${PORT_OPTIONS:MUNIXODBC}
 EXTRA_MODULES+=		db_unixodbc
 .endif
-
-
 
 OPENSIPS_MAKE_ENV=	CC="${CC}" CXX="${CXX}" CPP="${CPP}" _GCC_RUNTIME="${_GCC_RUNTIME}" CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}"
 
@@ -230,4 +226,3 @@ post-stage:
 .endfor
 
 .include <bsd.port.mk>
-

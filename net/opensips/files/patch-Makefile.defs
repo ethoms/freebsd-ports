@@ -1,6 +1,6 @@
---- Makefile.defs.orig	2015-07-15 17:29:48.903759537 +0800
-+++ Makefile.defs	2015-07-15 17:33:30.446744247 +0800
-@@ -118,6 +118,14 @@
+--- Makefile.defs.orig	2015-05-07 16:45:43 UTC
++++ Makefile.defs
+@@ -118,6 +118,14 @@ ifeq ($(OS),solaris)
  		ISSMP ?= yes
  	endif
  else
@@ -15,7 +15,7 @@
  	SMP_STR = $(shell uname -v | grep -i "SMP")
  	ifeq (,$(SMP_STR))
  		ISSMP ?= no
-@@ -125,6 +133,7 @@
+@@ -125,6 +133,7 @@ else
  		ISSMP ?= yes
  	endif
  endif
@@ -23,7 +23,7 @@
  
  OSREL = $(shell uname -r)
  # numerical version (good for comparisons: A.B.C => A*1000000+B*1000+C)
-@@ -162,6 +171,9 @@
+@@ -162,6 +171,9 @@ cfg-dir = etc/$(MAIN_NAME)/
  bin-dir = sbin/
  
  ARCH_B = $(shell echo $(ARCH) | sed -e 's/.*64.*/64b/')
@@ -33,7 +33,7 @@
  ifeq ($(ARCH_B),64b)
  	LIBDIR ?= lib64
  else
-@@ -169,6 +181,7 @@
+@@ -169,6 +181,7 @@ else
  	# assume 32b - it is not really used further
  	ARCH_B=32b
  endif
