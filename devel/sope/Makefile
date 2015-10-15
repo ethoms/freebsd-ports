@@ -3,6 +3,7 @@
 
 PORTNAME=		sope
 PORTVERSION=		2.3.2
+PORTREVISION=		1
 CATEGORIES=		devel gnustep
 MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
 DISTNAME=		SOPE-${PORTVERSION}
@@ -32,6 +33,13 @@ USE_LDCONFIG=		${GNUSTEP_LOCAL_LIBRARIES}
 
 SUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
 			GNUSTEP_MAKEFILES=${GNUSTEP_MAKEFILES}
+
+# For checking compiler warnings:
+#CFLAGS+=		-Werror
+#CFLAGS+=		-Wno-objc-protocol-method-implementation
+#CFLAGS+=		-Wno-unused-function
+#CFLAGS+=		-Wno-comment
+#CFLAGS+=		-Wno-unused-variable
 
 CONFIGURE_ARGS=		--with-gnustep --disable-debug --enable-strip
 
