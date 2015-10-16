@@ -3,7 +3,7 @@
 
 PORTNAME=		sogo
 PORTVERSION=		2.3.2
-PORTREVISION=		2
+PORTREVISION=		1
 CATEGORIES=		www gnustep
 MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
 DISTNAME=		SOGo-${PORTVERSION}
@@ -18,7 +18,11 @@ LIB_DEPENDS=		libmemcached.so:${PORTSDIR}/databases/libmemcached \
 			libcurl.so:${PORTSDIR}/ftp/curl
 RUN_DEPENDS:=		${BUILD_DEPENDS}
 
-MAKE_JOBS_UNSAFE=yes
+OPTIONS_DEFINE=		ACTIVESYNC
+OPTIONS_DEFAULT=
+OPTIONS_SUB=		yes
+
+ACTIVESYNC_DESC=	Enable support for ActiveSync protocol (Experimental)
 
 USERS=			sogod
 GROUPS=			sogod
@@ -42,9 +46,17 @@ CONFIGURE_ARGS=		--disable-debug --enable-strip
 
 .include <bsd.port.options.mk>
 
+.if ${PORT_OPTIONS:MACTIVESYNC}
+LIB_DEPENDS+=		libwbxml2.so:${PORTSDIR}/textproc/wbxml2
+.endif
+
 post-patch:
 	${GREP} -rlF '/etc/sogo' ${WRKSRC} \
 		| ${XARGS} ${REINPLACE_CMD} 's#/etc/sogo#${PREFIX}/etc/sogo#g'
+
+.if ${PORT_OPTIONS:MACTIVESYNC}
+	@${REINPLACE_CMD} -e 's/Tools/Tools ActiveSync/' ${WRKSRC}/GNUmakefile
+.endif
 
 do-configure:
 	cd ${WRKSRC} ; . ${GNUSTEP_MAKEFILES}/GNUstep.sh ; ./configure ${CONFIGURE_ARGS}
