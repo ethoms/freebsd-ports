@@ -1,0 +1,12 @@
+Notes for www/sogo port development.
+
+Patches with caution:
+
+patch-SoObjects_SOGo_SOGoCacheGCSFolder.h
+patch-SoObjects_SOGo_SOGoGroup.m
+patch-SoObjects_SOGo_SOGoParentFolder.h
+patch-SoObjects_SOGo_SOGoParentFolder.m
+patch-SoObjects_SOGo_WORequest+SOGo.m
+patch-UI_MailPartViewers_UIxMailListActions.h
+patch-UI_MailPartViewers_UIxMailPartHTMLViewer.m
+patch-UI_Scheduler_UIxCalDayTable.m

@@ -1,0 +1,6 @@
+Notes for devel/sope port development.
+
+Patches with caution:
+
+files/patch-sope-mime_NGImap4_NGImap4Client.h
+files/patch-sope-mime_NGImap4_NGImap4Client.m
