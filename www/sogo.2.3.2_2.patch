@@ -1,6 +1,15 @@
 diff -ruN sogo.orig/Makefile sogo/Makefile
 --- sogo.orig/Makefile	2015-09-29 14:17:27.000000000 +0800
-+++ sogo/Makefile	2015-10-16 18:43:18.441280315 +0800
++++ sogo/Makefile	2015-10-20 11:43:00.656205166 +0800
+@@ -3,7 +3,7 @@
+ 
+ PORTNAME=		sogo
+ PORTVERSION=		2.3.2
+-PORTREVISION=		1
++PORTREVISION=		2
+ CATEGORIES=		www gnustep
+ MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
+ DISTNAME=		SOGo-${PORTVERSION}
 @@ -18,7 +18,11 @@
  			libcurl.so:${PORTSDIR}/ftp/curl
  RUN_DEPENDS:=		${BUILD_DEPENDS}
