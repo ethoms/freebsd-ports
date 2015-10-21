@@ -1,6 +1,6 @@
 diff -ruN sogo.orig/Makefile sogo/Makefile
 --- sogo.orig/Makefile	2015-09-29 14:17:27.000000000 +0800
-+++ sogo/Makefile	2015-10-21 14:29:32.000000000 +0800
++++ sogo/Makefile	2015-10-21 16:37:10.916028727 +0800
 @@ -3,7 +3,7 @@
  
  PORTNAME=		sogo
@@ -10,9 +10,16 @@ diff -ruN sogo.orig/Makefile sogo/Makefile
  CATEGORIES=		www gnustep
  MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
  DISTNAME=		SOGo-${PORTVERSION}
-@@ -18,7 +18,11 @@
- 			libcurl.so:${PORTSDIR}/ftp/curl
- RUN_DEPENDS:=		${BUILD_DEPENDS}
+@@ -13,12 +13,17 @@
+ 
+ LICENSE=		GPLv2
+ 
+-BUILD_DEPENDS=		${GNUSTEP_LOCAL_LIBRARIES}/libDOM.so:${PORTSDIR}/devel/sope
+ LIB_DEPENDS=		libmemcached.so:${PORTSDIR}/databases/libmemcached \
+-			libcurl.so:${PORTSDIR}/ftp/curl
+-RUN_DEPENDS:=		${BUILD_DEPENDS}
++			libcurl.so:${PORTSDIR}/ftp/curl \
++			libDOM.so:${PORTSDIR}/devel/sope
  
 -MAKE_JOBS_UNSAFE=yes
 +OPTIONS_DEFINE=		ACTIVESYNC
@@ -20,18 +27,12 @@ diff -ruN sogo.orig/Makefile sogo/Makefile
 +OPTIONS_SUB=		yes
 +
 +ACTIVESYNC_DESC=	Enable support for ActiveSync protocol (Experimental)
++
++ACTIVESYNC_LIB_DEPENDS=	libwbxml2.so:${PORTSDIR}/textproc/wbxml2
  
  USERS=			sogod
  GROUPS=			sogod
-@@ -36,10 +40,18 @@
- 
- .include <bsd.port.options.mk>
- 
-+.if ${PORT_OPTIONS:MACTIVESYNC}
-+LIB_DEPENDS+=		libwbxml2.so:${PORTSDIR}/textproc/wbxml2
-+.endif
-+
- post-patch:
+@@ -40,6 +45,10 @@
  	${GREP} -rlF '/etc/sogo' ${WRKSRC} \
  		| ${XARGS} ${REINPLACE_CMD} 's#/etc/sogo#${PREFIX}/etc/sogo#g'
  
@@ -44,7 +45,7 @@ diff -ruN sogo.orig/Makefile sogo/Makefile
  
 diff -ruN sogo.orig/files/patch-ActiveSync_GNUmakefile sogo/files/patch-ActiveSync_GNUmakefile
 --- sogo.orig/files/patch-ActiveSync_GNUmakefile	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-ActiveSync_GNUmakefile	2015-10-16 18:44:33.000000000 +0800
++++ sogo/files/patch-ActiveSync_GNUmakefile	2015-10-16 18:44:33.285273628 +0800
 @@ -0,0 +1,11 @@
 +--- ActiveSync/GNUmakefile.orig	2015-09-17 02:41:28.000000000 +0800
 ++++ ActiveSync/GNUmakefile	2015-10-16 16:55:31.932724851 +0800
@@ -2101,7 +2102,7 @@ diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxRecurrenceEditor.m sogo/files/pa
 + }
 diff -ruN sogo.orig/pkg-plist sogo/pkg-plist
 --- sogo.orig/pkg-plist	2015-09-23 13:30:12.000000000 +0800
-+++ sogo/pkg-plist	2015-10-16 18:44:03.000000000 +0800
++++ sogo/pkg-plist	2015-10-16 18:44:03.971283911 +0800
 @@ -564,6 +564,10 @@
  GNUstep/Local/Library/OCSTypeModels/appointment.ocs
  GNUstep/Local/Library/OCSTypeModels/contact-oracle.ocs

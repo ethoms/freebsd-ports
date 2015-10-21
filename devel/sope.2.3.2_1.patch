@@ -1,6 +1,6 @@
 diff -ruN sope.orig/Makefile sope/Makefile
 --- sope.orig/Makefile	2015-09-22 18:32:08.000000000 +0800
-+++ sope/Makefile	2015-10-21 14:26:57.000000000 +0800
++++ sope/Makefile	2015-10-21 14:26:57.569568679 +0800
 @@ -3,6 +3,7 @@
  
  PORTNAME=		sope

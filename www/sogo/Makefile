@@ -13,16 +13,17 @@ COMMENT=		Groupware server with a focus on scalability and open standards
 
 LICENSE=		GPLv2
 
-BUILD_DEPENDS=		${GNUSTEP_LOCAL_LIBRARIES}/libDOM.so:${PORTSDIR}/devel/sope
 LIB_DEPENDS=		libmemcached.so:${PORTSDIR}/databases/libmemcached \
-			libcurl.so:${PORTSDIR}/ftp/curl
-RUN_DEPENDS:=		${BUILD_DEPENDS}
+			libcurl.so:${PORTSDIR}/ftp/curl \
+			libDOM.so:${PORTSDIR}/devel/sope
 
 OPTIONS_DEFINE=		ACTIVESYNC
 OPTIONS_DEFAULT=
 OPTIONS_SUB=		yes
 
 ACTIVESYNC_DESC=	Enable support for ActiveSync protocol (Experimental)
+
+ACTIVESYNC_LIB_DEPENDS=	libwbxml2.so:${PORTSDIR}/textproc/wbxml2
 
 USERS=			sogod
 GROUPS=			sogod
@@ -39,10 +40,6 @@ SUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
 CONFIGURE_ARGS=		--disable-debug --enable-strip
 
 .include <bsd.port.options.mk>
-
-.if ${PORT_OPTIONS:MACTIVESYNC}
-LIB_DEPENDS+=		libwbxml2.so:${PORTSDIR}/textproc/wbxml2
-.endif
 
 post-patch:
 	${GREP} -rlF '/etc/sogo' ${WRKSRC} \
