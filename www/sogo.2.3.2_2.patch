@@ -1,6 +1,6 @@
 diff -ruN sogo.orig/Makefile sogo/Makefile
 --- sogo.orig/Makefile	2015-09-29 14:17:27.000000000 +0800
-+++ sogo/Makefile	2015-10-21 16:37:10.916028727 +0800
++++ sogo/Makefile	2015-10-21 17:07:05.680904749 +0800
 @@ -3,7 +3,7 @@
  
  PORTNAME=		sogo
@@ -10,7 +10,7 @@ diff -ruN sogo.orig/Makefile sogo/Makefile
  CATEGORIES=		www gnustep
  MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
  DISTNAME=		SOGo-${PORTVERSION}
-@@ -13,12 +13,17 @@
+@@ -13,12 +13,16 @@
  
  LICENSE=		GPLv2
  
@@ -23,7 +23,6 @@ diff -ruN sogo.orig/Makefile sogo/Makefile
  
 -MAKE_JOBS_UNSAFE=yes
 +OPTIONS_DEFINE=		ACTIVESYNC
-+OPTIONS_DEFAULT=
 +OPTIONS_SUB=		yes
 +
 +ACTIVESYNC_DESC=	Enable support for ActiveSync protocol (Experimental)
@@ -32,7 +31,7 @@ diff -ruN sogo.orig/Makefile sogo/Makefile
  
  USERS=			sogod
  GROUPS=			sogod
-@@ -40,6 +45,10 @@
+@@ -40,6 +44,10 @@
  	${GREP} -rlF '/etc/sogo' ${WRKSRC} \
  		| ${XARGS} ${REINPLACE_CMD} 's#/etc/sogo#${PREFIX}/etc/sogo#g'
  

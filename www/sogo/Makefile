@@ -18,7 +18,6 @@ LIB_DEPENDS=		libmemcached.so:${PORTSDIR}/databases/libmemcached \
 			libDOM.so:${PORTSDIR}/devel/sope
 
 OPTIONS_DEFINE=		ACTIVESYNC
-OPTIONS_DEFAULT=
 OPTIONS_SUB=		yes
 
 ACTIVESYNC_DESC=	Enable support for ActiveSync protocol (Experimental)
