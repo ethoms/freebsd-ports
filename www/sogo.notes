@@ -1,5 +1,11 @@
 Notes for www/sogo port development.
 
+# For checking compiler warnings (Makefile):
+#CFLAGS+=               -Werror
+#CFLAGS+=               -Wno-unused-function
+#CFLAGS+=               -Wno-unused-variable
+#CFLAGS+=               -Wno-objc-protocol-method-implementation
+
 Patches with caution:
 
 patch-SoObjects_SOGo_SOGoCacheGCSFolder.h

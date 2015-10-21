@@ -1,6 +1,6 @@
 diff -ruN sope.orig/Makefile sope/Makefile
 --- sope.orig/Makefile	2015-09-22 18:32:08.000000000 +0800
-+++ sope/Makefile	2015-10-16 07:16:14.000000000 +0800
++++ sope/Makefile	2015-10-21 14:26:57.000000000 +0800
 @@ -3,6 +3,7 @@
  
  PORTNAME=		sope
@@ -9,20 +9,6 @@ diff -ruN sope.orig/Makefile sope/Makefile
  CATEGORIES=		devel gnustep
  MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
  DISTNAME=		SOPE-${PORTVERSION}
-@@ -33,6 +34,13 @@
- SUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
- 			GNUSTEP_MAKEFILES=${GNUSTEP_MAKEFILES}
- 
-+# For checking compiler warnings:
-+#CFLAGS+=		-Werror
-+#CFLAGS+=		-Wno-objc-protocol-method-implementation
-+#CFLAGS+=		-Wno-unused-function
-+#CFLAGS+=		-Wno-comment
-+#CFLAGS+=		-Wno-unused-variable
-+
- CONFIGURE_ARGS=		--with-gnustep --disable-debug --enable-strip
- 
- .include <bsd.port.options.mk>
 diff -ruN sope.orig/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOHyperlinkInfo.m sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOHyperlinkInfo.m
 --- sope.orig/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOHyperlinkInfo.m	1970-01-01 07:30:00.000000000 +0730
 +++ sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOHyperlinkInfo.m	2015-10-08 05:41:34.000000000 +0800

@@ -1,6 +1,6 @@
 diff -ruN sogo.orig/Makefile sogo/Makefile
 --- sogo.orig/Makefile	2015-09-29 14:17:27.000000000 +0800
-+++ sogo/Makefile	2015-10-20 11:43:00.656205166 +0800
++++ sogo/Makefile	2015-10-21 14:29:32.000000000 +0800
 @@ -3,7 +3,7 @@
  
  PORTNAME=		sogo
@@ -23,16 +23,8 @@ diff -ruN sogo.orig/Makefile sogo/Makefile
  
  USERS=			sogod
  GROUPS=			sogod
-@@ -34,12 +38,26 @@
+@@ -36,10 +40,18 @@
  
- CONFIGURE_ARGS=		--disable-debug --enable-strip
- 
-+# For checking compiler warnings:
-+#CFLAGS+=		-Werror
-+#CFLAGS+=		-Wno-unused-function
-+#CFLAGS+=		-Wno-unused-variable
-+#CFLAGS+=		-Wno-objc-protocol-method-implementation
-+
  .include <bsd.port.options.mk>
  
 +.if ${PORT_OPTIONS:MACTIVESYNC}
@@ -52,7 +44,7 @@ diff -ruN sogo.orig/Makefile sogo/Makefile
  
 diff -ruN sogo.orig/files/patch-ActiveSync_GNUmakefile sogo/files/patch-ActiveSync_GNUmakefile
 --- sogo.orig/files/patch-ActiveSync_GNUmakefile	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-ActiveSync_GNUmakefile	2015-10-16 16:55:38.534727969 +0800
++++ sogo/files/patch-ActiveSync_GNUmakefile	2015-10-16 18:44:33.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- ActiveSync/GNUmakefile.orig	2015-09-17 02:41:28.000000000 +0800
 ++++ ActiveSync/GNUmakefile	2015-10-16 16:55:31.932724851 +0800
@@ -67,7 +59,7 @@ diff -ruN sogo.orig/files/patch-ActiveSync_GNUmakefile sogo/files/patch-ActiveSy
 + -include GNUmakefile.preamble
 diff -ruN sogo.orig/files/patch-Main_SOGo+DAV.m sogo/files/patch-Main_SOGo+DAV.m
 --- sogo.orig/files/patch-Main_SOGo+DAV.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Main_SOGo+DAV.m	2015-10-12 01:06:44.160469671 +0800
++++ sogo/files/patch-Main_SOGo+DAV.m	2015-10-12 01:06:44.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- Main/SOGo+DAV.m.orig	2015-10-12 00:55:36.784513635 +0800
 ++++ Main/SOGo+DAV.m	2015-10-12 01:05:10.524474393 +0800
@@ -82,7 +74,7 @@ diff -ruN sogo.orig/files/patch-Main_SOGo+DAV.m sogo/files/patch-Main_SOGo+DAV.m
 +   if ([list length])
 diff -ruN sogo.orig/files/patch-SOPE_GDLContentStore_GCSChannelManager.m sogo/files/patch-SOPE_GDLContentStore_GCSChannelManager.m
 --- sogo.orig/files/patch-SOPE_GDLContentStore_GCSChannelManager.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SOPE_GDLContentStore_GCSChannelManager.m	2015-10-08 10:24:49.488980653 +0800
++++ sogo/files/patch-SOPE_GDLContentStore_GCSChannelManager.m	2015-10-08 10:24:49.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SOPE/GDLContentStore/GCSChannelManager.m.orig	2015-10-08 10:23:07.630990957 +0800
 ++++ SOPE/GDLContentStore/GCSChannelManager.m	2015-10-08 10:23:39.389981097 +0800
@@ -97,7 +89,7 @@ diff -ruN sogo.orig/files/patch-SOPE_GDLContentStore_GCSChannelManager.m sogo/fi
 +   return ms;
 diff -ruN sogo.orig/files/patch-SOPE_NGCards_CardElement.m sogo/files/patch-SOPE_NGCards_CardElement.m
 --- sogo.orig/files/patch-SOPE_NGCards_CardElement.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SOPE_NGCards_CardElement.m	2015-10-08 08:49:06.666373207 +0800
++++ sogo/files/patch-SOPE_NGCards_CardElement.m	2015-10-08 08:49:06.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SOPE/NGCards/CardElement.m.orig	2015-10-08 08:46:14.856388025 +0800
 ++++ SOPE/NGCards/CardElement.m	2015-10-08 08:48:15.614375777 +0800
@@ -112,7 +104,7 @@ diff -ruN sogo.orig/files/patch-SOPE_NGCards_CardElement.m sogo/files/patch-SOPE
 + 
 diff -ruN sogo.orig/files/patch-SOPE_NGCards_CardGroup.m sogo/files/patch-SOPE_NGCards_CardGroup.m
 --- sogo.orig/files/patch-SOPE_NGCards_CardGroup.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SOPE_NGCards_CardGroup.m	2015-10-08 09:09:48.364290342 +0800
++++ sogo/files/patch-SOPE_NGCards_CardGroup.m	2015-10-08 09:09:48.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SOPE/NGCards/CardGroup.m.orig	2015-10-08 09:03:57.483310954 +0800
 ++++ SOPE/NGCards/CardGroup.m	2015-10-08 09:06:25.109300905 +0800
@@ -127,7 +119,7 @@ diff -ruN sogo.orig/files/patch-SOPE_NGCards_CardGroup.m sogo/files/patch-SOPE_N
 +              [[children objectAtIndex: count] description]];
 diff -ruN sogo.orig/files/patch-SOPE_NGCards_NSCalendarDate+NGCards.m sogo/files/patch-SOPE_NGCards_NSCalendarDate+NGCards.m
 --- sogo.orig/files/patch-SOPE_NGCards_NSCalendarDate+NGCards.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SOPE_NGCards_NSCalendarDate+NGCards.m	2015-10-08 08:27:43.782464673 +0800
++++ sogo/files/patch-SOPE_NGCards_NSCalendarDate+NGCards.m	2015-10-08 08:27:43.000000000 +0800
 @@ -0,0 +1,24 @@
 +--- SOPE/NGCards/NSCalendarDate+NGCards.m.orig	2015-10-08 08:22:33.220485498 +0800
 ++++ SOPE/NGCards/NSCalendarDate+NGCards.m	2015-10-08 08:24:16.099475908 +0800
@@ -155,7 +147,7 @@ diff -ruN sogo.orig/files/patch-SOPE_NGCards_NSCalendarDate+NGCards.m sogo/files
 + @end
 diff -ruN sogo.orig/files/patch-SOPE_NGCards_iCalMonthlyRecurrenceCalculator.m sogo/files/patch-SOPE_NGCards_iCalMonthlyRecurrenceCalculator.m
 --- sogo.orig/files/patch-SOPE_NGCards_iCalMonthlyRecurrenceCalculator.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SOPE_NGCards_iCalMonthlyRecurrenceCalculator.m	2015-10-08 19:32:41.948714743 +0800
++++ sogo/files/patch-SOPE_NGCards_iCalMonthlyRecurrenceCalculator.m	2015-10-08 19:32:41.000000000 +0800
 @@ -0,0 +1,20 @@
 +--- SOPE/NGCards/iCalMonthlyRecurrenceCalculator.m.orig	2015-10-08 19:30:05.019721919 +0800
 ++++ SOPE/NGCards/iCalMonthlyRecurrenceCalculator.m	2015-10-08 19:31:47.705714765 +0800
@@ -179,7 +171,7 @@ diff -ruN sogo.orig/files/patch-SOPE_NGCards_iCalMonthlyRecurrenceCalculator.m s
 +                     }
 diff -ruN sogo.orig/files/patch-SOPE_NGCards_iCalPerson.m sogo/files/patch-SOPE_NGCards_iCalPerson.m
 --- sogo.orig/files/patch-SOPE_NGCards_iCalPerson.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SOPE_NGCards_iCalPerson.m	2015-10-08 09:33:18.543193091 +0800
++++ sogo/files/patch-SOPE_NGCards_iCalPerson.m	2015-10-08 09:33:18.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SOPE/NGCards/iCalPerson.m.orig	2015-10-08 09:29:37.635206447 +0800
 ++++ SOPE/NGCards/iCalPerson.m	2015-10-08 09:32:16.016193627 +0800
@@ -194,7 +186,7 @@ diff -ruN sogo.orig/files/patch-SOPE_NGCards_iCalPerson.m sogo/files/patch-SOPE_
 +     return NO;
 diff -ruN sogo.orig/files/patch-SOPE_NGCards_iCalRecurranceRule.m sogo/files/patch-SOPE_NGCards_iCalRecurranceRule.m
 --- sogo.orig/files/patch-SOPE_NGCards_iCalRecurranceRule.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SOPE_NGCards_iCalRecurranceRule.m	2015-10-08 09:53:34.018109490 +0800
++++ sogo/files/patch-SOPE_NGCards_iCalRecurranceRule.m	2015-10-08 09:53:34.000000000 +0800
 @@ -0,0 +1,15 @@
 +--- SOPE/NGCards/iCalRecurrenceRule.m.orig	2015-10-08 09:37:28.117175437 +0800
 ++++ SOPE/NGCards/iCalRecurrenceRule.m	2015-10-08 09:50:57.392119166 +0800
@@ -213,7 +205,7 @@ diff -ruN sogo.orig/files/patch-SOPE_NGCards_iCalRecurranceRule.m sogo/files/pat
 + }
 diff -ruN sogo.orig/files/patch-SOPE_NGCards_versitCardsSaxDriver_VSSaxDriver.m sogo/files/patch-SOPE_NGCards_versitCardsSaxDriver_VSSaxDriver.m
 --- sogo.orig/files/patch-SOPE_NGCards_versitCardsSaxDriver_VSSaxDriver.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SOPE_NGCards_versitCardsSaxDriver_VSSaxDriver.m	2015-10-08 10:19:21.112998424 +0800
++++ sogo/files/patch-SOPE_NGCards_versitCardsSaxDriver_VSSaxDriver.m	2015-10-08 10:19:21.000000000 +0800
 @@ -0,0 +1,20 @@
 +--- SOPE/NGCards/versitCardsSaxDriver/VSSaxDriver.m.orig	2015-10-08 10:17:21.303008853 +0800
 ++++ SOPE/NGCards/versitCardsSaxDriver/VSSaxDriver.m	2015-10-08 10:18:24.511005649 +0800
@@ -237,7 +229,7 @@ diff -ruN sogo.orig/files/patch-SOPE_NGCards_versitCardsSaxDriver_VSSaxDriver.m 
 +   [self _parseString: _source];
 diff -ruN sogo.orig/files/patch-SoObjects_Appointments_MSExchangeFreeBusy.m sogo/files/patch-SoObjects_Appointments_MSExchangeFreeBusy.m
 --- sogo.orig/files/patch-SoObjects_Appointments_MSExchangeFreeBusy.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Appointments_MSExchangeFreeBusy.m	2015-10-09 16:18:26.518559284 +0800
++++ sogo/files/patch-SoObjects_Appointments_MSExchangeFreeBusy.m	2015-10-09 16:18:26.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/Appointments/MSExchangeFreeBusy.m.orig	2015-10-09 16:15:25.499576435 +0800
 ++++ SoObjects/Appointments/MSExchangeFreeBusy.m	2015-10-09 16:17:52.374562154 +0800
@@ -252,7 +244,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Appointments_MSExchangeFreeBusy.m sogo
 +   if (mergedFreeBusy)
 diff -ruN sogo.orig/files/patch-SoObjects_Appointments_SOGoAppointmentFolder.m sogo/files/patch-SoObjects_Appointments_SOGoAppointmentFolder.m
 --- sogo.orig/files/patch-SoObjects_Appointments_SOGoAppointmentFolder.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Appointments_SOGoAppointmentFolder.m	2015-10-09 15:26:26.736785255 +0800
++++ sogo/files/patch-SoObjects_Appointments_SOGoAppointmentFolder.m	2015-10-09 15:26:26.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/Appointments/SOGoAppointmentFolder.m.orig	2015-10-09 15:19:44.154803470 +0800
 ++++ SoObjects/Appointments/SOGoAppointmentFolder.m	2015-10-09 15:25:42.002786945 +0800
@@ -267,7 +259,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Appointments_SOGoAppointmentFolder.m s
 +       [colType addObject: gdVEventCol];
 diff -ruN sogo.orig/files/patch-SoObjects_Appointments_SOGoAppointmentObject.m sogo/files/patch-SoObjects_Appointments_SOGoAppointmentObject.m
 --- sogo.orig/files/patch-SoObjects_Appointments_SOGoAppointmentObject.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Appointments_SOGoAppointmentObject.m	2015-10-09 15:06:56.274859111 +0800
++++ sogo/files/patch-SoObjects_Appointments_SOGoAppointmentObject.m	2015-10-09 15:06:56.000000000 +0800
 @@ -0,0 +1,64 @@
 +--- SoObjects/Appointments/SOGoAppointmentObject.m.orig	2015-10-09 14:24:40.529034383 +0800
 ++++ SoObjects/Appointments/SOGoAppointmentObject.m	2015-10-09 14:55:22.495908672 +0800
@@ -335,7 +327,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Appointments_SOGoAppointmentObject.m s
 +       //
 diff -ruN sogo.orig/files/patch-SoObjects_Appointments_SOGoCalendarComponent.m sogo/files/patch-SoObjects_Appointments_SOGoCalendarComponent.m
 --- sogo.orig/files/patch-SoObjects_Appointments_SOGoCalendarComponent.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Appointments_SOGoCalendarComponent.m	2015-10-09 14:23:27.623035787 +0800
++++ sogo/files/patch-SoObjects_Appointments_SOGoCalendarComponent.m	2015-10-09 14:23:27.000000000 +0800
 @@ -0,0 +1,25 @@
 +--- SoObjects/Appointments/SOGoCalendarComponent.m.orig	2015-10-09 13:51:16.100168977 +0800
 ++++ SoObjects/Appointments/SOGoCalendarComponent.m	2015-10-09 14:20:59.057046917 +0800
@@ -364,7 +356,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Appointments_SOGoCalendarComponent.m s
 + - (NSString *) davContentType
 diff -ruN sogo.orig/files/patch-SoObjects_Appointments_iCalAlarm+SOGo.m sogo/files/patch-SoObjects_Appointments_iCalAlarm+SOGo.m
 --- sogo.orig/files/patch-SoObjects_Appointments_iCalAlarm+SOGo.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Appointments_iCalAlarm+SOGo.m	2015-10-09 13:38:55.147222820 +0800
++++ sogo/files/patch-SoObjects_Appointments_iCalAlarm+SOGo.m	2015-10-09 13:38:55.000000000 +0800
 @@ -0,0 +1,14 @@
 +--- SoObjects/Appointments/iCalAlarm+SOGo.m.orig	2015-10-09 13:32:17.705247981 +0800
 ++++ SoObjects/Appointments/iCalAlarm+SOGo.m	2015-10-09 13:36:28.503254126 +0800
@@ -382,7 +374,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Appointments_iCalAlarm+SOGo.m sogo/fil
 +           [reminderUnit caseInsensitiveCompare: @"HOURS"] == NSOrderedSame)
 diff -ruN sogo.orig/files/patch-SoObjects_Appointments_iCalEvent+SOGo.h sogo/files/patch-SoObjects_Appointments_iCalEvent+SOGo.h
 --- sogo.orig/files/patch-SoObjects_Appointments_iCalEvent+SOGo.h	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Appointments_iCalEvent+SOGo.h	2015-10-09 13:44:23.834201084 +0800
++++ sogo/files/patch-SoObjects_Appointments_iCalEvent+SOGo.h	2015-10-09 13:44:23.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/Appointments/iCalEvent+SOGo.h.orig	2015-10-09 13:42:25.289208627 +0800
 ++++ SoObjects/Appointments/iCalEvent+SOGo.h	2015-10-09 13:42:56.647202696 +0800
@@ -397,7 +389,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Appointments_iCalEvent+SOGo.h sogo/fil
 + @end
 diff -ruN sogo.orig/files/patch-SoObjects_Appointments_iCalEvent+SOGo.m sogo/files/patch-SoObjects_Appointments_iCalEvent+SOGo.m
 --- sogo.orig/files/patch-SoObjects_Appointments_iCalEvent+SOGo.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Appointments_iCalEvent+SOGo.m	2015-10-09 13:43:54.538203360 +0800
++++ sogo/files/patch-SoObjects_Appointments_iCalEvent+SOGo.m	2015-10-09 13:43:54.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/Appointments/iCalEvent+SOGo.m.orig	2015-10-09 13:40:11.097214920 +0800
 ++++ SoObjects/Appointments/iCalEvent+SOGo.m	2015-10-09 13:41:24.319208579 +0800
@@ -412,7 +404,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Appointments_iCalEvent+SOGo.m sogo/fil
 + /**
 diff -ruN sogo.orig/files/patch-SoObjects_Contacts_NGVCard+SOGo.m sogo/files/patch-SoObjects_Contacts_NGVCard+SOGo.m
 --- sogo.orig/files/patch-SoObjects_Contacts_NGVCard+SOGo.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Contacts_NGVCard+SOGo.m	2015-10-09 17:32:32.563265136 +0800
++++ sogo/files/patch-SoObjects_Contacts_NGVCard+SOGo.m	2015-10-09 17:32:32.000000000 +0800
 @@ -0,0 +1,26 @@
 +--- SoObjects/Contacts/NGVCard+SOGo.m.orig	2015-10-09 16:20:14.044553480 +0800
 ++++ SoObjects/Contacts/NGVCard+SOGo.m	2015-10-09 17:29:21.144266488 +0800
@@ -442,7 +434,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Contacts_NGVCard+SOGo.m sogo/files/pat
 +   [self _setValue: @"description" to: [self note] inLDIFRecord: ldifRecord];
 diff -ruN sogo.orig/files/patch-SoObjects_Contacts_SOGoContactEntryPhoto.m sogo/files/patch-SoObjects_Contacts_SOGoContactEntryPhoto.m
 --- sogo.orig/files/patch-SoObjects_Contacts_SOGoContactEntryPhoto.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Contacts_SOGoContactEntryPhoto.m	2015-10-12 00:21:48.009655983 +0800
++++ sogo/files/patch-SoObjects_Contacts_SOGoContactEntryPhoto.m	2015-10-12 00:21:48.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/Contacts/SOGoContactEntryPhoto.m.orig	2015-10-12 00:20:43.010660719 +0800
 ++++ SoObjects/Contacts/SOGoContactEntryPhoto.m	2015-10-12 00:21:07.660013539 +0800
@@ -457,7 +449,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Contacts_SOGoContactEntryPhoto.m sogo/
 +     }
 diff -ruN sogo.orig/files/patch-SoObjects_Contacts_SOGoContactFolders.m sogo/files/patch-SoObjects_Contacts_SOGoContactFolders.m
 --- sogo.orig/files/patch-SoObjects_Contacts_SOGoContactFolders.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Contacts_SOGoContactFolders.m	2015-10-10 13:21:46.090339453 +0800
++++ sogo/files/patch-SoObjects_Contacts_SOGoContactFolders.m	2015-10-10 13:21:46.000000000 +0800
 @@ -0,0 +1,15 @@
 +--- SoObjects/Contacts/SOGoContactFolders.m.orig	2015-10-09 17:53:48.355169269 +0800
 ++++ SoObjects/Contacts/SOGoContactFolders.m	2015-10-10 12:59:10.048433423 +0800
@@ -476,7 +468,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Contacts_SOGoContactFolders.m sogo/fil
 +       result = nil;
 diff -ruN sogo.orig/files/patch-SoObjects_Contacts_SOGoContactGCSEntry.m sogo/files/patch-SoObjects_Contacts_SOGoContactGCSEntry.m
 --- sogo.orig/files/patch-SoObjects_Contacts_SOGoContactGCSEntry.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Contacts_SOGoContactGCSEntry.m	2015-10-10 13:24:26.454328296 +0800
++++ sogo/files/patch-SoObjects_Contacts_SOGoContactGCSEntry.m	2015-10-10 13:24:26.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/Contacts/SOGoContactGCSEntry.m.orig	2015-10-10 13:22:12.488337134 +0800
 ++++ SoObjects/Contacts/SOGoContactGCSEntry.m	2015-10-10 13:23:24.526329978 +0800
@@ -491,7 +483,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Contacts_SOGoContactGCSEntry.m sogo/fi
 + /* content */
 diff -ruN sogo.orig/files/patch-SoObjects_Contacts_SOGoContactGCSList.m sogo/files/patch-SoObjects_Contacts_SOGoContactGCSList.m
 --- sogo.orig/files/patch-SoObjects_Contacts_SOGoContactGCSList.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Contacts_SOGoContactGCSList.m	2015-10-10 13:26:07.013321503 +0800
++++ sogo/files/patch-SoObjects_Contacts_SOGoContactGCSList.m	2015-10-10 13:26:07.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/Contacts/SOGoContactGCSList.m.orig	2015-10-10 13:25:06.365325835 +0800
 ++++ SoObjects/Contacts/SOGoContactGCSList.m	2015-10-10 13:25:31.802319847 +0800
@@ -506,7 +498,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Contacts_SOGoContactGCSList.m sogo/fil
 + 
 diff -ruN sogo.orig/files/patch-SoObjects_Contacts_SOGoContactSourceFolder.m sogo/files/patch-SoObjects_Contacts_SOGoContactSourceFolder.m
 --- sogo.orig/files/patch-SoObjects_Contacts_SOGoContactSourceFolder.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Contacts_SOGoContactSourceFolder.m	2015-10-15 08:31:13.611155194 +0800
++++ sogo/files/patch-SoObjects_Contacts_SOGoContactSourceFolder.m	2015-10-15 08:31:13.000000000 +0800
 @@ -0,0 +1,20 @@
 +--- SoObjects/Contacts/SOGoContactSourceFolder.m.orig	2015-10-10 13:26:34.980316221 +0800
 ++++ SoObjects/Contacts/SOGoContactSourceFolder.m	2015-10-10 13:53:49.996206010 +0800
@@ -530,7 +522,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Contacts_SOGoContactSourceFolder.m sog
 +     {
 diff -ruN sogo.orig/files/patch-SoObjects_Mailer_NSDictionary+Mail.m sogo/files/patch-SoObjects_Mailer_NSDictionary+Mail.m
 --- sogo.orig/files/patch-SoObjects_Mailer_NSDictionary+Mail.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Mailer_NSDictionary+Mail.m	2015-10-14 06:14:13.196289298 +0800
++++ sogo/files/patch-SoObjects_Mailer_NSDictionary+Mail.m	2015-10-14 06:14:13.000000000 +0800
 @@ -0,0 +1,10 @@
 +--- SoObjects/Mailer/NSDictionary+Mail.m.orig	2015-10-14 05:47:30.728396081 +0800
 ++++ SoObjects/Mailer/NSDictionary+Mail.m	2015-10-14 06:09:50.541304212 +0800
@@ -544,7 +536,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Mailer_NSDictionary+Mail.m sogo/files/
 + 
 diff -ruN sogo.orig/files/patch-SoObjects_Mailer_NSString+Mail.m sogo/files/patch-SoObjects_Mailer_NSString+Mail.m
 --- sogo.orig/files/patch-SoObjects_Mailer_NSString+Mail.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Mailer_NSString+Mail.m	2015-10-12 00:08:58.431712872 +0800
++++ sogo/files/patch-SoObjects_Mailer_NSString+Mail.m	2015-10-12 00:08:58.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/Mailer/NSString+Mail.m.orig	2015-10-12 00:02:53.664734285 +0800
 ++++ SoObjects/Mailer/NSString+Mail.m	2015-10-12 00:04:12.743725205 +0800
@@ -559,7 +551,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Mailer_NSString+Mail.m sogo/files/patc
 + }
 diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailAccounts.m sogo/files/patch-SoObjects_Mailer_SOGoMailAccounts.m
 --- sogo.orig/files/patch-SoObjects_Mailer_SOGoMailAccounts.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Mailer_SOGoMailAccounts.m	2015-10-14 05:45:17.986410216 +0800
++++ sogo/files/patch-SoObjects_Mailer_SOGoMailAccounts.m	2015-10-14 05:45:17.000000000 +0800
 @@ -0,0 +1,28 @@
 +--- SoObjects/Mailer/SOGoMailAccounts.m.orig	2015-09-17 02:41:30.000000000 +0800
 ++++ SoObjects/Mailer/SOGoMailAccounts.m	2015-10-14 05:44:19.467409671 +0800
@@ -591,7 +583,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailAccounts.m sogo/files/p
 + @end /* SOGoMailAccounts */
 diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailBaseObject.m sogo/files/patch-SoObjects_Mailer_SOGoMailBaseObject.m
 --- sogo.orig/files/patch-SoObjects_Mailer_SOGoMailBaseObject.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Mailer_SOGoMailBaseObject.m	2015-10-14 02:21:07.796250202 +0800
++++ sogo/files/patch-SoObjects_Mailer_SOGoMailBaseObject.m	2015-10-14 02:21:07.000000000 +0800
 @@ -0,0 +1,14 @@
 +--- SoObjects/Mailer/SOGoMailBaseObject.m.orig	2015-09-17 02:41:30.000000000 +0800
 ++++ SoObjects/Mailer/SOGoMailBaseObject.m	2015-10-14 02:16:23.980269983 +0800
@@ -609,7 +601,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailBaseObject.m sogo/files
 + #import "SOGoMailManager.h"
 diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailBodyPart.m sogo/files/patch-SoObjects_Mailer_SOGoMailBodyPart.m
 --- sogo.orig/files/patch-SoObjects_Mailer_SOGoMailBodyPart.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Mailer_SOGoMailBodyPart.m	2015-10-15 08:32:50.115049935 +0800
++++ sogo/files/patch-SoObjects_Mailer_SOGoMailBodyPart.m	2015-10-15 08:32:50.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/Mailer/SOGoMailBodyPart.m.orig	2015-10-11 23:55:35.353760677 +0800
 ++++ SoObjects/Mailer/SOGoMailBodyPart.m	2015-10-11 23:58:39.164751566 +0800
@@ -624,7 +616,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailBodyPart.m sogo/files/p
 + 	  if (asAttachment)
 diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailFolder.m sogo/files/patch-SoObjects_Mailer_SOGoMailFolder.m
 --- sogo.orig/files/patch-SoObjects_Mailer_SOGoMailFolder.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Mailer_SOGoMailFolder.m	2015-10-10 17:31:06.715318787 +0800
++++ sogo/files/patch-SoObjects_Mailer_SOGoMailFolder.m	2015-10-10 17:31:06.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/Mailer/SOGoMailFolder.m.orig	2015-10-10 17:21:58.389347307 +0800
 ++++ SoObjects/Mailer/SOGoMailFolder.m	2015-10-10 17:25:17.473330458 +0800
@@ -639,7 +631,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailFolder.m sogo/files/pat
 +     sortOrderingOrder = EOCompareDescending;
 diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailForward.m sogo/files/patch-SoObjects_Mailer_SOGoMailForward.m
 --- sogo.orig/files/patch-SoObjects_Mailer_SOGoMailForward.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Mailer_SOGoMailForward.m	2015-10-12 00:06:27.938719379 +0800
++++ sogo/files/patch-SoObjects_Mailer_SOGoMailForward.m	2015-10-12 00:06:27.000000000 +0800
 @@ -0,0 +1,15 @@
 +--- SoObjects/Mailer/SOGoMailForward.m.orig	2015-10-12 00:00:08.490746039 +0800
 ++++ SoObjects/Mailer/SOGoMailForward.m	2015-10-12 00:02:19.963732575 +0800
@@ -658,7 +650,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailForward.m sogo/files/pa
 + }
 diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailLabel.m sogo/files/patch-SoObjects_Mailer_SOGoMailLabel.m
 --- sogo.orig/files/patch-SoObjects_Mailer_SOGoMailLabel.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Mailer_SOGoMailLabel.m	2015-10-15 08:58:35.481651193 +0800
++++ sogo/files/patch-SoObjects_Mailer_SOGoMailLabel.m	2015-10-15 08:58:35.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/Mailer/SOGoMailLabel.m.orig	2015-10-11 18:07:02.705202858 +0800
 ++++ SoObjects/Mailer/SOGoMailLabel.m	2015-10-11 18:09:13.043193497 +0800
@@ -673,7 +665,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailLabel.m sogo/files/patc
 +     {
 diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailObject.m sogo/files/patch-SoObjects_Mailer_SOGoMailObject.m
 --- sogo.orig/files/patch-SoObjects_Mailer_SOGoMailObject.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_Mailer_SOGoMailObject.m	2015-10-12 00:51:53.570531556 +0800
++++ sogo/files/patch-SoObjects_Mailer_SOGoMailObject.m	2015-10-12 00:51:53.000000000 +0800
 @@ -0,0 +1,46 @@
 +--- SoObjects/Mailer/SOGoMailObject.m.orig	2015-10-12 00:48:44.033544034 +0800
 ++++ SoObjects/Mailer/SOGoMailObject.m	2015-10-12 00:51:09.761535745 +0800
@@ -723,7 +715,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailObject.m sogo/files/pat
 +   else
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_BSONCodec.m sogo/files/patch-SoObjects_SOGo_BSONCodec.m
 --- sogo.orig/files/patch-SoObjects_SOGo_BSONCodec.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_BSONCodec.m	2015-10-08 10:44:16.308897604 +0800
++++ sogo/files/patch-SoObjects_SOGo_BSONCodec.m	2015-10-08 10:44:16.000000000 +0800
 @@ -0,0 +1,20 @@
 +--- SoObjects/SOGo/BSONCodec.m.orig	2015-10-08 10:27:25.726969480 +0800
 ++++ SoObjects/SOGo/BSONCodec.m	2015-10-08 10:44:13.473901101 +0800
@@ -747,7 +739,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_BSONCodec.m sogo/files/patch-SoOb
 + 
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_LDAPSource.m sogo/files/patch-SoObjects_SOGo_LDAPSource.m
 --- sogo.orig/files/patch-SoObjects_SOGo_LDAPSource.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_LDAPSource.m	2015-10-15 09:31:20.840515544 +0800
++++ sogo/files/patch-SoObjects_SOGo_LDAPSource.m	2015-10-15 09:31:20.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/SOGo/LDAPSource.m.orig	2015-10-08 14:56:38.777853673 +0800
 ++++ SoObjects/SOGo/LDAPSource.m	2015-10-08 15:07:17.767809894 +0800
@@ -762,7 +754,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_LDAPSource.m sogo/files/patch-SoO
 +                                         CNField: @"displayName"
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_NSCalendarDate+SOGo.m sogo/files/patch-SoObjects_SOGo_NSCalendarDate+SOGo.m
 --- sogo.orig/files/patch-SoObjects_SOGo_NSCalendarDate+SOGo.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_NSCalendarDate+SOGo.m	2015-10-08 15:31:33.976709717 +0800
++++ sogo/files/patch-SoObjects_SOGo_NSCalendarDate+SOGo.m	2015-10-08 15:31:33.000000000 +0800
 @@ -0,0 +1,28 @@
 +--- SoObjects/SOGo/NSCalendarDate+SOGo.m.orig	2015-10-08 15:27:02.130727407 +0800
 ++++ SoObjects/SOGo/NSCalendarDate+SOGo.m	2015-10-08 15:30:00.529714242 +0800
@@ -794,7 +786,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_NSCalendarDate+SOGo.m sogo/files/
 + 
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_NSData+Crypto.m sogo/files/patch-SoObjects_SOGo_NSData+Crypto.m
 --- sogo.orig/files/patch-SoObjects_SOGo_NSData+Crypto.m	2015-09-23 13:30:12.000000000 +0800
-+++ sogo/files/patch-SoObjects_SOGo_NSData+Crypto.m	2015-10-15 09:48:27.241449398 +0800
++++ sogo/files/patch-SoObjects_SOGo_NSData+Crypto.m	2015-10-15 09:48:27.000000000 +0800
 @@ -1,13 +1,11 @@
 ---- SoObjects/SOGo/NSData+Crypto.m.orig	2015-09-16 18:41:31 UTC
 -+++ SoObjects/SOGo/NSData+Crypto.m
@@ -818,7 +810,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_NSData+Crypto.m sogo/files/patch-
 + 
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_NSDictionary+DAV.m sogo/files/patch-SoObjects_SOGo_NSDictionary+DAV.m
 --- sogo.orig/files/patch-SoObjects_SOGo_NSDictionary+DAV.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_NSDictionary+DAV.m	2015-10-08 17:26:57.093235336 +0800
++++ sogo/files/patch-SoObjects_SOGo_NSDictionary+DAV.m	2015-10-08 17:26:57.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/SOGo/NSDictionary+DAV.m.orig	2015-10-08 17:24:48.307243279 +0800
 ++++ SoObjects/SOGo/NSDictionary+DAV.m	2015-10-08 17:25:57.354237540 +0800
@@ -833,7 +825,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_NSDictionary+DAV.m sogo/files/pat
 +   return newTag;
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_NSString+Utilities.m sogo/files/patch-SoObjects_SOGo_NSString+Utilities.m
 --- sogo.orig/files/patch-SoObjects_SOGo_NSString+Utilities.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_NSString+Utilities.m	2015-10-08 19:37:57.830693951 +0800
++++ sogo/files/patch-SoObjects_SOGo_NSString+Utilities.m	2015-10-08 19:37:57.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/SOGo/NSString+Utilities.m.orig	2015-10-08 19:36:02.806701634 +0800
 ++++ SoObjects/SOGo/NSString+Utilities.m	2015-10-08 19:37:02.380693585 +0800
@@ -848,7 +840,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_NSString+Utilities.m sogo/files/p
 +           j++;
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoCache.h sogo/files/patch-SoObjects_SOGo_SOGoCache.h
 --- sogo.orig/files/patch-SoObjects_SOGo_SOGoCache.h	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_SOGoCache.h	2015-10-08 11:12:36.381782985 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoCache.h	2015-10-08 11:12:36.000000000 +0800
 @@ -0,0 +1,10 @@
 +--- SoObjects/SOGo/SOGoCache.h.orig	2015-10-08 11:12:00.831781718 +0800
 ++++ SoObjects/SOGo/SOGoCache.h	2015-10-08 11:10:21.287794419 +0800
@@ -862,7 +854,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoCache.h sogo/files/patch-SoOb
 + #include <libmemcached/memcached.h>
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.h sogo/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.h
 --- sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.h	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.h	2015-10-08 11:36:32.881684032 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.h	2015-10-08 11:36:32.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/SOGo/SOGoCacheGCSFolder.h.orig	2015-10-08 11:19:28.603751311 +0800
 ++++ SoObjects/SOGo/SOGoCacheGCSFolder.h	2015-10-08 11:35:36.006684174 +0800
@@ -877,7 +869,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.h sogo/files/p
 + 
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.m sogo/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.m
 --- sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.m	2015-10-08 11:17:52.501758270 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.m	2015-10-08 11:17:52.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/SOGo/SOGoCacheGCSFolder.m.orig	2015-10-08 11:13:15.184779897 +0800
 ++++ SoObjects/SOGo/SOGoCacheGCSFolder.m	2015-10-08 11:17:04.335760701 +0800
@@ -892,7 +884,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.m sogo/files/p
 + 
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheGCSObject.m sogo/files/patch-SoObjects_SOGo_SOGoCacheGCSObject.m
 --- sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheGCSObject.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_SOGoCacheGCSObject.m	2015-10-08 12:09:32.319547954 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoCacheGCSObject.m	2015-10-08 12:09:32.000000000 +0800
 @@ -0,0 +1,68 @@
 +--- SoObjects/SOGo/SOGoCacheGCSObject.m.orig	2015-10-08 11:38:29.151675385 +0800
 ++++ SoObjects/SOGo/SOGoCacheGCSObject.m	2015-10-08 12:09:29.854549665 +0800
@@ -964,7 +956,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheGCSObject.m sogo/files/p
 + 
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheObject.h sogo/files/patch-SoObjects_SOGo_SOGoCacheObject.h
 --- sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheObject.h	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_SOGoCacheObject.h	2015-10-08 12:14:50.128525800 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoCacheObject.h	2015-10-08 12:14:50.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/SOGo/SOGoCacheObject.h.orig	2015-10-08 12:13:56.954532500 +0800
 ++++ SoObjects/SOGo/SOGoCacheObject.h	2015-10-08 12:14:14.781522288 +0800
@@ -979,7 +971,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheObject.h sogo/files/patc
 + #endif /* SOGOCACHEOBJECT_H */
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoContentObject.m sogo/files/patch-SoObjects_SOGo_SOGoContentObject.m
 --- sogo.orig/files/patch-SoObjects_SOGo_SOGoContentObject.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_SOGoContentObject.m	2015-10-08 12:44:39.443397854 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoContentObject.m	2015-10-08 12:44:39.000000000 +0800
 @@ -0,0 +1,39 @@
 +--- SoObjects/SOGo/SOGoContentObject.m.orig	2015-10-08 12:31:02.045459297 +0800
 ++++ SoObjects/SOGo/SOGoContentObject.m	2015-10-08 12:43:44.313403665 +0800
@@ -1022,7 +1014,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoContentObject.m sogo/files/pa
 + - (NSException *) davMoveToTargetObject: (id) _target
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoFolder.m sogo/files/patch-SoObjects_SOGo_SOGoFolder.m
 --- sogo.orig/files/patch-SoObjects_SOGo_SOGoFolder.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_SOGoFolder.m	2015-10-15 11:25:45.750043508 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoFolder.m	2015-10-15 11:25:45.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- SoObjects/SOGo/SOGoFolder.m.orig	2015-10-08 12:48:00.753385180 +0800
 ++++ SoObjects/SOGo/SOGoFolder.m	2015-10-08 12:50:18.720380410 +0800
@@ -1037,7 +1029,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoFolder.m sogo/files/patch-SoO
 + - (NSString *) displayName
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoGCSFolder.m sogo/files/patch-SoObjects_SOGo_SOGoGCSFolder.m
 --- sogo.orig/files/patch-SoObjects_SOGo_SOGoGCSFolder.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_SOGoGCSFolder.m	2015-10-15 11:29:21.406027835 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoGCSFolder.m	2015-10-15 11:29:21.000000000 +0800
 @@ -0,0 +1,27 @@
 +--- SoObjects/SOGo/SOGoGCSFolder.m.orig	2015-09-17 02:41:31.000000000 +0800
 ++++ SoObjects/SOGo/SOGoGCSFolder.m	2015-10-08 13:05:51.848316611 +0800
@@ -1068,7 +1060,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoGCSFolder.m sogo/files/patch-
 +           deleteObject = [deleteObject lookupName: currentName
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoGroup.m sogo/files/patch-SoObjects_SOGo_SOGoGroup.m
 --- sogo.orig/files/patch-SoObjects_SOGo_SOGoGroup.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_SOGoGroup.m	2015-10-09 11:05:55.137856562 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoGroup.m	2015-10-09 11:05:55.000000000 +0800
 @@ -0,0 +1,20 @@
 +--- SoObjects/SOGo/SOGoGroup.m.orig	2015-10-09 07:05:53.364848141 +0800
 ++++ SoObjects/SOGo/SOGoGroup.m	2015-10-09 11:05:52.535853113 +0800
@@ -1092,7 +1084,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoGroup.m sogo/files/patch-SoOb
 +       if ([source respondsToSelector: theSelector])
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoObject.m sogo/files/patch-SoObjects_SOGo_SOGoObject.m
 --- sogo.orig/files/patch-SoObjects_SOGo_SOGoObject.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_SOGoObject.m	2015-10-08 12:29:17.207468048 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoObject.m	2015-10-08 12:29:17.000000000 +0800
 @@ -0,0 +1,29 @@
 +--- SoObjects/SOGo/SOGoObject.m.orig	2015-10-08 12:15:33.034523424 +0800
 ++++ SoObjects/SOGo/SOGoObject.m	2015-10-08 12:28:36.114468163 +0800
@@ -1125,7 +1117,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoObject.m sogo/files/patch-SoO
 + 
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoParentFolder.h sogo/files/patch-SoObjects_SOGo_SOGoParentFolder.h
 --- sogo.orig/files/patch-SoObjects_SOGo_SOGoParentFolder.h	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_SOGoParentFolder.h	2015-10-08 14:40:40.982919312 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoParentFolder.h	2015-10-08 14:40:40.000000000 +0800
 @@ -0,0 +1,10 @@
 +--- SoObjects/SOGo/SOGoParentFolder.h.orig	2015-10-08 14:18:51.757012268 +0800
 ++++ SoObjects/SOGo/SOGoParentFolder.h	2015-10-08 14:23:51.190988564 +0800
@@ -1139,7 +1131,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoParentFolder.h sogo/files/pat
 + 
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoParentFolder.m sogo/files/patch-SoObjects_SOGo_SOGoParentFolder.m
 --- sogo.orig/files/patch-SoObjects_SOGo_SOGoParentFolder.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_SOGoParentFolder.m	2015-10-08 14:40:23.998921304 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoParentFolder.m	2015-10-08 14:40:23.000000000 +0800
 @@ -0,0 +1,41 @@
 +--- SoObjects/SOGo/SOGoParentFolder.m.orig	2015-10-08 13:26:16.671228360 +0800
 ++++ SoObjects/SOGo/SOGoParentFolder.m	2015-10-08 14:38:57.340927167 +0800
@@ -1184,7 +1176,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoParentFolder.m sogo/files/pat
 +   NSException *error;
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SQLSource.m sogo/files/patch-SoObjects_SOGo_SQLSource.m
 --- sogo.orig/files/patch-SoObjects_SOGo_SQLSource.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_SQLSource.m	2015-10-08 15:17:26.283768592 +0800
++++ sogo/files/patch-SoObjects_SOGo_SQLSource.m	2015-10-08 15:17:26.000000000 +0800
 @@ -0,0 +1,56 @@
 +--- SoObjects/SOGo/SQLSource.m.orig	2015-10-08 15:11:51.598793649 +0800
 ++++ SoObjects/SOGo/SQLSource.m	2015-10-08 15:17:24.502768818 +0800
@@ -1244,7 +1236,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SQLSource.m sogo/files/patch-SoOb
 +                                  reason: reason
 diff -ruN sogo.orig/files/patch-SoObjects_SOGo_WORequest+SOGo.m sogo/files/patch-SoObjects_SOGo_WORequest+SOGo.m
 --- sogo.orig/files/patch-SoObjects_SOGo_WORequest+SOGo.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-SoObjects_SOGo_WORequest+SOGo.m	2015-10-09 13:30:10.143259426 +0800
++++ sogo/files/patch-SoObjects_SOGo_WORequest+SOGo.m	2015-10-09 13:30:10.000000000 +0800
 @@ -0,0 +1,35 @@
 +--- SoObjects/SOGo/WORequest+SOGo.m.orig	2015-10-09 11:56:27.945647076 +0800
 ++++ SoObjects/SOGo/WORequest+SOGo.m	2015-10-09 13:30:08.196266262 +0800
@@ -1283,7 +1275,7 @@ diff -ruN sogo.orig/files/patch-SoObjects_SOGo_WORequest+SOGo.m sogo/files/patch
 + }
 diff -ruN sogo.orig/files/patch-Tests_Unit_SOGoTest.m sogo/files/patch-Tests_Unit_SOGoTest.m
 --- sogo.orig/files/patch-Tests_Unit_SOGoTest.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Tests_Unit_SOGoTest.m	2015-10-13 21:29:25.852458709 +0800
++++ sogo/files/patch-Tests_Unit_SOGoTest.m	2015-10-13 21:29:25.000000000 +0800
 @@ -0,0 +1,15 @@
 +--- Tests/Unit/SOGoTest.m.orig	2015-10-13 21:27:11.658467928 +0800
 ++++ Tests/Unit/SOGoTest.m	2015-10-13 21:28:18.545460408 +0800
@@ -1302,7 +1294,7 @@ diff -ruN sogo.orig/files/patch-Tests_Unit_SOGoTest.m sogo/files/patch-Tests_Uni
 +     }
 diff -ruN sogo.orig/files/patch-Tests_Unit_TestNGMimeAddressHeaderFieldGenerator.m sogo/files/patch-Tests_Unit_TestNGMimeAddressHeaderFieldGenerator.m
 --- sogo.orig/files/patch-Tests_Unit_TestNGMimeAddressHeaderFieldGenerator.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Tests_Unit_TestNGMimeAddressHeaderFieldGenerator.m	2015-10-13 23:23:22.484987542 +0800
++++ sogo/files/patch-Tests_Unit_TestNGMimeAddressHeaderFieldGenerator.m	2015-10-13 23:23:22.000000000 +0800
 @@ -0,0 +1,23 @@
 +--- Tests/Unit/TestNGMimeAddressHeaderFieldGenerator.m.orig	2015-10-13 23:08:27.577045766 +0800
 ++++ Tests/Unit/TestNGMimeAddressHeaderFieldGenerator.m	2015-10-13 23:20:49.017995327 +0800
@@ -1329,7 +1321,7 @@ diff -ruN sogo.orig/files/patch-Tests_Unit_TestNGMimeAddressHeaderFieldGenerator
 +         @"Wolfgang Sourdeau \"Bla Bla\" <wolfgang@test.com>", // partly quoted
 diff -ruN sogo.orig/files/patch-Tests_Unit_TestNGMimeMessageGenerator.m sogo/files/patch-Tests_Unit_TestNGMimeMessageGenerator.m
 --- sogo.orig/files/patch-Tests_Unit_TestNGMimeMessageGenerator.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Tests_Unit_TestNGMimeMessageGenerator.m	2015-10-13 23:31:30.792954315 +0800
++++ sogo/files/patch-Tests_Unit_TestNGMimeMessageGenerator.m	2015-10-13 23:31:30.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- Tests/Unit/TestNGMimeMessageGenerator.m.orig	2015-10-13 23:27:44.267969037 +0800
 ++++ Tests/Unit/TestNGMimeMessageGenerator.m	2015-10-13 23:29:30.792958515 +0800
@@ -1344,7 +1336,7 @@ diff -ruN sogo.orig/files/patch-Tests_Unit_TestNGMimeMessageGenerator.m sogo/fil
 +                               expected,
 diff -ruN sogo.orig/files/patch-Tests_Unit_TestVersit.m sogo/files/patch-Tests_Unit_TestVersit.m
 --- sogo.orig/files/patch-Tests_Unit_TestVersit.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Tests_Unit_TestVersit.m	2015-10-13 22:11:54.593283524 +0800
++++ sogo/files/patch-Tests_Unit_TestVersit.m	2015-10-13 22:11:54.000000000 +0800
 @@ -0,0 +1,41 @@
 +--- Tests/Unit/TestVersit.m.orig	2015-10-13 22:02:35.703319178 +0800
 ++++ Tests/Unit/TestVersit.m	2015-10-13 22:10:50.805284923 +0800
@@ -1389,7 +1381,7 @@ diff -ruN sogo.orig/files/patch-Tests_Unit_TestVersit.m sogo/files/patch-Tests_U
 + @end
 diff -ruN sogo.orig/files/patch-Tests_Unit_TestiCalRecurrenceCalculator.m sogo/files/patch-Tests_Unit_TestiCalRecurrenceCalculator.m
 --- sogo.orig/files/patch-Tests_Unit_TestiCalRecurrenceCalculator.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Tests_Unit_TestiCalRecurrenceCalculator.m	2015-10-13 23:07:12.499054987 +0800
++++ sogo/files/patch-Tests_Unit_TestiCalRecurrenceCalculator.m	2015-10-13 23:07:12.000000000 +0800
 @@ -0,0 +1,29 @@
 +--- Tests/Unit/TestiCalRecurrenceCalculator.m.orig	2015-10-13 22:24:36.211231500 +0800
 ++++ Tests/Unit/TestiCalRecurrenceCalculator.m	2015-10-13 23:05:47.988057201 +0800
@@ -1422,7 +1414,7 @@ diff -ruN sogo.orig/files/patch-Tests_Unit_TestiCalRecurrenceCalculator.m sogo/f
 + 			[currentRule count] - 2];
 diff -ruN sogo.orig/files/patch-Tests_Unit_TestiCalTimeZonePeriod.m sogo/files/patch-Tests_Unit_TestiCalTimeZonePeriod.m
 --- sogo.orig/files/patch-Tests_Unit_TestiCalTimeZonePeriod.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Tests_Unit_TestiCalTimeZonePeriod.m	2015-10-13 22:24:03.607230273 +0800
++++ sogo/files/patch-Tests_Unit_TestiCalTimeZonePeriod.m	2015-10-13 22:24:03.000000000 +0800
 @@ -0,0 +1,13 @@
 +--- Tests/Unit/TestiCalTimeZonePeriod.m.orig	2015-10-13 22:12:21.064282266 +0800
 ++++ Tests/Unit/TestiCalTimeZonePeriod.m	2015-10-13 22:23:02.608233950 +0800
@@ -1439,7 +1431,7 @@ diff -ruN sogo.orig/files/patch-Tests_Unit_TestiCalTimeZonePeriod.m sogo/files/p
 + 
 diff -ruN sogo.orig/files/patch-Tools_SOGoEAlarmsNotifier.m sogo/files/patch-Tools_SOGoEAlarmsNotifier.m
 --- sogo.orig/files/patch-Tools_SOGoEAlarmsNotifier.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Tools_SOGoEAlarmsNotifier.m	2015-10-13 21:24:54.625474852 +0800
++++ sogo/files/patch-Tools_SOGoEAlarmsNotifier.m	2015-10-13 21:24:54.000000000 +0800
 @@ -0,0 +1,13 @@
 +--- Tools/SOGoEAlarmsNotifier.m.orig	2015-10-13 21:19:28.942510596 +0800
 ++++ Tools/SOGoEAlarmsNotifier.m	2015-10-13 21:24:03.748478690 +0800
@@ -1456,7 +1448,7 @@ diff -ruN sogo.orig/files/patch-Tools_SOGoEAlarmsNotifier.m sogo/files/patch-Too
 + }
 diff -ruN sogo.orig/files/patch-Tools_SOGoSockDOperation.m sogo/files/patch-Tools_SOGoSockDOperation.m
 --- sogo.orig/files/patch-Tools_SOGoSockDOperation.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Tools_SOGoSockDOperation.m	2015-10-13 21:17:45.007507481 +0800
++++ sogo/files/patch-Tools_SOGoSockDOperation.m	2015-10-13 21:17:45.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- Tools/SOGoSockDOperation.m.orig	2015-10-13 21:11:15.463535399 +0800
 ++++ Tools/SOGoSockDOperation.m	2015-10-13 21:14:55.685516664 +0800
@@ -1471,7 +1463,7 @@ diff -ruN sogo.orig/files/patch-Tools_SOGoSockDOperation.m sogo/files/patch-Tool
 + }
 diff -ruN sogo.orig/files/patch-Tools_SOGoToolCreateFolder.m sogo/files/patch-Tools_SOGoToolCreateFolder.m
 --- sogo.orig/files/patch-Tools_SOGoToolCreateFolder.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Tools_SOGoToolCreateFolder.m	2015-10-13 09:43:18.131379040 +0800
++++ sogo/files/patch-Tools_SOGoToolCreateFolder.m	2015-10-13 09:43:18.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- Tools/SOGoToolCreateFolder.m.orig	2015-10-13 09:24:13.755455090 +0800
 ++++ Tools/SOGoToolCreateFolder.m	2015-10-13 09:42:15.600381213 +0800
@@ -1486,7 +1478,7 @@ diff -ruN sogo.orig/files/patch-Tools_SOGoToolCreateFolder.m sogo/files/patch-To
 + 
 diff -ruN sogo.orig/files/patch-Tools_SOGoToolExpireUserSessions.m sogo/files/patch-Tools_SOGoToolExpireUserSessions.m
 --- sogo.orig/files/patch-Tools_SOGoToolExpireUserSessions.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Tools_SOGoToolExpireUserSessions.m	2015-10-13 23:44:15.272902193 +0800
++++ sogo/files/patch-Tools_SOGoToolExpireUserSessions.m	2015-10-13 23:44:15.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- Tools/SOGoToolExpireUserSessions.m.orig	2015-10-13 23:42:49.782904725 +0800
 ++++ Tools/SOGoToolExpireUserSessions.m	2015-10-13 23:43:53.893900318 +0800
@@ -1501,7 +1493,7 @@ diff -ruN sogo.orig/files/patch-Tools_SOGoToolExpireUserSessions.m sogo/files/pa
 +   [cm releaseChannel: channel];
 diff -ruN sogo.orig/files/patch-Tools_SOGoToolManageEAS.m sogo/files/patch-Tools_SOGoToolManageEAS.m
 --- sogo.orig/files/patch-Tools_SOGoToolManageEAS.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Tools_SOGoToolManageEAS.m	2015-10-13 19:30:28.508951243 +0800
++++ sogo/files/patch-Tools_SOGoToolManageEAS.m	2015-10-13 19:30:28.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- Tools/SOGoToolManageEAS.m.orig	2015-10-13 09:50:19.138347381 +0800
 ++++ Tools/SOGoToolManageEAS.m	2015-10-13 19:29:28.210951778 +0800
@@ -1516,7 +1508,7 @@ diff -ruN sogo.orig/files/patch-Tools_SOGoToolManageEAS.m sogo/files/patch-Tools
 +               rc = YES;
 diff -ruN sogo.orig/files/patch-Tools_SOGoToolRemoveDoubles.m sogo/files/patch-Tools_SOGoToolRemoveDoubles.m
 --- sogo.orig/files/patch-Tools_SOGoToolRemoveDoubles.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Tools_SOGoToolRemoveDoubles.m	2015-10-15 10:56:29.107170539 +0800
++++ sogo/files/patch-Tools_SOGoToolRemoveDoubles.m	2015-10-15 10:56:29.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- Tools/SOGoToolRemoveDoubles.m.orig	2015-09-17 02:41:31.000000000 +0800
 ++++ Tools/SOGoToolRemoveDoubles.m	2015-10-15 10:55:54.609166337 +0800
@@ -1531,7 +1523,7 @@ diff -ruN sogo.orig/files/patch-Tools_SOGoToolRemoveDoubles.m sogo/files/patch-T
 + 		     tableName,
 diff -ruN sogo.orig/files/patch-Tools_SOGoToolRenameUser.m sogo/files/patch-Tools_SOGoToolRenameUser.m
 --- sogo.orig/files/patch-Tools_SOGoToolRenameUser.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Tools_SOGoToolRenameUser.m	2015-10-13 09:16:13.021492665 +0800
++++ sogo/files/patch-Tools_SOGoToolRenameUser.m	2015-10-13 09:16:13.000000000 +0800
 @@ -0,0 +1,20 @@
 +--- Tools/SOGoToolRenameUser.m.orig	2015-10-13 09:12:17.759505521 +0800
 ++++ Tools/SOGoToolRenameUser.m	2015-10-13 09:14:38.742494299 +0800
@@ -1555,7 +1547,7 @@ diff -ruN sogo.orig/files/patch-Tools_SOGoToolRenameUser.m sogo/files/patch-Tool
 +     rc = [ac commitTransaction];
 diff -ruN sogo.orig/files/patch-Tools_SOGoToolRestore.m sogo/files/patch-Tools_SOGoToolRestore.m
 --- sogo.orig/files/patch-Tools_SOGoToolRestore.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Tools_SOGoToolRestore.m	2015-10-13 23:47:20.927886876 +0800
++++ sogo/files/patch-Tools_SOGoToolRestore.m	2015-10-13 23:47:20.000000000 +0800
 @@ -0,0 +1,10 @@
 +--- Tools/SOGoToolRestore.m.orig	2015-10-13 23:45:35.646896281 +0800
 ++++ Tools/SOGoToolRestore.m	2015-10-13 23:46:38.256887925 +0800
@@ -1569,7 +1561,7 @@ diff -ruN sogo.orig/files/patch-Tools_SOGoToolRestore.m sogo/files/patch-Tools_S
 +     {
 diff -ruN sogo.orig/files/patch-Tools_SOGoToolUserPreferences.m sogo/files/patch-Tools_SOGoToolUserPreferences.m
 --- sogo.orig/files/patch-Tools_SOGoToolUserPreferences.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Tools_SOGoToolUserPreferences.m	2015-10-13 09:49:34.560353156 +0800
++++ sogo/files/patch-Tools_SOGoToolUserPreferences.m	2015-10-13 09:49:34.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- Tools/SOGoToolUserPreferences.m.orig	2015-10-13 09:43:41.234378222 +0800
 ++++ Tools/SOGoToolUserPreferences.m	2015-10-13 09:48:36.693354816 +0800
@@ -1584,7 +1576,7 @@ diff -ruN sogo.orig/files/patch-Tools_SOGoToolUserPreferences.m sogo/files/patch
 +       credsFilename = [[NSUserDefaults standardUserDefaults] stringForKey: @"p"];
 diff -ruN sogo.orig/files/patch-Tools_sogo-tool.m sogo/files/patch-Tools_sogo-tool.m
 --- sogo.orig/files/patch-Tools_sogo-tool.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-Tools_sogo-tool.m	2015-10-13 08:50:53.102595694 +0800
++++ sogo/files/patch-Tools_sogo-tool.m	2015-10-13 08:50:53.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- Tools/sogo-tool.m.orig	2015-10-13 08:49:02.534602894 +0800
 ++++ Tools/sogo-tool.m	2015-10-13 08:50:28.020596778 +0800
@@ -1599,7 +1591,7 @@ diff -ruN sogo.orig/files/patch-Tools_sogo-tool.m sogo/files/patch-Tools_sogo-to
 + - (void) registerTools
 diff -ruN sogo.orig/files/patch-UI_Common_UIxToolbar.m sogo/files/patch-UI_Common_UIxToolbar.m
 --- sogo.orig/files/patch-UI_Common_UIxToolbar.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_Common_UIxToolbar.m	2015-10-12 01:31:18.910368391 +0800
++++ sogo/files/patch-UI_Common_UIxToolbar.m	2015-10-12 01:31:18.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- UI/Common/UIxToolbar.m.orig	2015-10-12 01:26:49.548386836 +0800
 ++++ UI/Common/UIxToolbar.m	2015-10-12 01:29:17.906393163 +0800
@@ -1614,7 +1606,7 @@ diff -ruN sogo.orig/files/patch-UI_Common_UIxToolbar.m sogo/files/patch-UI_Commo
 + 
 diff -ruN sogo.orig/files/patch-UI_Contacts_UIxContactActions.m sogo/files/patch-UI_Contacts_UIxContactActions.m
 --- sogo.orig/files/patch-UI_Contacts_UIxContactActions.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_Contacts_UIxContactActions.m	2015-10-15 11:08:41.752113874 +0800
++++ sogo/files/patch-UI_Contacts_UIxContactActions.m	2015-10-15 11:08:41.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- UI/Contacts/UIxContactActions.m.orig	2015-10-12 01:31:58.756363563 +0800
 ++++ UI/Contacts/UIxContactActions.m	2015-10-12 02:04:25.062227766 +0800
@@ -1629,7 +1621,7 @@ diff -ruN sogo.orig/files/patch-UI_Contacts_UIxContactActions.m sogo/files/patch
 +   [response appendContentString: content];
 diff -ruN sogo.orig/files/patch-UI_Contacts_UIxContactFolderActions.m sogo/files/patch-UI_Contacts_UIxContactFolderActions.m
 --- sogo.orig/files/patch-UI_Contacts_UIxContactFolderActions.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_Contacts_UIxContactFolderActions.m	2015-10-12 02:38:25.489087451 +0800
++++ sogo/files/patch-UI_Contacts_UIxContactFolderActions.m	2015-10-12 02:38:25.000000000 +0800
 @@ -0,0 +1,14 @@
 +--- UI/Contacts/UIxContactFolderActions.m.orig	2015-10-12 02:35:08.415105259 +0800
 ++++ UI/Contacts/UIxContactFolderActions.m	2015-10-12 02:37:28.637102880 +0800
@@ -1647,7 +1639,7 @@ diff -ruN sogo.orig/files/patch-UI_Contacts_UIxContactFolderActions.m sogo/files
 + 
 diff -ruN sogo.orig/files/patch-UI_Contacts_UIxContactFolderProperties.m sogo/files/patch-UI_Contacts_UIxContactFolderProperties.m
 --- sogo.orig/files/patch-UI_Contacts_UIxContactFolderProperties.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_Contacts_UIxContactFolderProperties.m	2015-10-14 06:47:20.433150599 +0800
++++ sogo/files/patch-UI_Contacts_UIxContactFolderProperties.m	2015-10-14 06:47:20.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- UI/Contacts/UIxContactFolderProperties.m.orig	2015-10-14 06:34:18.044206978 +0800
 ++++ UI/Contacts/UIxContactFolderProperties.m	2015-10-14 06:47:09.534149701 +0800
@@ -1662,7 +1654,7 @@ diff -ruN sogo.orig/files/patch-UI_Contacts_UIxContactFolderProperties.m sogo/fi
 + 
 diff -ruN sogo.orig/files/patch-UI_Contacts_UIxContactView.m sogo/files/patch-UI_Contacts_UIxContactView.m
 --- sogo.orig/files/patch-UI_Contacts_UIxContactView.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_Contacts_UIxContactView.m	2015-10-15 11:20:50.682066896 +0800
++++ sogo/files/patch-UI_Contacts_UIxContactView.m	2015-10-15 11:20:50.000000000 +0800
 @@ -0,0 +1,20 @@
 +--- UI/Contacts/UIxContactView.m.orig	2015-09-17 02:41:36.000000000 +0800
 ++++ UI/Contacts/UIxContactView.m	2015-10-15 11:19:56.731067858 +0800
@@ -1686,7 +1678,7 @@ diff -ruN sogo.orig/files/patch-UI_Contacts_UIxContactView.m sogo/files/patch-UI
 +   return [self _cardStringWithLabel: nil value: data];
 diff -ruN sogo.orig/files/patch-UI_MailPartViewers_UIxMailListActions.h sogo/files/patch-UI_MailPartViewers_UIxMailListActions.h
 --- sogo.orig/files/patch-UI_MailPartViewers_UIxMailListActions.h	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_MailPartViewers_UIxMailListActions.h	2015-10-12 03:46:51.161805086 +0800
++++ sogo/files/patch-UI_MailPartViewers_UIxMailListActions.h	2015-10-12 03:46:51.000000000 +0800
 @@ -0,0 +1,10 @@
 +--- UI/MailerUI/UIxMailListActions.h.orig	2015-10-12 03:45:20.839812321 +0800
 ++++ UI/MailerUI/UIxMailListActions.h	2015-10-12 03:45:29.934812501 +0800
@@ -1700,7 +1692,7 @@ diff -ruN sogo.orig/files/patch-UI_MailPartViewers_UIxMailListActions.h sogo/fil
 + - (NSString *) msgLabels;
 diff -ruN sogo.orig/files/patch-UI_MailPartViewers_UIxMailMainFrame.m sogo/files/patch-UI_MailPartViewers_UIxMailMainFrame.m
 --- sogo.orig/files/patch-UI_MailPartViewers_UIxMailMainFrame.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_MailPartViewers_UIxMailMainFrame.m	2015-10-12 03:35:20.845859375 +0800
++++ sogo/files/patch-UI_MailPartViewers_UIxMailMainFrame.m	2015-10-12 03:35:20.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- UI/MailerUI/UIxMailMainFrame.m.orig	2015-10-12 03:31:38.716871414 +0800
 ++++ UI/MailerUI/UIxMailMainFrame.m	2015-10-12 03:32:31.963865693 +0800
@@ -1715,7 +1707,7 @@ diff -ruN sogo.orig/files/patch-UI_MailPartViewers_UIxMailMainFrame.m sogo/files
 + - (void) setCurrentColumn: (NSDictionary *) newCurrentColumn
 diff -ruN sogo.orig/files/patch-UI_MailPartViewers_UIxMailPartHTMLViewer.m sogo/files/patch-UI_MailPartViewers_UIxMailPartHTMLViewer.m
 --- sogo.orig/files/patch-UI_MailPartViewers_UIxMailPartHTMLViewer.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_MailPartViewers_UIxMailPartHTMLViewer.m	2015-10-12 03:27:02.598890291 +0800
++++ sogo/files/patch-UI_MailPartViewers_UIxMailPartHTMLViewer.m	2015-10-12 03:27:02.000000000 +0800
 @@ -0,0 +1,32 @@
 +--- UI/MailPartViewers/UIxMailPartHTMLViewer.m.orig	2015-10-12 02:42:22.519071553 +0800
 ++++ UI/MailPartViewers/UIxMailPartHTMLViewer.m	2015-10-12 03:25:07.395896369 +0800
@@ -1751,7 +1743,7 @@ diff -ruN sogo.orig/files/patch-UI_MailPartViewers_UIxMailPartHTMLViewer.m sogo/
 + 
 diff -ruN sogo.orig/files/patch-UI_MailPartViewers_UIxMailPartViewer.m sogo/files/patch-UI_MailPartViewers_UIxMailPartViewer.m
 --- sogo.orig/files/patch-UI_MailPartViewers_UIxMailPartViewer.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_MailPartViewers_UIxMailPartViewer.m	2015-10-15 11:23:58.738091820 +0800
++++ sogo/files/patch-UI_MailPartViewers_UIxMailPartViewer.m	2015-10-15 11:23:58.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- UI/MailPartViewers/UIxMailPartViewer.m.orig	2015-10-12 02:39:07.719086705 +0800
 ++++ UI/MailPartViewers/UIxMailPartViewer.m	2015-10-12 02:41:14.554075510 +0800
@@ -1766,7 +1758,7 @@ diff -ruN sogo.orig/files/patch-UI_MailPartViewers_UIxMailPartViewer.m sogo/file
 + 	      [self labelForKey: @"Untitled"],
 diff -ruN sogo.orig/files/patch-UI_MailerUI_UIxMailFolderActions.m sogo/files/patch-UI_MailerUI_UIxMailFolderActions.m
 --- sogo.orig/files/patch-UI_MailerUI_UIxMailFolderActions.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_MailerUI_UIxMailFolderActions.m	2015-10-12 04:13:02.432702052 +0800
++++ sogo/files/patch-UI_MailerUI_UIxMailFolderActions.m	2015-10-12 04:13:02.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- UI/MailerUI/UIxMailFolderActions.m.orig	2015-10-12 04:08:23.478716523 +0800
 ++++ UI/MailerUI/UIxMailFolderActions.m	2015-10-12 04:11:58.350711826 +0800
@@ -1781,7 +1773,7 @@ diff -ruN sogo.orig/files/patch-UI_MailerUI_UIxMailFolderActions.m sogo/files/pa
 +   NSString *value, *destinationFolder;
 diff -ruN sogo.orig/files/patch-UI_MainUI_SOGoMicrosoftActiveSyncActions.m sogo/files/patch-UI_MainUI_SOGoMicrosoftActiveSyncActions.m
 --- sogo.orig/files/patch-UI_MainUI_SOGoMicrosoftActiveSyncActions.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_MainUI_SOGoMicrosoftActiveSyncActions.m	2015-10-14 07:24:12.208999139 +0800
++++ sogo/files/patch-UI_MainUI_SOGoMicrosoftActiveSyncActions.m	2015-10-14 07:24:12.000000000 +0800
 @@ -0,0 +1,21 @@
 +--- UI/MainUI/SOGoMicrosoftActiveSyncActions.m.orig	2015-09-17 02:41:32.000000000 +0800
 ++++ UI/MainUI/SOGoMicrosoftActiveSyncActions.m	2015-10-14 07:23:29.165999648 +0800
@@ -1806,7 +1798,7 @@ diff -ruN sogo.orig/files/patch-UI_MainUI_SOGoMicrosoftActiveSyncActions.m sogo/
 +   bundle = [NSBundle bundleForClass: NSClassFromString(@"ActiveSyncProduct")];
 diff -ruN sogo.orig/files/patch-UI_PreferencesUI_UIxPreferences.m sogo/files/patch-UI_PreferencesUI_UIxPreferences.m
 --- sogo.orig/files/patch-UI_PreferencesUI_UIxPreferences.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_PreferencesUI_UIxPreferences.m	2015-10-12 17:29:35.442406147 +0800
++++ sogo/files/patch-UI_PreferencesUI_UIxPreferences.m	2015-10-12 17:29:35.000000000 +0800
 @@ -0,0 +1,21 @@
 +--- UI/PreferencesUI/UIxPreferences.m.orig	2015-10-12 17:26:24.474415189 +0800
 ++++ UI/PreferencesUI/UIxPreferences.m	2015-10-12 17:28:42.117407234 +0800
@@ -1831,7 +1823,7 @@ diff -ruN sogo.orig/files/patch-UI_PreferencesUI_UIxPreferences.m sogo/files/pat
 +   else
 diff -ruN sogo.orig/files/patch-UI_SOGoUI_SOGoAptFormatter.m sogo/files/patch-UI_SOGoUI_SOGoAptFormatter.m
 --- sogo.orig/files/patch-UI_SOGoUI_SOGoAptFormatter.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_SOGoUI_SOGoAptFormatter.m	2015-10-12 01:20:28.402413689 +0800
++++ sogo/files/patch-UI_SOGoUI_SOGoAptFormatter.m	2015-10-12 01:20:28.000000000 +0800
 @@ -0,0 +1,22 @@
 +--- UI/SOGoUI/SOGoAptFormatter.m.orig	2015-10-12 01:17:54.305420146 +0800
 ++++ UI/SOGoUI/SOGoAptFormatter.m	2015-10-12 01:19:34.047412685 +0800
@@ -1857,7 +1849,7 @@ diff -ruN sogo.orig/files/patch-UI_SOGoUI_SOGoAptFormatter.m sogo/files/patch-UI
 + }
 diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalDateSelector.m sogo/files/patch-UI_Scheduler_UIxCalDateSelector.m
 --- sogo.orig/files/patch-UI_Scheduler_UIxCalDateSelector.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_Scheduler_UIxCalDateSelector.m	2015-10-13 06:40:24.263140317 +0800
++++ sogo/files/patch-UI_Scheduler_UIxCalDateSelector.m	2015-10-13 06:40:24.000000000 +0800
 @@ -0,0 +1,20 @@
 +--- UI/Scheduler/UIxCalDateSelector.m.orig	2015-10-13 06:02:26.792289741 +0800
 ++++ UI/Scheduler/UIxCalDateSelector.m	2015-10-13 06:39:25.511136695 +0800
@@ -1881,7 +1873,7 @@ diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalDateSelector.m sogo/files/pat
 + - (NSString *) localizedDayOfWeekName
 diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalDayTable.h sogo/files/patch-UI_Scheduler_UIxCalDayTable.h
 --- sogo.orig/files/patch-UI_Scheduler_UIxCalDayTable.h	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_Scheduler_UIxCalDayTable.h	2015-10-13 06:00:46.245300396 +0800
++++ sogo/files/patch-UI_Scheduler_UIxCalDayTable.h	2015-10-13 06:00:46.000000000 +0800
 @@ -0,0 +1,21 @@
 +--- UI/Scheduler/UIxCalDayTable.h.orig	2015-10-13 06:00:14.240298780 +0800
 ++++ UI/Scheduler/UIxCalDayTable.h	2015-10-13 06:00:19.230301851 +0800
@@ -1906,7 +1898,7 @@ diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalDayTable.h sogo/files/patch-U
 + 
 diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalDayTable.m sogo/files/patch-UI_Scheduler_UIxCalDayTable.m
 --- sogo.orig/files/patch-UI_Scheduler_UIxCalDayTable.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_Scheduler_UIxCalDayTable.m	2015-10-14 07:53:41.917878153 +0800
++++ sogo/files/patch-UI_Scheduler_UIxCalDayTable.m	2015-10-14 07:53:41.000000000 +0800
 @@ -0,0 +1,56 @@
 +--- UI/Scheduler/UIxCalDayTable.m.orig	2015-09-17 02:41:36.000000000 +0800
 ++++ UI/Scheduler/UIxCalDayTable.m	2015-10-14 07:44:32.063915367 +0800
@@ -1966,7 +1958,7 @@ diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalDayTable.m sogo/files/patch-U
 + }
 diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalDayView.m sogo/files/patch-UI_Scheduler_UIxCalDayView.m
 --- sogo.orig/files/patch-UI_Scheduler_UIxCalDayView.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_Scheduler_UIxCalDayView.m	2015-10-13 06:56:16.295076778 +0800
++++ sogo/files/patch-UI_Scheduler_UIxCalDayView.m	2015-10-13 06:56:16.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- UI/Scheduler/UIxCalDayView.m.orig	2015-10-13 06:55:05.290075011 +0800
 ++++ UI/Scheduler/UIxCalDayView.m	2015-10-13 06:55:41.472070500 +0800
@@ -1981,7 +1973,7 @@ diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalDayView.m sogo/files/patch-UI
 +   [qp setObject: hmString forKey:@"hm"];
 diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalListingActions.m sogo/files/patch-UI_Scheduler_UIxCalListingActions.m
 --- sogo.orig/files/patch-UI_Scheduler_UIxCalListingActions.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_Scheduler_UIxCalListingActions.m	2015-10-15 11:42:52.355972610 +0800
++++ sogo/files/patch-UI_Scheduler_UIxCalListingActions.m	2015-10-15 11:42:52.000000000 +0800
 @@ -0,0 +1,56 @@
 +--- UI/Scheduler/UIxCalListingActions.m.orig	2015-09-17 02:41:36.000000000 +0800
 ++++ UI/Scheduler/UIxCalListingActions.m	2015-10-15 11:41:53.562979042 +0800
@@ -2041,7 +2033,7 @@ diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalListingActions.m sogo/files/p
 +     {
 diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalMonthView.m sogo/files/patch-UI_Scheduler_UIxCalMonthView.m
 --- sogo.orig/files/patch-UI_Scheduler_UIxCalMonthView.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_Scheduler_UIxCalMonthView.m	2015-10-13 06:57:57.614059936 +0800
++++ sogo/files/patch-UI_Scheduler_UIxCalMonthView.m	2015-10-13 06:57:57.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- UI/Scheduler/UIxCalMonthView.m.orig	2015-10-13 06:56:35.930068918 +0800
 ++++ UI/Scheduler/UIxCalMonthView.m	2015-10-13 06:57:08.272061713 +0800
@@ -2056,7 +2048,7 @@ diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalMonthView.m sogo/files/patch-
 +     [classes appendString: @" weekEndDay"];
 diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalViewPrint.m sogo/files/patch-UI_Scheduler_UIxCalViewPrint.m
 --- sogo.orig/files/patch-UI_Scheduler_UIxCalViewPrint.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_Scheduler_UIxCalViewPrint.m	2015-10-13 06:54:44.379074580 +0800
++++ sogo/files/patch-UI_Scheduler_UIxCalViewPrint.m	2015-10-13 06:54:44.000000000 +0800
 @@ -0,0 +1,19 @@
 +--- UI/Scheduler/UIxCalViewPrint.m.orig	2015-10-13 06:40:49.935130156 +0800
 ++++ UI/Scheduler/UIxCalViewPrint.m	2015-10-13 06:45:36.482115783 +0800
@@ -2079,7 +2071,7 @@ diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalViewPrint.m sogo/files/patch-
 + //
 diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxComponentEditor.m sogo/files/patch-UI_Scheduler_UIxComponentEditor.m
 --- sogo.orig/files/patch-UI_Scheduler_UIxComponentEditor.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_Scheduler_UIxComponentEditor.m	2015-10-13 08:41:22.441635615 +0800
++++ sogo/files/patch-UI_Scheduler_UIxComponentEditor.m	2015-10-13 08:41:22.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- UI/Scheduler/UIxComponentEditor.m.orig	2015-10-13 08:34:49.429762100 +0800
 ++++ UI/Scheduler/UIxComponentEditor.m	2015-10-13 08:39:58.917637567 +0800
@@ -2094,7 +2086,7 @@ diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxComponentEditor.m sogo/files/pat
 +   [response appendContentString: content];
 diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxRecurrenceEditor.m sogo/files/patch-UI_Scheduler_UIxRecurrenceEditor.m
 --- sogo.orig/files/patch-UI_Scheduler_UIxRecurrenceEditor.m	1970-01-01 07:30:00.000000000 +0730
-+++ sogo/files/patch-UI_Scheduler_UIxRecurrenceEditor.m	2015-10-13 08:44:38.984621634 +0800
++++ sogo/files/patch-UI_Scheduler_UIxRecurrenceEditor.m	2015-10-13 08:44:38.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- UI/Scheduler/UIxRecurrenceEditor.m.orig	2015-10-13 08:43:32.796623156 +0800
 ++++ UI/Scheduler/UIxRecurrenceEditor.m	2015-10-13 08:44:08.401625528 +0800
@@ -2109,7 +2101,7 @@ diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxRecurrenceEditor.m sogo/files/pa
 + }
 diff -ruN sogo.orig/pkg-plist sogo/pkg-plist
 --- sogo.orig/pkg-plist	2015-09-23 13:30:12.000000000 +0800
-+++ sogo/pkg-plist	2015-10-16 18:16:18.703391141 +0800
++++ sogo/pkg-plist	2015-10-16 18:44:03.000000000 +0800
 @@ -564,6 +564,10 @@
  GNUstep/Local/Library/OCSTypeModels/appointment.ocs
  GNUstep/Local/Library/OCSTypeModels/contact-oracle.ocs

@@ -38,12 +38,6 @@ SUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
 
 CONFIGURE_ARGS=		--disable-debug --enable-strip
 
-# For checking compiler warnings:
-#CFLAGS+=		-Werror
-#CFLAGS+=		-Wno-unused-function
-#CFLAGS+=		-Wno-unused-variable
-#CFLAGS+=		-Wno-objc-protocol-method-implementation
-
 .include <bsd.port.options.mk>
 
 .if ${PORT_OPTIONS:MACTIVESYNC}

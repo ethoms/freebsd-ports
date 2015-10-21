@@ -1,5 +1,12 @@
 Notes for devel/sope port development.
 
+# For checking compiler warnings (Makefile):
+#CFLAGS+=               -Werror
+#CFLAGS+=               -Wno-objc-protocol-method-implementation
+#CFLAGS+=               -Wno-unused-function
+#CFLAGS+=               -Wno-comment
+#CFLAGS+=               -Wno-unused-variable
+
 Patches with caution:
 
 files/patch-sope-mime_NGImap4_NGImap4Client.h
