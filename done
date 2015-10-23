@@ -1,19 +1,3 @@
-Notes for devel/sope port development.
-
-# For checking compiler warnings (Makefile):
-#CFLAGS+=               -Werror
-#CFLAGS+=               -Wno-objc-protocol-method-implementation
-#CFLAGS+=               -Wno-unused-function
-#CFLAGS+=               -Wno-comment
-#CFLAGS+=               -Wno-unused-variable
-
-Patches with caution:
-
-files/patch-sope-mime_NGImap4_NGImap4Client.h
-files/patch-sope-mime_NGImap4_NGImap4Client.m
-
-Patches submitted upstream:
-Stage1
 patch-sope-appserver_NGObjWeb_WOHttpAdaptor_WOHttpTransaction.m
 patch-sope-appserver__NGObjWeb__Associations__WOScriptAssociation.m
 patch-sope-appserver__NGObjWeb__Associations__WOValueAssociation.m
@@ -47,7 +31,7 @@ patch-sope-appserver__WOExtensions__WOTabPanel.m
 patch-sope-core_NGExtensions_FdExt.subproj_NSString+Encoding
 patch-sope-core__EOControl__EOFetchSpecification.m
 patch-sope-core__EOControl__EONull.m
-patch-sope-core__NGExtensions__FdExt.subproj__NGPropertyListParser (fuzz=1)
+patch-sope-core__NGExtensions__FdExt.subproj__NGPropertyListParser
 patch-sope-core__NGExtensions__FdExt.subproj__NSException+misc
 patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Values
 patch-sope-core__NGExtensions__NGDirectoryEnumerator.m
@@ -87,7 +71,6 @@ patch-sope-mime__NGMime__NGMimePartParser.m
 patch-sope-mime__NGMime__NGMimeRFC822DateHeaderFieldParser.m
 patch-sope-xml__DOM__DOMQueryPathExpression.m
 patch-sope-xml__XmlRpc__NSNotification+XmlRpcCoding.m
-Stage2
 patch-sope-appserver__NGObjWeb__SoObjects__SoClassSecurityInfo.h
 patch-sope-appserver__NGObjWeb__SoObjects__SoClassSecurityInfo.m
 patch-sope-appserver__NGObjWeb__WebDAV__SoDAVSQLParser.h
@@ -100,7 +83,6 @@ patch-sope-core__EOControl__EOSQLParser.m
 patch-sope-gdl1__GDLAccess__EODatabaseChannel.m
 patch-sope-mime__NGMime__NGMimePartGenerator.h
 patch-sope-xml_SaxObjC_SaxObjectDecoder.m
-Stage3
 patch-sope-appserver__NGObjWeb__WOComponent+Sync.m
 patch-sope-appserver__NGObjWeb__WOComponent.m
 patch-sope-core_NGExtensions_NGCalendarDateRange.m
@@ -111,7 +93,6 @@ patch-sope-gdl1__GDLAccess__EOFExceptions.m
 patch-sope-gdl1__GDLAccess__EOFault.m
 patch-sope-gdl1__GDLAccess__EOModel.m
 patch-sope-gdl1__GDLAccess__EOPrimaryKeyDictionary.m
-Stage4
 patch-sope-appserver_NGObjWeb_DynamicElements_WOHyperlinkInfo.m
 patch-sope-appserver_NGObjWeb_WebDAV_SoObjectDataSource.m
 patch-sope-appserver__NGObjWeb__NGHttp__NGHttpHeaderFieldParser.m
@@ -119,25 +100,11 @@ patch-sope-appserver__NGObjWeb__WOMailDelivery.m
 patch-sope-gdl1__PostgreSQL__NSString+PostgreSQL72.m
 patch-sope-mime__NGImap4__NGImap4Context.m
 patch-sope-mime__NGImap4__NGImap4Folder.m
-Stage5
 patch-sope-core__NGExtensions__FdExt.subproj__NSSet+enumerator
 patch-sope-core__NGExtensions__FdExt.subproj__NSString+misc (fuzz=1)
 patch-sope-gdl1__GDLAccess__EOAdaptor.m
 patch-sope-gdl1__GDLAccess__EODatabaseFault.m
 patch-sope-gdl1__GDLAccess__EOSQLExpression.m
 patch-sope-gdl1__GDLAccess__EOSQLQualifier.m
-Stage6
 patch-sope-mime_NGImap4_NGImap4Client.h
 patch-sope-mime_NGImap4_NGImap4Client.m
-Stage7
-
-
-Patches partially submitted upstream:
-Stage1
-patch-sope-gdl1__GDLAccess__EOAttribute.m
-patch-sope-gdl1__GDLAccess__EODatabaseFault.m
-patch-sope-gdl1__GDLAccess__EOEntity.m
-patch-sope-mime_NGImap4_NGImap4Client.m
-patch-sope-gdl1__GDLAccess__EOSQLQualifier.m
-Stage4
-patch-sope-core_NGStreams_NGActiveSocket.m
