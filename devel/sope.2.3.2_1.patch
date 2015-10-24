@@ -1,6 +1,6 @@
 diff -ruN sope.orig/Makefile sope/Makefile
 --- sope.orig/Makefile	2015-09-22 18:32:08.000000000 +0800
-+++ sope/Makefile	2015-10-21 14:26:57.569568679 +0800
++++ sope/Makefile	2015-10-21 14:26:57.000000000 +0800
 @@ -3,6 +3,7 @@
  
  PORTNAME=		sope
@@ -876,39 +876,9 @@ diff -ruN sope.orig/files/patch-sope-core_EOControl_EOValidation.m sope/files/pa
 + #endif
 +     if (sel) {
 +       if ([self respondsToSelector:sel]) {
-diff -ruN sope.orig/files/patch-sope-core_NGExtensions_EOExt.subproj_EOQualifier+CtxEval sope/files/patch-sope-core_NGExtensions_EOExt.subproj_EOQualifier+CtxEval
---- sope.orig/files/patch-sope-core_NGExtensions_EOExt.subproj_EOQualifier+CtxEval	1970-01-01 07:30:00.000000000 +0730
-+++ sope/files/patch-sope-core_NGExtensions_EOExt.subproj_EOQualifier+CtxEval	2015-09-22 18:32:08.000000000 +0800
-@@ -0,0 +1,11 @@
-+--- sope-core/NGExtensions/EOExt.subproj/EOQualifier+CtxEval.m.orig	2015-09-16 18:26:49 UTC
-++++ sope-core/NGExtensions/EOExt.subproj/EOQualifier+CtxEval.m
-+@@ -29,7 +29,7 @@
-+ #  import <objc/objc.h>
-+ #  import <extensions/objc-runtime.h>
-+ #elif GNUSTEP_BASE_LIBRARY
-+-#if __GNU_LIBOBJC__ >= 20100911
-++#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(__GNUSTEP_RUNTIME__)
-+ #  define sel_get_name sel_getName
-+ #  import <objc/runtime.h>
-+ #else
-diff -ruN sope.orig/files/patch-sope-core_NGExtensions_EOExt.subproj_EOQualifier+CtxEval.m sope/files/patch-sope-core_NGExtensions_EOExt.subproj_EOQualifier+CtxEval.m
---- sope.orig/files/patch-sope-core_NGExtensions_EOExt.subproj_EOQualifier+CtxEval.m	2015-09-22 18:32:08.000000000 +0800
-+++ sope/files/patch-sope-core_NGExtensions_EOExt.subproj_EOQualifier+CtxEval.m	1970-01-01 07:30:00.000000000 +0730
-@@ -1,11 +0,0 @@
----- sope-core/NGExtensions/EOExt.subproj/EOQualifier+CtxEval.m.orig	2015-09-16 18:26:49 UTC
--+++ sope-core/NGExtensions/EOExt.subproj/EOQualifier+CtxEval.m
--@@ -29,7 +29,7 @@
-- #  import <objc/objc.h>
-- #  import <extensions/objc-runtime.h>
-- #elif GNUSTEP_BASE_LIBRARY
---#if __GNU_LIBOBJC__ >= 20100911
--+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(__GNUSTEP_RUNTIME__)
-- #  define sel_get_name sel_getName
-- #  import <objc/runtime.h>
-- #else
-diff -ruN sope.orig/files/patch-sope-core_NGExtensions_FdExt.subproj_NSString+Encoding sope/files/patch-sope-core_NGExtensions_FdExt.subproj_NSString+Encoding
---- sope.orig/files/patch-sope-core_NGExtensions_FdExt.subproj_NSString+Encoding	1970-01-01 07:30:00.000000000 +0730
-+++ sope/files/patch-sope-core_NGExtensions_FdExt.subproj_NSString+Encoding	2015-10-07 08:11:51.000000000 +0800
+diff -ruN sope.orig/files/patch-sope-core_NGExtensions_FdExt.subproj_NSString+Encoding.m sope/files/patch-sope-core_NGExtensions_FdExt.subproj_NSString+Encoding.m
+--- sope.orig/files/patch-sope-core_NGExtensions_FdExt.subproj_NSString+Encoding.m	1970-01-01 07:30:00.000000000 +0730
++++ sope/files/patch-sope-core_NGExtensions_FdExt.subproj_NSString+Encoding.m	2015-10-07 08:11:51.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- sope-core/NGExtensions/FdExt.subproj/NSString+Encoding.m.orig	2015-10-07 08:04:38.136511581 +0800
 ++++ sope-core/NGExtensions/FdExt.subproj/NSString+Encoding.m	2015-10-07 08:08:49.915493258 +0800
@@ -1138,9 +1108,9 @@ diff -ruN sope.orig/files/patch-sope-core__EOControl__EOSQLParser.m sope/files/p
 +   from:(unichar **)pos length:(unsigned *)len
 + {
 +   /* 
-diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NGPropertyListParser sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NGPropertyListParser
---- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NGPropertyListParser	1970-01-01 07:30:00.000000000 +0730
-+++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NGPropertyListParser	2015-10-07 02:14:04.000000000 +0800
+diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NGPropertyListParser.m sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NGPropertyListParser.m
+--- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NGPropertyListParser.m	1970-01-01 07:30:00.000000000 +0730
++++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NGPropertyListParser.m	2015-10-07 02:14:04.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- ./sope-core/NGExtensions/FdExt.subproj/NGPropertyListParser.m.orig	2013-07-22 14:03:07.000000000 +0100
 ++++ ./sope-core/NGExtensions/FdExt.subproj/NGPropertyListParser.m	2013-10-09 17:03:32.000000000 +0100
@@ -1153,9 +1123,9 @@ diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NGProper
 +             const unsigned char *startPos, *endPos;
 + 
 +             for (pos = _idx; (pos >= 0) && (_buffer[pos] != '\n'); pos--)
-diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSException+misc sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSException+misc
---- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSException+misc	1970-01-01 07:30:00.000000000 +0730
-+++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSException+misc	2015-10-08 01:37:51.000000000 +0800
+diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSException+misc.m sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSException+misc.m
+--- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSException+misc.m	1970-01-01 07:30:00.000000000 +0730
++++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSException+misc.m	2015-10-08 01:37:51.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- ./sope-core/NGExtensions/FdExt.subproj/NSException+misc.m.orig	2013-07-22 14:03:07.000000000 +0100
 ++++ ./sope-core/NGExtensions/FdExt.subproj/NSException+misc.m	2013-10-09 17:03:32.000000000 +0100
@@ -1168,9 +1138,9 @@ diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSExcept
 + }
 + 
 + @end /* NSException(NGMiscellaneous) */
-diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Logs sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Logs
---- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Logs	1970-01-01 07:30:00.000000000 +0730
-+++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Logs	2015-10-07 02:14:04.000000000 +0800
+diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Logs.m sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Logs.m
+--- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Logs.m	1970-01-01 07:30:00.000000000 +0730
++++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Logs.m	2015-10-07 02:14:04.000000000 +0800
 @@ -0,0 +1,16 @@
 +--- ./sope-core/NGExtensions/FdExt.subproj/NSObject+Logs.m.orig	2013-07-22 14:03:07.000000000 +0100
 ++++ ./sope-core/NGExtensions/FdExt.subproj/NSObject+Logs.m	2013-10-09 17:03:32.000000000 +0100
@@ -1188,9 +1158,9 @@ diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject
 +   }
 + 
 +   return logger;
-diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Values sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Values
---- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Values	1970-01-01 07:30:00.000000000 +0730
-+++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Values	2015-10-07 02:14:04.000000000 +0800
+diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Values.m sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Values.m
+--- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Values.m	1970-01-01 07:30:00.000000000 +0730
++++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Values.m	2015-10-07 02:14:04.000000000 +0800
 @@ -0,0 +1,11 @@
 +--- ./sope-core/NGExtensions/FdExt.subproj/NSObject+Values.m.orig	2013-07-22 14:03:07.000000000 +0100
 ++++ ./sope-core/NGExtensions/FdExt.subproj/NSObject+Values.m	2013-10-09 17:03:32.000000000 +0100
@@ -1203,9 +1173,9 @@ diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject
 + }
 + 
 + - (BOOL)boolValue {
-diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSSet+enumerator sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSSet+enumerator
---- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSSet+enumerator	1970-01-01 07:30:00.000000000 +0730
-+++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSSet+enumerator	2015-10-07 02:14:04.000000000 +0800
+diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSSet+enumerator.m sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSSet+enumerator.m
+--- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSSet+enumerator.m	1970-01-01 07:30:00.000000000 +0730
++++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSSet+enumerator.m	2015-10-07 02:14:04.000000000 +0800
 @@ -0,0 +1,10 @@
 +--- ./sope-core/NGExtensions/FdExt.subproj/NSSet+enumerator.m.orig	2013-07-22 14:03:07.000000000 +0100
 ++++ ./sope-core/NGExtensions/FdExt.subproj/NSSet+enumerator.m	2013-10-09 17:03:32.000000000 +0100
@@ -1217,9 +1187,9 @@ diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSSet+en
 + #include "common.h"
 + 
 + @implementation NSSet(enumerator)
-diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSString+misc sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSString+misc
---- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSString+misc	1970-01-01 07:30:00.000000000 +0730
-+++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSString+misc	2015-10-07 02:14:04.000000000 +0800
+diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSString+misc.m sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSString+misc.m
+--- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSString+misc.m	1970-01-01 07:30:00.000000000 +0730
++++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSString+misc.m	2015-10-07 02:14:04.000000000 +0800
 @@ -0,0 +1,10 @@
 +--- ./sope-core/NGExtensions/FdExt.subproj/NSString+misc.m.orig	2013-07-22 14:03:07.000000000 +0100
 ++++ ./sope-core/NGExtensions/FdExt.subproj/NSString+misc.m	2013-10-09 17:03:32.000000000 +0100

@@ -141,3 +141,249 @@ patch-sope-mime_NGImap4_NGImap4Client.m
 patch-sope-gdl1__GDLAccess__EOSQLQualifier.m
 Stage4
 patch-sope-core_NGStreams_NGActiveSocket.m
+
+
+
+
+
+
+******************************
+"sel_*" runtime compatability:
+******************************
+FILES:
+sope/sope-gdl1/GDLAccess/EOFault.m
+sope/sope-gdl1/GDLAccess/EOFaultHandler.m
+sope/sope-gdl1/GDLAccess/common.h
+sope/sope-gdl1/GDLAccess/EOSQLExpression.m
+sope/sope-mime/NGImap4/ChangeLog
+sope/sope-mime/NGImap4/imCommon.h
+sope/sope-mime/NGImap4/NGImap4Folder.m
+sope/sope-mime/NGImap4/EOQualifier+IMAPAdditions.m
+sope/sope-mime/NGImap4/EOSortOrdering+IMAPAdditions.m
+sope/sope-mime/NGMime/common.h
+sope/sope-core/EOControl/EOKeyValueQualifier.m
+sope/sope-core/EOControl/EOKeyValueCoding.m
+sope/sope-core/EOControl/EOKeyComparisonQualifier.m
+sope/sope-core/EOControl/common.h
+sope/sope-core/EOControl/EOSortOrdering.m
+sope/sope-core/EOControl/EOValidation.m
+sope/sope-core/NGExtensions/EOExt.subproj/EOQualifier+CtxEval.m
+sope/sope-core/EOCoreData/common.h
+sope/sope-core/NGStreams/NGStreamCoder.m
+sope/sope-ldap/NGLdap/ChangeLog
+sope/sope-ldap/NGLdap/EOQualifier+LDAP.m
+sope/sope-appserver/NGObjWeb/WOSession.m
+sope/sope-appserver/NGObjWeb/NSObject+WO.m
+sope/sope-appserver/NGObjWeb/DynamicElements/WOComponentContent.m
+sope/sope-appserver/NGObjWeb/DynamicElements/WOComponentReference.m
+sope/sope-appserver/NGObjWeb/common.h
+sope/sope-appserver/NGObjWeb/Associations/WOKeyPathAssociation.m
+sope/sope-appserver/NGObjWeb/SoObjects/SoSelectorInvocation.m
+sope/sope-appserver/NGObjWeb/WOChildComponentReference.m
+
+SEARCH RESULTS:
+		    sel_get_name(sel)];
+sope/sope-gdl1/GDLAccess/EOFault.m
+#  define sel_getTypeEncoding(selector) ((selector)->sel_types)
+  types = aSelector->sel_types;
+    types = sel_getTypeEncoding(_selector);
+sope/sope-gdl1/GDLAccess/EOFaultHandler.m
+#  define sel_eq(sela,selb) (sela==selb?YES:NO)
+#  define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
+#    define SEL_EQ(__A__,__B__) sel_isEqual(__A__,__B__)
+#    define SEL_EQ(__A__,__B__) sel_eq(__A__,__B__)
+sope/sope-gdl1/GDLAccess/common.h
+      if (sel_eq(ordering, EOCompareCaseInsensitiveAscending) ||
+          sel_eq(ordering, EOCompareCaseInsensitiveDescending))
+      if (sel_eq(ordering, EOCompareCaseInsensitiveAscending) ||
+          sel_eq(ordering, EOCompareAscending)) {
+      else if (sel_eq(ordering, EOCompareCaseInsensitiveDescending) ||
+               sel_eq(ordering, EOCompareDescending)) {
+    if (sel_eq(_selector, EOQualifierOperatorEqual))
+    else if (sel_eq(_selector, EOQualifierOperatorNotEqual))
+    if (sel_eq(_selector, EOQualifierOperatorEqual))
+    else if (sel_eq(_selector, EOQualifierOperatorNotEqual))
+  if (sel_eq(_selector, EOQualifierOperatorLessThan))
+  else if (sel_eq(_selector, EOQualifierOperatorGreaterThan))
+  else if (sel_eq(_selector, EOQualifierOperatorLessThanOrEqualTo))
+  else if (sel_eq(_selector, EOQualifierOperatorGreaterThanOrEqualTo))
+  else if (sel_eq(_selector, EOQualifierOperatorLike))
+sope/sope-gdl1/GDLAccess/EOSQLExpression.m
+	* imCommon.h: only define sel_eq on NeXT or APPLE runtime, fixes OGo
+sope/sope-mime/NGImap4/ChangeLog
+#  ifndef sel_eq
+#    define sel_eq(__A__,__B__) (__A__==__B__)
+#  ifndef sel_eq
+#    define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
+sope/sope-mime/NGImap4/imCommon.h
+      if (sel_eq([so selector], EOCompareAscending) ||
+          sel_eq([so selector], EOCompareCaseInsensitiveAscending)) {
+sope/sope-mime/NGImap4/NGImap4Folder.m
+  if (sel_eq(lselector, EOQualifierOperatorEqual)) {
+  else if (!sel_eq(lselector, EOQualifierOperatorContains)) {
+  if (sel_eq(lselector, EOQualifierOperatorEqual))
+  else if (sel_eq(lselector, EOQualifierOperatorGreaterThan)
+	   || sel_eq(lselector, EOQualifierOperatorGreaterThanOrEqualTo))
+  else if (sel_eq(lselector, EOQualifierOperatorLessThan)
+	   || sel_eq(lselector, EOQualifierOperatorLessThanOrEqualTo))
+    if (!sel_eq(lselector, EOQualifierOperatorEqual)) {
+    if (!sel_eq(lselector, EOQualifierOperatorGreaterThanOrEqualTo)) {
+    if (sel_eq(lselector, EOQualifierOperatorGreaterThan)
+	|| sel_eq(lselector, EOQualifierOperatorGreaterThanOrEqualTo))
+    else if (sel_eq(lselector, EOQualifierOperatorLessThan)
+	     || sel_eq(lselector, EOQualifierOperatorLessThanOrEqualTo))
+    if (!sel_eq(lselector, EOQualifierOperatorEqual) &&
+	!sel_eq(lselector, EOQualifierOperatorCaseInsensitiveLike) &&
+	!sel_eq(lselector, EOQualifierOperatorContains)) {
+  if (!sel_eq(lselector, EOQualifierOperatorEqual) &&
+      !sel_eq(lselector, EOQualifierOperatorCaseInsensitiveLike))
+sope/sope-mime/NGImap4/EOQualifier+IMAPAdditions.m
+  if (sel_eq(sel, EOCompareDescending) ||
+      sel_eq(sel, EOCompareCaseInsensitiveDescending)) {
+sope/sope-mime/NGImap4/EOSortOrdering+IMAPAdditions.m
+#  ifndef sel_eq
+#    define sel_eq(__A__, __B__) (__A__==__B__)
+sope/sope-mime/NGMime/common.h
+  if (sel_eq(self->operator, [(EOKeyValueQualifier *)_qual selector]))
+sope/sope-core/EOControl/EOKeyValueQualifier.m
+#  define sel_get_any_uid sel_getUid
+    sel = sel_get_any_uid(ckey);
+    sel = sel_get_any_uid(sname);
+    sel = sel_get_any_uid(buf);
+    sel = sel_getUid(buf);
+    sel = sel_get_any_uid(buf);
+sope/sope-core/EOControl/EOKeyValueCoding.m
+  if (sel_eq(self->operator, [(EOKeyComparisonQualifier *)_qual selector]))
+sope/sope-core/EOControl/EOKeyComparisonQualifier.m
+#  ifndef sel_eq
+#    define sel_eq(sela,selb) (sela==selb?YES:NO)
+#  ifndef sel_eq
+#    define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
+sope/sope-core/EOControl/common.h
+#    define SEL_EQ(sel1,sel2) sel_eq(sel1,sel2)
+sope/sope-core/EOControl/EOSortOrdering.m
+#  define sel_get_any_uid sel_getUid
+    sel = sel_getUid(buf);
+    sel = sel_get_any_uid(buf);
+sope/sope-core/EOControl/EOValidation.m
+#  define sel_get_name sel_getName
+#  define sel_get_name sel_getName
+  if ((selName = sel_get_name(_sel))) {
+sope/sope-core/NGExtensions/EOExt.subproj/EOQualifier+CtxEval.m
+#    define SEL_EQ(sel1,sel2) sel_eq(sel1,sel2)
+sope/sope-core/EOCoreData/common.h
+      _writeCString(self, (*(SEL *)_value) ? sel_get_name(*(SEL *)_value) : NULL);
+      *(SEL *)_value = name ? sel_get_any_uid(name) : NULL;
+sope/sope-core/NGStreams/NGStreamCoder.m
+	* EOQualifier+LDAP.m: define sel_eq for NeXT_RUNTIME
+sope/sope-ldap/NGLdap/ChangeLog
+#define sel_eq(sel1, sel2) ((sel1)) == ((sel2))
+#  define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
+  if (sel_eq(sel,  EOQualifierOperatorNotEqual))
+  if (sel_eq(sel,  EOQualifierOperatorEqual))
+  else if (sel_eq(sel,  EOQualifierOperatorNotEqual))
+  else if (sel_eq(sel,  EOQualifierOperatorLessThan))
+  else if (sel_eq(sel,  EOQualifierOperatorGreaterThan))
+  else if (sel_eq(sel,  EOQualifierOperatorLessThanOrEqualTo))
+  else if (sel_eq(sel,  EOQualifierOperatorGreaterThanOrEqualTo))
+  else if (sel_eq(sel,  EOQualifierOperatorContains))
+  else if (sel_eq(sel,  EOQualifierOperatorLike))
+  else if (sel_eq(sel,  EOQualifierOperatorCaseInsensitiveLike))
+  if (sel_eq(sel,  EOQualifierOperatorNotEqual))
+  if (sel_eq(sel,  EOQualifierOperatorNotEqual))
+  if (sel_eq(sel,  EOQualifierOperatorEqual))
+  else if (sel_eq(sel,  EOQualifierOperatorNotEqual))
+  else if (sel_eq(sel,  EOQualifierOperatorLessThan))
+  else if (sel_eq(sel,  EOQualifierOperatorGreaterThan))
+  else if (sel_eq(sel,  EOQualifierOperatorLessThanOrEqualTo))
+  else if (sel_eq(sel,  EOQualifierOperatorGreaterThanOrEqualTo))
+  else if (sel_eq(sel,  EOQualifierOperatorContains))
+  else if (sel_eq(sel,  EOQualifierOperatorLike))
+  else if (sel_eq(sel,  EOQualifierOperatorCaseInsensitiveLike))
+  if (sel_eq(sel,  EOQualifierOperatorNotEqual))
+sope/sope-ldap/NGLdap/EOQualifier+LDAP.m
+#if !defined(sel_get_name) && ((defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__))
+#  define sel_get_name sel_getName
+               [[(WOComponent *)page name] cString], sel_get_name(_cmd), diff);
+               [[(WOComponent *)page name] cString], sel_get_name(_cmd), diff);
+                 [[page name] cString], sel_get_name(_cmd), diff);
+                 //[page name], sel_get_name(_cmd), diff);
+               [[page name] cString], sel_get_name(_cmd), diff);
+sope/sope-appserver/NGObjWeb/WOSession.m
+  return sel_getUid(buf);
+  return sel_get_uid(buf);
+    getSel = sel_get_uid(buf);
+    getSel = sel_getUid(buf);
+    getSel = sel_get_uid(buf);
+sope/sope-appserver/NGObjWeb/NSObject+WO.m
+	     sel_getName(_cmd), 
+	     sel_get_name(_cmd), 
+	     sel_getName(_cmd), 
+	     sel_get_name(_cmd), 
+	     sel_getName(_cmd), 
+	     sel_get_name(_cmd), 
+sope/sope-appserver/NGObjWeb/DynamicElements/WOComponentContent.m
+	     sel_getName(_cmd), 
+	     sel_get_name(_cmd), 
+sope/sope-appserver/NGObjWeb/DynamicElements/WOComponentReference.m
+#  ifndef sel_get_name
+#    define sel_get_name(__XXX__)    sel_getName(__XXX__)
+#    define sel_get_any_uid(__XXX__) sel_getUid(__XXX__)
+sope/sope-appserver/NGObjWeb/common.h
+#define sel_get_uid               sel_getUid
+#  define sel_get_uid               sel_getUid
+              info->extra.sel.get = sel_get_uid((char *)info->ckey);
+            info->extra.sel.get = sel_get_uid((char *)info->ckey);
+            info->extra.sel.get = sel_get_uid((char *)info->ckey);
+  return sel_get_uid((char *)buf);
+sope/sope-appserver/NGObjWeb/Associations/WOKeyPathAssociation.m
+#  define sel_get_any_uid   sel_getUid
+#  define sel_register_name sel_registerName
+    if ((self->sel = sel_get_any_uid(sname)) == NULL)
+      self->sel = sel_register_name(sname);
+sope/sope-appserver/NGObjWeb/SoObjects/SoSelectorInvocation.m
+           [[child name] cString], sel_get_name(_cmd), diff);
+           [[child name] cString], sel_get_name(_cmd), diff);
+           [[child name] cString], sel_get_name(_cmd), diff);
+sope/sope-appserver/NGObjWeb/WOChildComponentReference.m
+
+
+
+
+*************************
+objc_malloc compatability
+*************************
+#  define objc_malloc(__size__) malloc(__size__)
+sope/sope-core/EOControl/common.h
+	  objc_malloc/objc_free to clean up the code
+sope/sope-core/EOControl/ChangeLog
+  nl = objc_malloc(sizeof(EOObserverList));
+  l = objc_malloc(sizeof(EOObserverList));
+sope/sope-core/EOControl/EOObserver.m
+#  define NGMalloc       objc_malloc
+sope/sope-core/NGExtensions/NGExtensions/NGMemoryAllocation.h
+  objc_free(qs);
+sope/sope-core/EOControl/EOOrQualifier.m
+	  objc_malloc/objc_free to clean up the code
+sope/sope-core/EOControl/ChangeLog
+
+
+
+*************************
+objc_free compatability
+*************************
+        objc_free(l);
+        objc_free(ll);
+        objc_free(l);
+      objc_free(l);
+sope/sope-core/EOControl/EOObserver.m
+  objc_free(qs);
+sope/sope-core/EOControl/EOOrQualifier.m
+
+
+
+*************************
+objc_calloc compatability
+*************************
+  qs = objc_calloc(c, sizeof(id));
+sope/sope-core/EOControl/EOOrQualifier.m
