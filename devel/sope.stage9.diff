@@ -1,0 +1,40 @@
+diff --git a/sope-appserver/NGObjWeb/NSObject+WO.m b/sope-appserver/NGObjWeb/NSObject+WO.m
+index e274e37..9d24172 100644
+--- a/sope-appserver/NGObjWeb/NSObject+WO.m
++++ b/sope-appserver/NGObjWeb/NSObject+WO.m
+@@ -255,7 +255,7 @@ IMP WOGetKVCGetMethod(id object, NSString *_key) {
+   if (object == nil) return NULL;
+   if (_key   == nil) return NULL;
+ 
+-#if GNU_RUNTIME && !(defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911))
++#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ < 20100911))
+   {
+     unsigned keyLen;
+     char     *buf;
+@@ -309,7 +309,7 @@ id WOGetKVCValueUsingMethod(id object, NSString *_key) {
+       return nil;
+     free(buf); buf = NULL;
+   }
+-#if GNUSTEP_BASE_LIBRARY
++#if GNUSTEP_BASE_LIBRARY && !defined(__GNUSTEP_RUNTIME__)
+   if (!__objc_responds_to(object, getSel))
+     return nil;
+ #endif
+diff --git a/sope-gdl1/GDLAccess/EOFault.h b/sope-gdl1/GDLAccess/EOFault.h
+index 05b0d8c..3ef18a5 100644
+--- a/sope-gdl1/GDLAccess/EOFault.h
++++ b/sope-gdl1/GDLAccess/EOFault.h
+@@ -9,6 +9,13 @@
+ 
+ @class EOFaultHandler;
+ 
++#ifndef __has_attribute
++#define __has_attribute(x) 0
++#endif
++
++#if __has_attribute(objc_root_class)
++__attribute__((objc_root_class))
++#endif
+ @interface EOFault
+ {
+   Class          isa;

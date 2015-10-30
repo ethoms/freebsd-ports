@@ -47,9 +47,9 @@ patch-sope-appserver__WOExtensions__WOTabPanel.m
 patch-sope-core_NGExtensions_FdExt.subproj_NSString+Encoding
 patch-sope-core__EOControl__EOFetchSpecification.m
 patch-sope-core__EOControl__EONull.m
-patch-sope-core__NGExtensions__FdExt.subproj__NGPropertyListParser (fuzz=1)
-patch-sope-core__NGExtensions__FdExt.subproj__NSException+misc
-patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Values
+patch-sope-core__NGExtensions__FdExt.subproj__NGPropertyListParser.m (fuzz=1)
+patch-sope-core__NGExtensions__FdExt.subproj__NSException+misc.m
+patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Values.m
 patch-sope-core__NGExtensions__NGDirectoryEnumerator.m
 patch-sope-core__NGStreams__NGBufferedStream.m
 patch-sope-core__NGStreams__NGByteBuffer.m
@@ -130,18 +130,38 @@ Stage6
 patch-sope-mime_NGImap4_NGImap4Client.h
 patch-sope-mime_NGImap4_NGImap4Client.m
 Stage7
+patch-sope-core_NGStreams_NGActiveSocket.m
+Stage8 [obsoleted by other, neater upstream changes (via git)]
+patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentContent.m
+patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentReference.m
+patch-sope-appserver_NGObjWeb_DynamicElements_decommon.h
+patch-sope-appserver_NGObjWeb_WOSession.m
+patch-sope-appserver_NGObjWeb_common.h
+patch-sope-core_EOControl_EOKeyValueCoding.m
+patch-sope-core_EOControl_EOSortOrdering.m
+patch-sope-core_EOControl_EOValidation.m
+patch-sope-core_EOControl_common.h
+patch-sope-core_NGExtensions_EOExt.subproj_EOQualifier+CtxEval
+patch-sope-core_NGStreams_NGStreamCoder.m
+patch-sope-core__EOControl__EOKeyComparisonQualifier.m
+patch-sope-core__EOControl__EOKeyValueQualifier.m
+patch-sope-core__EOControl__EOObserver.m
+patch-sope-core__EOControl__EOOrQualifier.m
+patch-sope-gdl1_GDLAccess_common.h
+patch-sope-gdl1__GDLAccess__EOAttribute.m
+patch-sope-gdl1__GDLAccess__EOEntity.m
+patch-sope-ldap_NGLdap_EOQualifier+LDAP.m
+patch-sope-mime_NGImap4_imCommon.h
+patch-sope-mime_NGMime_common.h
+Stage9
+patch-sope-appserver_NGObjWeb_NSObject+WO.m
+patch-sope-gdl1__GDLAccess__EOFault.h
+patch-sope-core_NGExtensions_NGExtensions_NGBundleManager.h
+patch-sope-core_NGExtensions_NGExtensions_NSException+misc.h
+
 
 
 Patches partially submitted upstream:
-Stage1
-patch-sope-gdl1__GDLAccess__EOAttribute.m
-patch-sope-gdl1__GDLAccess__EODatabaseFault.m
-patch-sope-gdl1__GDLAccess__EOEntity.m
-patch-sope-mime_NGImap4_NGImap4Client.m
-patch-sope-gdl1__GDLAccess__EOSQLQualifier.m
-Stage4
-patch-sope-core_NGStreams_NGActiveSocket.m
-
 
 
 
