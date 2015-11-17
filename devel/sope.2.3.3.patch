@@ -1,0 +1,3013 @@
+diff -ruN sope.orig/Makefile sope/Makefile
+--- sope.orig/Makefile	2015-10-25 14:47:26.000000000 +0800
++++ sope/Makefile	2015-11-17 05:51:38.000000000 +0800
+@@ -2,8 +2,7 @@
+ # $FreeBSD: head/devel/sope/Makefile 400145 2015-10-25 06:47:26Z pi $
+ 
+ PORTNAME=		sope
+-PORTVERSION=		2.3.2
+-PORTREVISION=		1
++PORTVERSION=		2.3.3
+ CATEGORIES=		devel gnustep
+ MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
+ DISTNAME=		SOPE-${PORTVERSION}
+diff -ruN sope.orig/distinfo sope/distinfo
+--- sope.orig/distinfo	2015-09-22 18:32:08.000000000 +0800
++++ sope/distinfo	2015-11-17 05:53:19.000000000 +0800
+@@ -1,2 +1,2 @@
+-SHA256 (SOPE-2.3.2.tar.gz) = 9d2072c6ee2b864d57d30f43079ff7c0921f8a94de066f32753337aef74e85d8
+-SIZE (SOPE-2.3.2.tar.gz) = 2269903
++SHA256 (SOPE-2.3.3.tar.gz) = da94b25eff35346c9ed6d80378f593b813d5eeb1d946d1f8db979c10b69d83c8
++SIZE (SOPE-2.3.3.tar.gz) = 2272440
+diff -ruN sope.orig/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentContent.m sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentContent.m
+--- sope.orig/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentContent.m	2015-09-22 18:32:08.000000000 +0800
++++ sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentContent.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,14 +0,0 @@
+---- sope-appserver/NGObjWeb/DynamicElements/WOComponentContent.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/DynamicElements/WOComponentContent.m
+-@@ -75,11 +75,7 @@ static Class NSDateClass = Nil;
+-         printf("  ");
+-       printf("content: [%s %s]: %0.3fs\n",
+-              [[component name] cString], 
+--#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+--	     sel_getName(_cmd), 
+--#else
+- 	     sel_get_name(_cmd), 
+--#endif
+- 	     diff);
+-     }
+-     
+diff -ruN sope.orig/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentReference.m sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentReference.m
+--- sope.orig/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentReference.m	2015-09-22 18:32:08.000000000 +0800
++++ sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOComponentReference.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/DynamicElements/WOComponentReference.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/DynamicElements/WOComponentReference.m
+-@@ -172,7 +172,7 @@ _updateComponent(WOComponentReference *s
+-         printf("  ");
+-       printf("[%s %s]: %0.3fs\n",
+-              [[child name] cString], 
+--#if APPLE_RUNTIME || NeXT_RUNTIME || (__GNU_LIBOBJC__ >= 20100911)
+-+#if APPLE_RUNTIME || NeXT_RUNTIME || (__GNU_LIBOBJC__ >= 20100911) || defined(__GNUSTEP_RUNTIME__)
+- 	     sel_getName(_cmd), 
+- #else
+- 	     sel_get_name(_cmd), 
+diff -ruN sope.orig/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOHyperlinkInfo.m sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOHyperlinkInfo.m
+--- sope.orig/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOHyperlinkInfo.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_WOHyperlinkInfo.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/DynamicElements/WOHyperlinkInfo.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/DynamicElements/WOHyperlinkInfo.m
+-@@ -27,7 +27,7 @@
+- @implementation WOHyperlinkInfo
+- 
+- - (id)initWithConfig:(NSMutableDictionary *)_config {
+--  unsigned count;
+-+  unsigned count = (unsigned)[_config count];
+- 
+-   self->sidInUrl = YES;
+-   
+diff -ruN sope.orig/files/patch-sope-appserver_NGObjWeb_DynamicElements_decommon.h sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_decommon.h
+--- sope.orig/files/patch-sope-appserver_NGObjWeb_DynamicElements_decommon.h	2015-09-22 18:32:08.000000000 +0800
++++ sope/files/patch-sope-appserver_NGObjWeb_DynamicElements_decommon.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,13 +0,0 @@
+---- sope-appserver/NGObjWeb/DynamicElements/decommon.h.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/DynamicElements/decommon.h
+-@@ -35,6 +35,10 @@
+- @end
+- #endif
+- 
+-+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+-+#  define sel_get_name(__XXX__) sel_getName(__XXX__)
+-+#endif
+-+
+- #include <NGExtensions/NGExtensions.h>
+- #include "WOResponse+private.h"
+- #include <NGObjWeb/WOContext.h>
+diff -ruN sope.orig/files/patch-sope-appserver_NGObjWeb_NSObject+WO.m sope/files/patch-sope-appserver_NGObjWeb_NSObject+WO.m
+--- sope.orig/files/patch-sope-appserver_NGObjWeb_NSObject+WO.m	2015-09-22 18:32:08.000000000 +0800
++++ sope/files/patch-sope-appserver_NGObjWeb_NSObject+WO.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,22 +0,0 @@
+---- sope-appserver/NGObjWeb/NSObject+WO.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/NSObject+WO.m
+-@@ -259,7 +259,7 @@ IMP WOGetKVCGetMethod(id object, NSStrin
+-   if (object == nil) return NULL;
+-   if (_key   == nil) return NULL;
+- 
+--#if GNU_RUNTIME && !(defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911))
+-+#if GNU_RUNTIME && !(defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) && !defined(__GNUSTEP_RUNTIME__)
+-   {
+-     unsigned keyLen;
+-     char     *buf;
+-@@ -317,7 +317,9 @@ id WOGetKVCValueUsingMethod(id object, N
+-       return nil;
+-     free(buf); buf = NULL;
+-   }
+--#if GNUSTEP_BASE_LIBRARY
+-+// This appears to be a work around for an old version of GNUstep-base not
+-+// correctly handling the case where there is no method.
+-+#if GNUSTEP_BASE_LIBRARY && !defined(__GNUSTEP_RUNTIME__)
+-   if (!__objc_responds_to(object, getSel))
+-     return nil;
+- #endif
+diff -ruN sope.orig/files/patch-sope-appserver_NGObjWeb_WOHttpAdaptor_WOHttpTransaction.m sope/files/patch-sope-appserver_NGObjWeb_WOHttpAdaptor_WOHttpTransaction.m
+--- sope.orig/files/patch-sope-appserver_NGObjWeb_WOHttpAdaptor_WOHttpTransaction.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver_NGObjWeb_WOHttpAdaptor_WOHttpTransaction.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,14 +0,0 @@
+---- sope-appserver/NGObjWeb/WOHttpAdaptor/WOHttpTransaction.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WOHttpAdaptor/WOHttpTransaction.m
+-@@ -1021,9 +1021,9 @@ static __inline__ const char *monthAbbr(
+-   [buf appendString:@"\" "];
+-   [buf appendFormat:@"%i %i",  
+-          [_response status],
+--         [[_response content] length]];
+-+         (int)[[_response content] length]];
+-   if (doExtLog)
+--    [buf appendFormat:@"/%i", [[_request content] length]];
+-+    [buf appendFormat:@"/%i", (int)[[_request content] length]];
+-   
+-   /* append duration */
+-   if (lstartDate != nil)
+diff -ruN sope.orig/files/patch-sope-appserver_NGObjWeb_WOSession.m sope/files/patch-sope-appserver_NGObjWeb_WOSession.m
+--- sope.orig/files/patch-sope-appserver_NGObjWeb_WOSession.m	2015-09-22 18:32:08.000000000 +0800
++++ sope/files/patch-sope-appserver_NGObjWeb_WOSession.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,13 +0,0 @@
+---- sope-appserver/NGObjWeb/WOSession.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WOSession.m
+-@@ -33,10 +33,6 @@
+- #include "common.h"
+- #include <string.h>
+- 
+--#if !defined(sel_get_name) && ((defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__))
+--#  define sel_get_name sel_getName
+--#endif
+--
+- #if APPLE_FOUNDATION_LIBRARY || NeXT_Foundation_LIBRARY
+- @interface NSObject(Miss)
+- - (id)notImplemented:(SEL)cmd;
+diff -ruN sope.orig/files/patch-sope-appserver_NGObjWeb_WebDAV_SoObjectDataSource.m sope/files/patch-sope-appserver_NGObjWeb_WebDAV_SoObjectDataSource.m
+--- sope.orig/files/patch-sope-appserver_NGObjWeb_WebDAV_SoObjectDataSource.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver_NGObjWeb_WebDAV_SoObjectDataSource.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/WebDAV/SoObjectDataSource.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WebDAV/SoObjectDataSource.m
+-@@ -137,7 +137,7 @@ static BOOL debugOn = NO;
+-   pool = [[NSAutoreleasePool alloc] init];
+-   i=0;
+-   while ((childKey = [[childKeys nextObject] stringValue]) != nil) {
+--    NSDictionary *rec;
+-+    id rec;
+-     NSException  *e;
+-     NSString     *childHref;
+-     id child = nil;
+diff -ruN sope.orig/files/patch-sope-appserver_NGObjWeb_common.h sope/files/patch-sope-appserver_NGObjWeb_common.h
+--- sope.orig/files/patch-sope-appserver_NGObjWeb_common.h	2015-09-22 18:32:08.000000000 +0800
++++ sope/files/patch-sope-appserver_NGObjWeb_common.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,21 +0,0 @@
+---- sope-appserver/NGObjWeb/common.h.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/common.h
+-@@ -51,13 +51,17 @@
+- #include <NGExtensions/NGLogging.h>
+- #include <NGStreams/NGStreams.h>
+- 
+--#if NeXT_RUNTIME || APPLE_RUNTIME || (__GNU_LIBOBJC__ >= 20100911)
+-+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+- #  ifndef sel_get_name
+- #    define sel_get_name(__XXX__)    sel_getName(__XXX__)
+- #    define sel_get_any_uid(__XXX__) sel_getUid(__XXX__)
+- #  endif
+- #endif
+- 
+-+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+-+#    define sel_get_uid(__XXX__)   sel_getUid(__XXX__);
+-+#endif
+-+
+- #define IS_DEPRECATED \
+-   [self warnWithFormat:@"used deprecated method: %s:%i.", \
+-           __PRETTY_FUNCTION__, __LINE__];
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__Associations__WOScriptAssociation.m sope/files/patch-sope-appserver__NGObjWeb__Associations__WOScriptAssociation.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__Associations__WOScriptAssociation.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__Associations__WOScriptAssociation.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/Associations/WOScriptAssociation.m.orig	2015-09-16 18:26:48 UTC
+-+++ sope-appserver/NGObjWeb/Associations/WOScriptAssociation.m
+-@@ -125,7 +125,7 @@ static BOOL doDebug = NO;
+-       v = [v substringToIndex:9];
+-       v = [v stringByApplyingCEscaping];
+-       [str appendString:v];
+--      [str appendFormat:@"...[len=%i]", [self->script length]];
+-+      [str appendFormat:@"...[len=%i]", (int)[self->script length]];
+-   }
+-   else {
+-       v = [v stringByApplyingCEscaping];
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__Associations__WOValueAssociation.m sope/files/patch-sope-appserver__NGObjWeb__Associations__WOValueAssociation.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__Associations__WOValueAssociation.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__Associations__WOValueAssociation.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/Associations/WOValueAssociation.m.orig	2015-09-16 18:26:48 UTC
+-+++ sope-appserver/NGObjWeb/Associations/WOValueAssociation.m
+-@@ -161,7 +161,7 @@ static Class StrClass = Nil;
+-       v = [v substringToIndex:9];
+-       v = [v stringByApplyingCEscaping];
+-       [str appendString:v];
+--      [str appendFormat:@"...[len=%i]", [self->value length]];
+-+      [str appendFormat:@"...[len=%i]", (int)[self->value length]];
+-     }
+-     else {
+-       v = [v stringByApplyingCEscaping];
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__DynamicElements__WOGenericElement.m sope/files/patch-sope-appserver__NGObjWeb__DynamicElements__WOGenericElement.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__DynamicElements__WOGenericElement.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__DynamicElements__WOGenericElement.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,14 +0,0 @@
+---- sope-appserver/NGObjWeb/DynamicElements/WOGenericElement.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/DynamicElements/WOGenericElement.m
+-@@ -77,10 +77,9 @@ typedef struct {
+-   [children autorelease];
+-   
+-   /* construct self ... */
+--  self = [(WODynamicElement *)self initWithName:name 
+-+  return (WOGenericElement*)[(WODynamicElement *)self initWithName:name 
+-                                    associations:assocs 
+-                                    contentElements:children];
+--  return self;
+- }
+- 
+- - (BOOL)_isASCIIString:(NSString *)_s {
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__DynamicElements__WOHyperlink.m sope/files/patch-sope-appserver__NGObjWeb__DynamicElements__WOHyperlink.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__DynamicElements__WOHyperlink.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__DynamicElements__WOHyperlink.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/DynamicElements/WOHyperlink.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/DynamicElements/WOHyperlink.m
+-@@ -75,7 +75,7 @@
+-     temporaryHyperlink = [_WOTemporaryHyperlink allocWithZone:zone];
+-   
+-   if (self == WOHyperlinkClass)
+--    return temporaryHyperlink;
+-+    return (id)temporaryHyperlink;
+-   else {
+- #if PROFILE_CLUSTERS
+-     static unsigned totalCount        = 0;
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__NGHttp__NGHttpHeaderFieldParser.m sope/files/patch-sope-appserver__NGObjWeb__NGHttp__NGHttpHeaderFieldParser.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__NGHttp__NGHttpHeaderFieldParser.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__NGHttp__NGHttpHeaderFieldParser.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/NGHttp/NGHttpHeaderFieldParser.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/NGHttp/NGHttpHeaderFieldParser.m
+-@@ -31,7 +31,7 @@ static Class NSArrayClass = Nil;
+- - (id)parseValue:(id)_data ofHeaderField:(NSString *)_field {
+-   unsigned              len   = 0;
+-   const unsigned char   *src  = NULL;
+--  NGHttpHostHeaderField *value = nil;
+-+  id                     value = nil;
+-   NSString *str = nil;
+- 
+-   if ([_data isKindOfClass:[NSData class]]) {
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__NGHttp__NGHttpResponse.h sope/files/patch-sope-appserver__NGObjWeb__NGHttp__NGHttpResponse.h
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__NGHttp__NGHttpResponse.h	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__NGHttp__NGHttpResponse.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/NGHttp/NGHttpResponse.h.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/NGHttp/NGHttpResponse.h
+-@@ -122,7 +122,7 @@ static inline BOOL NGIsClientErrorHttpSt
+-   return ((_code >= 400) && (_code < 500)) ? YES : NO;
+- }
+- static inline BOOL NGIsServerErrorHttpStatusCode(NGHttpStatusCode _code) {
+--  return ((_code >= 500) && (_code < 600)) ? YES : NO;
+-+  return ((_code >= 500) && ((int)_code < 600)) ? YES : NO;
+- }
+- 
+- #endif /* __NGHttp_NGHttpResponse_H__ */
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__NGHttp__NGUrlFormCoder.m sope/files/patch-sope-appserver__NGObjWeb__NGHttp__NGUrlFormCoder.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__NGHttp__NGUrlFormCoder.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__NGHttp__NGUrlFormCoder.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-appserver/NGObjWeb/NGHttp/NGUrlFormCoder.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/NGHttp/NGUrlFormCoder.m
+-@@ -93,7 +93,7 @@ static __inline__ NSString *urlStringFro
+-                             encoding:NSUTF8StringEncoding];
+-   if (debugDecoding) {
+-     NSLog(@"decoded data len %d value (len=%d): %@", 
+--	  len, [value length], value);
+-+	  len, (int)[value length], value);
+-   }
+-   return value;
+- #if 0
+-@@ -177,7 +177,7 @@ NGHashMap *NGDecodeUrlFormParameters(con
+- - (NSString *)stringByApplyingURLEncoding {
+-   /* NGExtensions/NSString+misc.h */
+-   NSLog(@"Note: Called deprecated -stringByApplyingURLEncoding method "
+--	@"(use -stringByEscapingURL instead)", __PRETTY_FUNCTION__);
+-+	@"(use -stringByEscapingURL instead)");
+-   return [self stringByEscapingURL];
+- }
+- 
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__SoObjects__SoClassSecurityInfo.h sope/files/patch-sope-appserver__NGObjWeb__SoObjects__SoClassSecurityInfo.h
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__SoObjects__SoClassSecurityInfo.h	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__SoObjects__SoClassSecurityInfo.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/SoObjects/SoClassSecurityInfo.h.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/SoObjects/SoClassSecurityInfo.h
+-@@ -101,7 +101,7 @@
+- - (BOOL)hasDefaultAccessDeclaration;
+- - (void)declarePublic:(NSString *)_firstName, ...;
+- - (void)declarePrivate:(NSString *)_firstName, ...;
+--- (void)declareProtected:(NSString *)_perm:(NSString *)_firstName, ...;
+-+- (void)declareProtected:(NSString *)_perm :(NSString *)_firstName, ...;
+- 
+- /* object security */
+- 
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__SoObjects__SoClassSecurityInfo.m sope/files/patch-sope-appserver__NGObjWeb__SoObjects__SoClassSecurityInfo.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__SoObjects__SoClassSecurityInfo.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__SoObjects__SoClassSecurityInfo.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/SoObjects/SoClassSecurityInfo.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/SoObjects/SoClassSecurityInfo.m
+-@@ -111,7 +111,7 @@
+-   va_end(va);
+- }
+- 
+--- (void)declareProtected:(NSString *)_perm:(NSString *)_firstName, ... {
+-+- (void)declareProtected:(NSString *)_perm :(NSString *)_firstName, ... {
+-   va_list  va;
+-   NSString *aname;
+- 
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__SoObjects__SoComponent.m sope/files/patch-sope-appserver__NGObjWeb__SoObjects__SoComponent.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__SoObjects__SoComponent.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__SoObjects__SoComponent.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,18 +0,0 @@
+---- sope-appserver/NGObjWeb/SoObjects/SoComponent.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/SoObjects/SoComponent.m
+-@@ -59,13 +59,13 @@
+- }
+- 
+- - (void)setResourceManager:(WOResourceManager *)_rm {
+--  ASSIGN(self->soResourceManager, _rm);
+-+  ASSIGN(self->soResourceManager, (SoProductResourceManager*)_rm);
+- }
+- - (WOResourceManager *)resourceManager {
+-   if (self->soResourceManager != nil)
+-     return self->soResourceManager;
+-   
+--  self->soResourceManager = [[[self componentProduct] resourceManager] retain];
+-+  self->soResourceManager = (SoProductResourceManager*)[[[self componentProduct] resourceManager] retain];
+-   if (self->soResourceManager)
+-     return self->soResourceManager;
+-   
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__SoObjects__SoDefaultRenderer.m sope/files/patch-sope-appserver__NGObjWeb__SoObjects__SoDefaultRenderer.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__SoObjects__SoDefaultRenderer.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__SoObjects__SoDefaultRenderer.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/SoObjects/SoDefaultRenderer.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/SoObjects/SoDefaultRenderer.m
+-@@ -154,7 +154,7 @@ static int debugOn = 0;
+-   
+-   [r setStatus:200];
+-   [r setHeader:@"application/octet-stream" forKey:@"content-type"];
+--  [r setHeader:[NSString stringWithFormat:@"%i", [_data length]] 
+-+  [r setHeader:[NSString stringWithFormat:@"%i", (int)[_data length]] 
+-      forKey:@"content-length"];
+-   [r setContent:_data];
+-   return nil;
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__Templates__WOComponentScriptPart.m sope/files/patch-sope-appserver__NGObjWeb__Templates__WOComponentScriptPart.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__Templates__WOComponentScriptPart.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__Templates__WOComponentScriptPart.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/Templates/WOComponentScriptPart.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/Templates/WOComponentScriptPart.m
+-@@ -112,7 +112,7 @@
+-       [ms appendFormat:@":%i", self->startLine];
+-   }
+-   else if (self->startLine > 0)
+--    [ms appendFormat:@" line=%@", self->startLine];
+-+    [ms appendFormat:@" line=%u", self->startLine];
+- 
+-   if ([self->script length] == 0)
+-     [ms appendString:@" no script"];
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__Templates__WODParser.m sope/files/patch-sope-appserver__NGObjWeb__Templates__WODParser.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__Templates__WODParser.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__Templates__WODParser.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/Templates/WODParser.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/Templates/WODParser.m
+-@@ -271,7 +271,7 @@ static NSException *_makeException(NSExc
+-   [ui setObject:[NumberClass numberWithInt:_idx]     forKey:@"position"];
+- 
+-   if (!atEof && (_idx > 0)) {
+--    register unsigned pos;
+-+    NSInteger pos;
+-     const unichar *startPos, *endPos;
+- 
+-     for (pos = _idx; (pos >= 0) && (_buffer[pos] != '\n'); pos--)
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__Templates__WOHTMLParser.m sope/files/patch-sope-appserver__NGObjWeb__Templates__WOHTMLParser.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__Templates__WOHTMLParser.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__Templates__WOHTMLParser.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/Templates/WOHTMLParser.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/Templates/WOHTMLParser.m
+-@@ -246,7 +246,7 @@ static NSException *_makeHtmlException(N
+-       [ui setObject:self forKey:@"handler"];
+-     
+-     if (!atEof && (_idx > 0)) {
+--      register unsigned pos;
+-+      NSInteger pos;
+-       const unichar *startPos, *endPos;
+- 
+-       for (pos = _idx; (pos >= 0) && (_buffer[pos] != '\n'); pos--)
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__Templates__WOTemplate.m sope/files/patch-sope-appserver__NGObjWeb__Templates__WOTemplate.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__Templates__WOTemplate.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__Templates__WOTemplate.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/Templates/WOTemplate.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/Templates/WOTemplate.m
+-@@ -133,7 +133,7 @@
+-       [ms appendFormat:@" url=%@", [self->url absoluteString]];
+-   }
+-   if (self->subcomponentInfos)
+--    [ms appendFormat:@" #subcomponents=%i", [self->subcomponentInfos count]];
+-+    [ms appendFormat:@" #subcomponents=%i", (int)[self->subcomponentInfos count]];
+-   
+-   [ms appendString:@">"];
+-   return ms;
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__Templates__WOxElemBuilder.m sope/files/patch-sope-appserver__NGObjWeb__Templates__WOxElemBuilder.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__Templates__WOxElemBuilder.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__Templates__WOxElemBuilder.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/Templates/WOxElemBuilder.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/Templates/WOxElemBuilder.m
+-@@ -191,7 +191,7 @@ static WOAssociation *yesAssoc = nil;
+-       }
+-     }
+-     else {
+--      NSLog(@"%s: couldn't allocate builder (class=%@)", cn);
+-+      NSLog(@"couldn't allocate builder (class=%@)", cn);
+-       continue;
+-     }
+-   }
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__WOComponent+Sync.m sope/files/patch-sope-appserver__NGObjWeb__WOComponent+Sync.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__WOComponent+Sync.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__WOComponent+Sync.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-appserver/NGObjWeb/WOComponent+Sync.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WOComponent+Sync.m
+-@@ -87,7 +87,7 @@ void WOComponent_syncFromParent(WOCompon
+- #if NeXT_RUNTIME
+-   takeValue = (void *)[self methodForSelector:@selector(takeValue:forKey:)];
+- #elif GNUSTEP_BASE_LIBRARY
+--  takeValue = (void*)method_get_imp(class_get_instance_method(self->isa,
+-+  takeValue = (void*)method_get_imp(class_get_instance_method(object_getClass(self),
+-                 @selector(setValue:forKey:)));
+- #else  
+-   takeValue = (void*)method_get_imp(class_get_instance_method(self->isa,
+-@@ -148,7 +148,7 @@ void WOComponent_syncToParent(WOComponen
+- #if NeXT_RUNTIME
+-   getValue = (void *)[self methodForSelector:@selector(valueForKey:)];
+- #else
+--  getValue = (void*)method_get_imp(class_get_instance_method(self->isa,
+-+  getValue = (void*)method_get_imp(class_get_instance_method(object_getClass(self),
+-                 @selector(valueForKey:)));
+- #endif
+-   
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__WOComponent.m sope/files/patch-sope-appserver__NGObjWeb__WOComponent.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__WOComponent.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__WOComponent.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,29 +0,0 @@
+---- sope-appserver/NGObjWeb/WOComponent.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WOComponent.m
+-@@ -1037,7 +1037,7 @@ static inline id _getExtraVar(WOComponen
+- 
+- - (BOOL)logComponentVariableCreations {
+-   /* only if we have a subclass, we can store values in ivars ... */
+--  return (self->isa != WOComponentClass) ? YES : NO;
+-+  return (object_getClass(self) != WOComponentClass) ? YES : NO;
+- }
+- 
+- #if !NG_USE_KVC_FALLBACK /* only override on libFoundation */
+-@@ -1124,7 +1124,7 @@ static inline id _getExtraVar(WOComponen
+-     /* only if we have a subclass, we can store values in ivars ... */
+-     if (![[self->wocVariables objectForKey:_key] isNotNull]) {
+-       [self debugWithFormat:@"Created component variable (class=%@): '%@'.", 
+--	            NSStringFromClass(self->isa), _key];
+-+	            NSStringFromClass(object_getClass(self)), _key];
+-     }
+-   }
+- #endif
+-@@ -1219,7 +1219,7 @@ static inline id _getExtraVar(WOComponen
+-   if (self->parentComponent)
+-     [str appendFormat:@" parent=%@", [self->parentComponent name]];
+-   if (self->subcomponents)
+--    [str appendFormat:@" #subs=%i", [self->subcomponents count]];
+-+    [str appendFormat:@" #subs=%i", (int)[self->subcomponents count]];
+-   
+-   if (self->componentFlags.isAwake)
+-     [str appendFormat:@" awake=0x%p", self->context];
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__WOHTTPConnection.m sope/files/patch-sope-appserver__NGObjWeb__WOHTTPConnection.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__WOHTTPConnection.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__WOHTTPConnection.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/WOHTTPConnection.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WOHTTPConnection.m
+-@@ -352,7 +352,7 @@ static BOOL logStream = NO;
+-   /* set content-length header */
+-   
+-   if ([content length] > 0) {
+--    [_request setHeader:[NSString stringWithFormat:@"%d", [content length]]
+-+    [_request setHeader:[NSString stringWithFormat:@"%d", (int)[content length]]
+-               forKey:@"content-length"];
+-   }
+- 
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__WOHttpAdaptor__WOHttpAdaptor.m sope/files/patch-sope-appserver__NGObjWeb__WOHttpAdaptor__WOHttpAdaptor.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__WOHttpAdaptor__WOHttpAdaptor.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__WOHttpAdaptor__WOHttpAdaptor.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-appserver/NGObjWeb/WOHttpAdaptor/WOHttpAdaptor.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WOHttpAdaptor/WOHttpAdaptor.m
+-@@ -427,7 +427,7 @@ static BOOL     debugOn                 
+- }
+- 
+- - (NGActiveSocket *)_accept {
+--  NGActiveSocket *connection;
+-+  id<NGActiveSocket>  connection;
+-   id<NGSocketAddress> remote;
+- 
+-   NS_DURING {
+-@@ -450,7 +450,7 @@ static BOOL     debugOn                 
+-   }
+-   NS_ENDHANDLER;
+- 
+--  return connection;
+-+  return (NGActiveSocket*)connection;
+- }
+- 
+- - (void)_handleConnection:(NGActiveSocket *)connection {
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__WOHttpAdaptor__WORequest+Adaptor.m sope/files/patch-sope-appserver__NGObjWeb__WOHttpAdaptor__WORequest+Adaptor.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__WOHttpAdaptor__WORequest+Adaptor.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__WOHttpAdaptor__WORequest+Adaptor.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/WOHttpAdaptor/WORequest+Adaptor.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WOHttpAdaptor/WORequest+Adaptor.m
+-@@ -35,7 +35,7 @@
+-   if (pi == nil) pi = [[NSProcessInfo processInfo] retain];
+-   
+-   tmp = [pi procStatDictionary];
+--  ASSIGN(self->startDate,       _startDate);
+-+  ASSIGN(self->startDate,       (NSCalendarDate*)_startDate);
+-   ASSIGN(self->startStatistics, tmp);
+- }
+- 
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__WOMailDelivery.m sope/files/patch-sope-appserver__NGObjWeb__WOMailDelivery.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__WOMailDelivery.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__WOMailDelivery.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,12 +0,0 @@
+---- sope-appserver/NGObjWeb/WOMailDelivery.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WOMailDelivery.m
+-@@ -180,7 +180,8 @@ WOMailDelivery *sharedInstance = nil;
+-       NSData *body;
+-       
+-       body = [(NSDictionary *)_email objectForKey:@"body"];
+--      if (fwrite([body bytes], [body length], 1, toMail) < 0)
+-+      NSUInteger bytes = [body length];
+-+      if (fwrite([body bytes], bytes, 1, toMail) < bytes)
+-         goto failed;
+-     }
+-     fprintf(toMail, "\r\n");
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__WOResponse.m sope/files/patch-sope-appserver__NGObjWeb__WOResponse.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__WOResponse.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__WOResponse.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/WOResponse.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WOResponse.m
+-@@ -305,7 +305,7 @@ static __inline__ char *monthName(int m)
+-     if ([data length] == 0)
+-       [ms appendString:@" empty-content"];
+-     else
+--      [ms appendFormat:@" content-size=%i", [data length]];
+-+      [ms appendFormat:@" content-size=%i", (int)[data length]];
+-   }
+-   else
+-     [ms appendString:@" no-content"];
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__WOSessionStore.m sope/files/patch-sope-appserver__NGObjWeb__WOSessionStore.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__WOSessionStore.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__WOSessionStore.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-appserver/NGObjWeb/WOSessionStore.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WOSessionStore.m
+-@@ -49,7 +49,7 @@
+-   WOSession *session;
+-   *(&session) = nil;
+-   
+--  SYNCHRONIZED(self) { // this must become a condition lock !!!
+-+  SYNCHRONIZED((id)self) { // this must become a condition lock !!!
+-     if (![self->checkedOutSessions containsObject:_sid]) {
+-       if ((session = [self restoreSessionWithID:_sid]))
+-         [self->checkedOutSessions addObject:_sid];
+-@@ -66,7 +66,7 @@
+-   NSString *sid;
+-   *(&sid) = [[_context session] sessionID];
+-   
+--  SYNCHRONIZED(self) { // this must become a condition lock !!!
+-+  SYNCHRONIZED((id)self) { // this must become a condition lock !!!
+-     [self saveSessionForContext:_context];
+-     
+-     if ([self->checkedOutSessions containsObject:sid])
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__WOSimpleHTTPParser.m sope/files/patch-sope-appserver__NGObjWeb__WOSimpleHTTPParser.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__WOSimpleHTTPParser.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__WOSimpleHTTPParser.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/WOSimpleHTTPParser.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WOSimpleHTTPParser.m
+-@@ -449,7 +449,7 @@ static NSString *stringForHeaderName(cha
+-   
+-   while ((e = [self readNextLine]) == nil) {
+-     unsigned char *p, *v;
+--    unsigned int  idx;
+-+    int  idx;
+-     NSString *headerName;
+-     NSString *headerValue;
+-     
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__WOStatisticsStore.m sope/files/patch-sope-appserver__NGObjWeb__WOStatisticsStore.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__WOStatisticsStore.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__WOStatisticsStore.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-appserver/NGObjWeb/WOStatisticsStore.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WOStatisticsStore.m
+-@@ -35,7 +35,7 @@
+-   unsigned       zippedResponsesCount;
+-   unsigned       totalZippedSize;
+-   unsigned       largestResponseSize;
+--  unsigned       smallestResponseSize;
+-+  NSInteger      smallestResponseSize;
+-   NSTimeInterval minimumDuration;
+-   NSTimeInterval maximumDuration;
+-   NSTimeInterval totalDuration;
+-@@ -420,7 +420,7 @@ static id mkdbl(double d) {
+-   /* response */
+-   
+-   [result appendFormat:@"%i %i",
+--            [_response status], [[_response content] length]];
+-+            [_response status], (int)[[_response content] length]];
+-   
+-   if ((startDate = [request startDate]) != nil) {
+-     NSTimeInterval duration;
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__WebDAV__SoDAVSQLParser.h sope/files/patch-sope-appserver__NGObjWeb__WebDAV__SoDAVSQLParser.h
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__WebDAV__SoDAVSQLParser.h	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__WebDAV__SoDAVSQLParser.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/WebDAV/SoDAVSQLParser.h.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WebDAV/SoDAVSQLParser.h
+-@@ -64,7 +64,7 @@
+-   consume:(BOOL)consume;
+- - (BOOL)parseQualifier:(EOQualifier **)result
+-   from:(unichar **)pos length:(unsigned *)len;
+--- (BOOL)parseScope:(NSString **)_scope:(NSString **)_entity
+-+- (BOOL)parseScope:(NSString **)_scope :(NSString **)_entity
+-   from:(unichar **)pos length:(unsigned *)len;
+- 
+- - (BOOL)parseColumnName:(NSString **)result
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__WebDAV__SoDAVSQLParser.m sope/files/patch-sope-appserver__NGObjWeb__WebDAV__SoDAVSQLParser.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__WebDAV__SoDAVSQLParser.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__WebDAV__SoDAVSQLParser.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,29 +0,0 @@
+---- sope-appserver/NGObjWeb/WebDAV/SoDAVSQLParser.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WebDAV/SoDAVSQLParser.m
+-@@ -396,7 +396,7 @@ static inline BOOL isTokStopChar(unichar
+-   return YES;
+- }
+- 
+--- (BOOL)parseScope:(NSString **)_scope:(NSString **)_entity
+-+- (BOOL)parseScope:(NSString **)_scope :(NSString **)_entity
+-   from:(unichar **)pos length:(unsigned *)len
+- {
+-   /* 
+-@@ -749,7 +749,7 @@ static inline BOOL isTokStopChar(unichar
+-     }
+-     else if ([[(EOAndQualifier *)q qualifiers] count] != 3) {
+-       NSLog(@"  INVALID: expected 3 subqualifiers, got %i !",
+--	    [[(EOAndQualifier *)q qualifiers] count]);
+-+	    (int)[[(EOAndQualifier *)q qualifiers] count]);
+-     }
+- 
+-     /* check sortordering */
+-@@ -767,7 +767,7 @@ static inline BOOL isTokStopChar(unichar
+-     }
+-     else if ([props count] != 14) {
+-       NSLog(@"  INVALID: invalid attribute count, expected 14, got %i.",
+--	    [props count]);
+-+	    (int)[props count]);
+-     }
+-   }
+-   
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__WebDAV__SoWebDAVRenderer.m sope/files/patch-sope-appserver__NGObjWeb__WebDAV__SoWebDAVRenderer.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__WebDAV__SoWebDAVRenderer.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__WebDAV__SoWebDAVRenderer.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/WebDAV/SoWebDAVRenderer.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WebDAV/SoWebDAVRenderer.m
+-@@ -1311,7 +1311,7 @@ static BOOL         useRelativeURLs = YE
+-     [r appendContentString:@"204 No Content"];
+-   else {
+-     NSString *s;
+--    s = [NSString stringWithFormat:@"%i code%i"];
+-+    s = [NSString stringWithFormat:@"%i code", _code];
+-     [r appendContentString:s];
+-   }
+-   [r appendContentString:@"</D:status>"];
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb__WebDAV__SoWebDAVValue.m sope/files/patch-sope-appserver__NGObjWeb__WebDAV__SoWebDAVValue.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb__WebDAV__SoWebDAVValue.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb__WebDAV__SoWebDAVValue.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/WebDAV/SoWebDAVValue.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/WebDAV/SoWebDAVValue.m
+-@@ -78,7 +78,7 @@
+- 	
+- 	if ((p = [encNS objectForKey:ns]) == nil) {
+- 	  if ((p = [_prefixes objectForKey:ns]) == nil) {
+--	    p = [NSString stringWithFormat:@"a%i", [encNS count]];
+-+	    p = [NSString stringWithFormat:@"a%i", (int)[encNS count]];
+- 	    [encNS setObject:p forKey:ns];
+- 	    [ms appendString:@" xmlns:"];
+- 	    [ms appendString:p];
+diff -ruN sope.orig/files/patch-sope-appserver__NGObjWeb___WOStringTable.m sope/files/patch-sope-appserver__NGObjWeb___WOStringTable.m
+--- sope.orig/files/patch-sope-appserver__NGObjWeb___WOStringTable.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__NGObjWeb___WOStringTable.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/NGObjWeb/_WOStringTable.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/NGObjWeb/_WOStringTable.m
+-@@ -162,7 +162,7 @@ static NSStringEncoding stringFilesEncod
+-   [ms appendFormat:@"<0x%p[%@]: ", self, NSStringFromClass([self class])];
+-   
+-   if (self->path)     [ms appendFormat:@" path='%@'",   self->path];
+--  if (self->data)     [ms appendFormat:@" strings=#%d", [self->data count]];
+-+  if (self->data)     [ms appendFormat:@" strings=#%d", (int)[self->data count]];
+-   if (self->lastRead) [ms appendFormat:@" loaddate=%@", self->lastRead];
+-   
+-   [ms appendString:@">"];
+diff -ruN sope.orig/files/patch-sope-appserver__WEExtensions__JSStringTable.m sope/files/patch-sope-appserver__WEExtensions__JSStringTable.m
+--- sope.orig/files/patch-sope-appserver__WEExtensions__JSStringTable.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__WEExtensions__JSStringTable.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/WEExtensions/JSStringTable.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/WEExtensions/JSStringTable.m
+-@@ -177,7 +177,7 @@
+-   }
+-   else {
+-     /* generate link to table file */
+--    NSMutableDictionary *qd;
+-+    NSDictionary *qd;
+-     NSString *url;
+-     id product = nil;
+-     
+diff -ruN sope.orig/files/patch-sope-appserver__WEExtensions__WEMonthOverview.m sope/files/patch-sope-appserver__WEExtensions__WEMonthOverview.m
+--- sope.orig/files/patch-sope-appserver__WEExtensions__WEMonthOverview.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__WEExtensions__WEMonthOverview.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/WEExtensions/WEMonthOverview.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/WEExtensions/WEMonthOverview.m
+-@@ -510,7 +510,7 @@ _takeValuesInCell(WEMonthOverview *self,
+-   /* fill up remaining slots with empty arrays */
+-   for (i = 0; i < MatrixSize; i++) {
+-     if (self->matrix[i] == nil)
+--      self->matrix[i] = [[NSArray alloc] init];
+-+      self->matrix[i] = (id)[[NSArray alloc] init];
+-   }
+- }
+- 
+diff -ruN sope.orig/files/patch-sope-appserver__WEExtensions__WEResourceKey.m sope/files/patch-sope-appserver__WEExtensions__WEResourceKey.m
+--- sope.orig/files/patch-sope-appserver__WEExtensions__WEResourceKey.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__WEExtensions__WEResourceKey.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/WEExtensions/WEResourceKey.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/WEExtensions/WEResourceKey.m
+-@@ -65,7 +65,7 @@
+- 
+- /* equality */
+- 
+--- (unsigned)hash {
+-+- (NSUInteger)hash {
+-   if (self->hashValue == 0) {
+-     /* don't know whether this is smart, Nat! needs to comment ;-) */
+-     self->hashValue = [self->name hash];
+diff -ruN sope.orig/files/patch-sope-appserver__WEExtensions__WEResourceManager.m sope/files/patch-sope-appserver__WEExtensions__WEResourceManager.m
+--- sope.orig/files/patch-sope-appserver__WEExtensions__WEResourceManager.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__WEExtensions__WEResourceManager.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/WEExtensions/WEResourceManager.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/WEExtensions/WEResourceManager.m
+-@@ -620,7 +620,7 @@ checkCache(NSDictionary *_cache, WEResou
+-     }
+-     [ms appendString:_name];
+-     [ms appendFormat: @"?lm=%u",
+--        (NSUInteger) [lastModified timeIntervalSince1970]];
+-+        (unsigned) [lastModified timeIntervalSince1970]];
+-       
+-     url = ms;
+-     if (debugOn) [self debugWithFormat:@"FOUND: '%@'", url];
+diff -ruN sope.orig/files/patch-sope-appserver__WEExtensions__WETableCalcMatrix.h sope/files/patch-sope-appserver__WEExtensions__WETableCalcMatrix.h
+--- sope.orig/files/patch-sope-appserver__WEExtensions__WETableCalcMatrix.h	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__WEExtensions__WETableCalcMatrix.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-appserver/WEExtensions/WETableCalcMatrix.h.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/WEExtensions/WETableCalcMatrix.h
+-@@ -66,7 +66,7 @@
+-   BOOL           rowCheck;
+- }
+- 
+--- (id)initWithSize:(unsigned)_width:(unsigned)_height;
+-+- (id)initWithSize:(unsigned)_width :(unsigned)_height;
+- 
+- /* static accessors */
+- 
+-@@ -111,7 +111,7 @@
+- 
+- - (BOOL)tableCalcMatrix:(WETableCalcMatrix *)_matrix
+-   shouldPlaceObject:(id)_object
+--  atPosition:(unsigned)_x:(unsigned)_y;
+-+  atPosition:(unsigned)_x :(unsigned)_y;
+- 
+- /* define if you want to create own span objects */
+- 
+diff -ruN sope.orig/files/patch-sope-appserver__WEExtensions__WETableCalcMatrix.m sope/files/patch-sope-appserver__WEExtensions__WETableCalcMatrix.m
+--- sope.orig/files/patch-sope-appserver__WEExtensions__WETableCalcMatrix.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__WEExtensions__WETableCalcMatrix.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,58 +0,0 @@
+---- sope-appserver/WEExtensions/WETableCalcMatrix.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/WEExtensions/WETableCalcMatrix.m
+-@@ -89,8 +89,8 @@ static NSNull *null = nil;
+-                      @"<0x%p[%@]: object=0x%p start=%d len=%d>",
+-                      self, NSStringFromClass([self class]),
+-                      [self object],
+--                     self->range.location,
+--                     self->range.length];
+-+                     (int)self->range.location,
+-+                     (int)self->range.length];
+- }
+- 
+- @end /* WETableCalcMatrixSpan */
+-@@ -356,7 +356,7 @@ static NSNull *null = nil;
+-   MatrixCoord *positions;
+- }
+- 
+--- (void)addPosition:(unsigned)_x:(unsigned)_y;
+-+- (void)addPosition:(unsigned)_x :(unsigned)_y;
+- - (void)checkForDuplicates;
+- 
+- /* narrow set to row or column */
+-@@ -387,7 +387,7 @@ static NSNull *null = nil;
+-   }
+- }
+- 
+--- (void)addPosition:(unsigned)_x:(unsigned)_y {
+-+- (void)addPosition:(unsigned)_x :(unsigned)_y {
+-   if (self->positions == NULL) {
+-     self->positions = calloc(1, sizeof(MatrixCoord));
+-     self->positions[0].x = _x;
+-@@ -468,7 +468,7 @@ static inline MatrixEntry *entryAt(WETab
+-          (y * sizeof(MatrixEntry));
+- }
+- 
+--- (id)initWithSize:(unsigned)_width:(unsigned)_height {
+-+- (id)initWithSize:(unsigned)_width :(unsigned)_height {
+-   if (_width == 0 || _height == 0) {
+-     [self logWithFormat:@"ERROR: specified invalid matrix dimensions: %ix%i",
+-             _width, _height];
+-@@ -572,7 +572,7 @@ static inline MatrixEntry *entryAt(WETab
+-   return YES;
+- }
+- 
+--- (BOOL)object:(id)_obj matchesCellAt:(unsigned)_x:(unsigned)_y {
+-+- (BOOL)object:(id)_obj matchesCellAt:(unsigned)_x :(unsigned)_y {
+-   return [self->delegate tableCalcMatrix:self
+-                          shouldPlaceObject:_obj
+-                          atPosition:_x:_y];
+-@@ -580,7 +580,7 @@ static inline MatrixEntry *entryAt(WETab
+- 
+- /* adding object to structure */
+- 
+--- (void)addObject:(id)_obj toCellAt:(unsigned)_x:(unsigned)_y {
+-+- (void)addObject:(id)_obj toCellAt:(unsigned)_x :(unsigned)_y {
+-   WETableCalcMatrixPositionArray *positions;
+-   MatrixEntry *e;
+-   
+diff -ruN sope.orig/files/patch-sope-appserver__WEExtensions__WETableMatrix.m sope/files/patch-sope-appserver__WEExtensions__WETableMatrix.m
+--- sope.orig/files/patch-sope-appserver__WEExtensions__WETableMatrix.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__WEExtensions__WETableMatrix.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/WEExtensions/WETableMatrix.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/WEExtensions/WETableMatrix.m
+-@@ -139,7 +139,7 @@ static NSNumber *numForUInt(unsigned int
+- 
+- - (BOOL)tableCalcMatrix:(WETableCalcMatrix *)_matrix
+-   shouldPlaceObject:(id)_object
+--  atPosition:(unsigned)_x:(unsigned)_y
+-+  atPosition:(unsigned)_x :(unsigned)_y
+- {
+-   id   _row, _col;
+-   BOOL doPlace;
+diff -ruN sope.orig/files/patch-sope-appserver__WEExtensions__WETableView__WETableView.m sope/files/patch-sope-appserver__WEExtensions__WETableView__WETableView.m
+--- sope.orig/files/patch-sope-appserver__WEExtensions__WETableView__WETableView.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__WEExtensions__WETableView__WETableView.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,14 +0,0 @@
+---- sope-appserver/WEExtensions/WETableView/WETableView.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/WEExtensions/WETableView/WETableView.m
+-@@ -1525,9 +1525,9 @@ static inline void _applyState_(WETableV
+-         result = [self decreaseBatchSizeInContext:_ctx];
+-       else {
+-         if (self->identifier == nil) {
+--          unsigned idx;
+-+          NSInteger idx;
+-       
+--          idx   = [idxId unsignedIntValue];
+-+          idx   = [idxId integerValue];
+-           if (idx < [self->allObjects count] && idx >= 0) {
+-             _applyItems_(self, cmp, idx);
+-           }
+diff -ruN sope.orig/files/patch-sope-appserver__WOExtensions__WOTabPanel.m sope/files/patch-sope-appserver__WOExtensions__WOTabPanel.m
+--- sope.orig/files/patch-sope-appserver__WOExtensions__WOTabPanel.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-appserver__WOExtensions__WOTabPanel.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-appserver/WOExtensions/WOTabPanel.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-appserver/WOExtensions/WOTabPanel.m
+-@@ -259,7 +259,7 @@
+-                      inComponent:sComponent];
+-   
+-   [_response appendContentString:@"</tr><tr><td colspan=\""];
+--  s = [[NSString alloc] initWithFormat:@"%d",[ttabs count]];
+-+  s = [[NSString alloc] initWithFormat:@"%d",(int)[ttabs count]];
+-   [_response appendContentString:s];
+-   [s release];
+-   [_response appendContentString:@"\" bgcolor=\""];
+diff -ruN sope.orig/files/patch-sope-core_EOControl_EOKeyValueCoding.m sope/files/patch-sope-core_EOControl_EOKeyValueCoding.m
+--- sope.orig/files/patch-sope-core_EOControl_EOKeyValueCoding.m	2015-09-22 18:32:08.000000000 +0800
++++ sope/files/patch-sope-core_EOControl_EOKeyValueCoding.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,10 +0,0 @@
+---- sope-core/EOControl/EOKeyValueCoding.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/EOControl/EOKeyValueCoding.m
+-@@ -26,7 +26,6 @@
+- #if GNU_RUNTIME
+- 
+- #if __GNU_LIBOBJC__ >= 20100911
+--#  define sel_get_any_uid sel_getUid
+- #  include <objc/runtime.h>
+- #else
+- #  include <objc/encoding.h>
+diff -ruN sope.orig/files/patch-sope-core_EOControl_EOSortOrdering.m sope/files/patch-sope-core_EOControl_EOSortOrdering.m
+--- sope.orig/files/patch-sope-core_EOControl_EOSortOrdering.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core_EOControl_EOSortOrdering.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,13 +0,0 @@
+---- sope-core/EOControl/EOSortOrdering.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/EOControl/EOSortOrdering.m
+-@@ -29,7 +29,9 @@
+- #endif
+- 
+- #ifndef SEL_EQ
+--#  if GNU_RUNTIME
+-+#  if defined(__GNUSTEP_RUNTIME__)
+-+#    define SEL_EQ(sel1,sel2) sel_isEqual(sel1, sel2)
+-+#  elif GNU_RUNTIME
+- #    define SEL_EQ(sel1,sel2) sel_eq(sel1,sel2)
+- #  else
+- #    define SEL_EQ(sel1,sel2) (sel1 == sel2)
+diff -ruN sope.orig/files/patch-sope-core_EOControl_EOValidation.m sope/files/patch-sope-core_EOControl_EOValidation.m
+--- sope.orig/files/patch-sope-core_EOControl_EOValidation.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core_EOControl_EOValidation.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-core/EOControl/EOValidation.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/EOControl/EOValidation.m
+-@@ -153,7 +153,7 @@
+- #if NeXT_RUNTIME
+-     sel = sel_getUid(buf);
+- #else
+--    sel = sel_get_any_uid(buf);
+-+    sel = sel_registerName(buf);
+- #endif
+-     if (sel) {
+-       if ([self respondsToSelector:sel]) {
+diff -ruN sope.orig/files/patch-sope-core_EOControl_common.h sope/files/patch-sope-core_EOControl_common.h
+--- sope.orig/files/patch-sope-core_EOControl_common.h	2015-09-22 18:32:08.000000000 +0800
++++ sope/files/patch-sope-core_EOControl_common.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,15 +0,0 @@
+---- sope-core/EOControl/common.h.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/EOControl/common.h
+-@@ -40,10 +40,11 @@
+- #  endif
+- #endif
+- 
+--#if __GNU_LIBOBJC__ >= 20100911
+-+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+- #  ifndef sel_eq
+- #    define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
+- #  endif
+-+#  define sel_get_any_uid(__XXX__) sel_getUid(__XXX__)
+- #endif
+- 
+- #ifndef ASSIGN
+diff -ruN sope.orig/files/patch-sope-core_NGExtensions_EOExt.subproj_EOQualifier+CtxEval.m sope/files/patch-sope-core_NGExtensions_EOExt.subproj_EOQualifier+CtxEval.m
+--- sope.orig/files/patch-sope-core_NGExtensions_EOExt.subproj_EOQualifier+CtxEval.m	2015-09-22 18:32:08.000000000 +0800
++++ sope/files/patch-sope-core_NGExtensions_EOExt.subproj_EOQualifier+CtxEval.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-core/NGExtensions/EOExt.subproj/EOQualifier+CtxEval.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/NGExtensions/EOExt.subproj/EOQualifier+CtxEval.m
+-@@ -29,7 +29,7 @@
+- #  import <objc/objc.h>
+- #  import <extensions/objc-runtime.h>
+- #elif GNUSTEP_BASE_LIBRARY
+--#if __GNU_LIBOBJC__ >= 20100911
+-+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(__GNUSTEP_RUNTIME__)
+- #  define sel_get_name sel_getName
+- #  import <objc/runtime.h>
+- #else
+diff -ruN sope.orig/files/patch-sope-core_NGExtensions_FdExt.subproj_NSString+Encoding.m sope/files/patch-sope-core_NGExtensions_FdExt.subproj_NSString+Encoding.m
+--- sope.orig/files/patch-sope-core_NGExtensions_FdExt.subproj_NSString+Encoding.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core_NGExtensions_FdExt.subproj_NSString+Encoding.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-core/NGExtensions/FdExt.subproj/NSString+Encoding.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/NGExtensions/FdExt.subproj/NSString+Encoding.m
+-@@ -209,7 +209,7 @@ static char *iconv_wrapper(id self, char
+-   tm           = outbuf;
+-   outbytesleft = outlen;
+- 
+--  write = iconv(type, &inbuf, &inbytesleft, &tm, &outbytesleft);
+-+  write = iconv(type, (void*)&inbuf, &inbytesleft, &tm, &outbytesleft);
+- 
+-   if (write == (size_t)-1) {
+-     if (errno == EILSEQ) {
+diff -ruN sope.orig/files/patch-sope-core_NGExtensions_NGCalendarDateRange.m sope/files/patch-sope-core_NGExtensions_NGCalendarDateRange.m
+--- sope.orig/files/patch-sope-core_NGExtensions_NGCalendarDateRange.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core_NGExtensions_NGCalendarDateRange.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-core/NGExtensions/NGCalendarDateRange.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/NGExtensions/NGCalendarDateRange.m
+-@@ -164,7 +164,7 @@
+-   if (other == self)
+-     return YES;
+-   
+--  if ([other isKindOfClass:self->isa] == NO)
+-+  if ([other isKindOfClass: object_getClass(self)] == NO)
+-     return NO;
+-   
+-   return ([self->startDate isEqual:[other startDate]] && 
+-@@ -194,7 +194,7 @@
+-   description = [NSMutableString stringWithCapacity:64];
+- 
+-   [description appendFormat:@"<%@[0x%p]: startDate:%@ endDate: ", 
+--	         NSStringFromClass(self->isa), self, self->startDate];
+-+	         NSStringFromClass(object_getClass(self)), self, self->startDate];
+-   
+-   if ([self->startDate isEqual:self->endDate])
+-     [description appendString:@"== startDate"];
+diff -ruN sope.orig/files/patch-sope-core_NGExtensions_NGExtensions_NGBundleManager.h sope/files/patch-sope-core_NGExtensions_NGExtensions_NGBundleManager.h
+--- sope.orig/files/patch-sope-core_NGExtensions_NGExtensions_NGBundleManager.h	2015-09-22 18:32:08.000000000 +0800
++++ sope/files/patch-sope-core_NGExtensions_NGExtensions_NGBundleManager.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,10 +0,0 @@
+---- sope-core/NGExtensions/NGExtensions/NGBundleManager.h.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/NGExtensions/NGExtensions/NGBundleManager.h
+-@@ -23,6 +23,7 @@
+- #define __NGExtensions_NGBundleManager_H__
+- 
+- #import <Foundation/NSObject.h>
+-+#define EXPOSE_NSBundle_IVARS
+- #import <Foundation/NSBundle.h>
+- #import <Foundation/NSMapTable.h>
+- #include <NGExtensions/NGExtensionsDecls.h>
+diff -ruN sope.orig/files/patch-sope-core_NGExtensions_NGExtensions_NSException+misc.h sope/files/patch-sope-core_NGExtensions_NGExtensions_NSException+misc.h
+--- sope.orig/files/patch-sope-core_NGExtensions_NGExtensions_NSException+misc.h	2015-09-22 18:32:08.000000000 +0800
++++ sope/files/patch-sope-core_NGExtensions_NGExtensions_NSException+misc.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,10 +0,0 @@
+---- sope-core/NGExtensions/NGExtensions/NSException+misc.h.orig	2015-09-16 18:26:50 UTC
+-+++ sope-core/NGExtensions/NGExtensions/NSException+misc.h
+-@@ -22,6 +22,7 @@
+- #ifndef __NGExtensions_NSException_misc_H__
+- #define __NGExtensions_NSException_misc_H__
+- 
+-+#define EXPOSE_NSException_IVARS
+- #import <Foundation/NSException.h>
+- #import <Foundation/NSLock.h>
+- 
+diff -ruN sope.orig/files/patch-sope-core_NGStreams_NGActiveSocket.m sope/files/patch-sope-core_NGStreams_NGActiveSocket.m
+--- sope.orig/files/patch-sope-core_NGStreams_NGActiveSocket.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core_NGStreams_NGActiveSocket.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,31 +0,0 @@
+---- sope-core/NGStreams/NGActiveSocket.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-core/NGStreams/NGActiveSocket.m
+-@@ -19,6 +19,7 @@
+-   02111-1307, USA.
+- */
+- 
+-+#include <sys/types.h>
+- #include <netinet/in.h>
+- #include <netinet/tcp.h>
+- 
+-@@ -410,7 +411,7 @@
+-   if ([self isConnected]) {
+-     [[[NGSocketAlreadyConnectedException alloc]
+-               initWithReason:@"Could not connected: socket is already connected"
+--              socket:self address:self->remoteAddress] raise];
+-+              socket:self] raise];
+-     return NO;
+-   }
+- 
+-@@ -748,10 +749,7 @@
+-     if ((readResult < 0) && (errno == EINVAL)) {
+-       NSLog(@"%s: invalid argument in NGDescriptorRecv(%i, 0x%p, %i, %i)",
+-             __PRETTY_FUNCTION__,
+--            self->fd, _buf, _len, 0,
+--            (self->receiveTimeout == 0.0)
+--            ? -1 // block until data
+--            : (int)(self->receiveTimeout * 1000.0));
+-+            self->fd, _buf, _len, 0);
+-     }
+- #endif
+-     
+diff -ruN sope.orig/files/patch-sope-core_NGStreams_NGStreamCoder.m sope/files/patch-sope-core_NGStreams_NGStreamCoder.m
+--- sope.orig/files/patch-sope-core_NGStreams_NGStreamCoder.m	2015-09-22 18:32:08.000000000 +0800
++++ sope/files/patch-sope-core_NGStreams_NGStreamCoder.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,13 +0,0 @@
+---- sope-core/NGStreams/NGStreamCoder.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-core/NGStreams/NGStreamCoder.m
+-@@ -28,6 +28,10 @@
+- #  include <objc/objc-class.h>
+- #endif
+- 
+-+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+-+#  define sel_get_name(__XXX__) sel_getName(__XXX__)
+-+#endif
+-+
+- #define FINAL static inline
+- 
+- extern id nil_method(id, SEL, ...);
+diff -ruN sope.orig/files/patch-sope-core__EOControl__EOFetchSpecification.m sope/files/patch-sope-core__EOControl__EOFetchSpecification.m
+--- sope.orig/files/patch-sope-core__EOControl__EOFetchSpecification.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__EOControl__EOFetchSpecification.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-core/EOControl/EOFetchSpecification.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/EOControl/EOFetchSpecification.m
+-@@ -291,7 +291,7 @@
+-       [ma release];
+-     }
+-     else
+--      lHints = [self->hints retain];
+-+      lHints = (id)[self->hints retain];
+-   }
+-   else 
+-     lHints = nil;
+diff -ruN sope.orig/files/patch-sope-core__EOControl__EOGlobalID.m sope/files/patch-sope-core__EOControl__EOGlobalID.m
+--- sope.orig/files/patch-sope-core__EOControl__EOGlobalID.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__EOControl__EOGlobalID.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-core/EOControl/EOGlobalID.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/EOControl/EOGlobalID.m
+-@@ -95,7 +95,7 @@ static unsigned int   ip;
+- }
+- 
+- - (id)init {
+--  [self->isa assignGloballyUniqueBytes:&(self->idbuffer[0])];
+-+  [object_getClass(self) assignGloballyUniqueBytes:&(self->idbuffer[0])];
+-   return self;
+- }
+- 
+diff -ruN sope.orig/files/patch-sope-core__EOControl__EOKeyComparisonQualifier.m sope/files/patch-sope-core__EOControl__EOKeyComparisonQualifier.m
+--- sope.orig/files/patch-sope-core__EOControl__EOKeyComparisonQualifier.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__EOControl__EOKeyComparisonQualifier.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-core/EOControl/EOKeyComparisonQualifier.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/EOControl/EOKeyComparisonQualifier.m
+-@@ -200,7 +200,7 @@ static EONull *null = nil;
+-     return NO;
+-   if (![self->rightKey isEqual:[(EOKeyComparisonQualifier *)_qual rightKey]])
+-     return NO;
+--  if (sel_eq(self->operator, [(EOKeyComparisonQualifier *)_qual selector]))
+-+  if (sel_isEqual(self->operator, [(EOKeyComparisonQualifier *)_qual selector]))
+-     return YES;
+-   return NO;
+- }
+diff -ruN sope.orig/files/patch-sope-core__EOControl__EOKeyGlobalID.m sope/files/patch-sope-core__EOControl__EOKeyGlobalID.m
+--- sope.orig/files/patch-sope-core__EOControl__EOKeyGlobalID.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__EOControl__EOKeyGlobalID.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-core/EOControl/EOKeyGlobalID.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/EOControl/EOKeyGlobalID.m
+-@@ -96,7 +96,7 @@
+-   if (_other == nil)  return NO;
+-   if (_other == self) return YES;
+-   otherKey = _other;
+--  if (otherKey->isa   != self->isa)   return NO;
+-+  if (object_getClass(otherKey)   != object_getClass(self))   return NO;
+-   if (otherKey->count != self->count) return NO;
+-   if (![otherKey->entityName isEqualToString:self->entityName]) return NO;
+-   
+diff -ruN sope.orig/files/patch-sope-core__EOControl__EOKeyValueQualifier.m sope/files/patch-sope-core__EOControl__EOKeyValueQualifier.m
+--- sope.orig/files/patch-sope-core__EOControl__EOKeyValueQualifier.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__EOControl__EOKeyValueQualifier.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-core/EOControl/EOKeyValueQualifier.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/EOControl/EOKeyValueQualifier.m
+-@@ -227,7 +227,7 @@ static EONull *null = nil;
+-     return NO;
+-   if (![self->value isEqual:[(EOKeyValueQualifier *)_qual value]])
+-     return NO;
+--  if (sel_eq(self->operator, [(EOKeyValueQualifier *)_qual selector]))
+-+  if (sel_isEqual(self->operator, [(EOKeyValueQualifier *)_qual selector]))
+-     return YES;
+-   return NO;
+- }
+diff -ruN sope.orig/files/patch-sope-core__EOControl__EONull.m sope/files/patch-sope-core__EOControl__EONull.m
+--- sope.orig/files/patch-sope-core__EOControl__EONull.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__EOControl__EONull.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,21 +0,0 @@
+---- sope-core/EOControl/EONull.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/EOControl/EONull.m
+-@@ -32,15 +32,15 @@
+- @implementation EONull
+- 
+- + (id)allocWithZone:(NSZone *)_zone {
+--  return [NSNull allocWithZone:_zone];
+-+  return (EONull*)[NSNull allocWithZone:_zone];
+- }
+- 
+- + (NSNull *)null {
+--  return [NSNull null];
+-+  return (EONull*)[NSNull null];
+- }
+- 
+- - (id)self {
+--  return [NSNull null];
+-+  return (EONull*)[NSNull null];
+- }
+- 
+- @end
+diff -ruN sope.orig/files/patch-sope-core__EOControl__EOObserver.m sope/files/patch-sope-core__EOControl__EOObserver.m
+--- sope.orig/files/patch-sope-core__EOControl__EOObserver.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__EOControl__EOObserver.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,13 +0,0 @@
+---- sope-core/EOControl/EOObserver.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/EOControl/EOObserver.m
+-@@ -21,6 +21,10 @@
+- 
+- #include "EOObserver.h"
+- #include "common.h"
+-+#ifdef __GNUSTEP_RUNTIME__
+-+#define objc_malloc(x) malloc(x)
+-+#define objc_free(x) free(x)
+-+#endif
+- 
+- // THREAD, MT
+- 
+diff -ruN sope.orig/files/patch-sope-core__EOControl__EOOrQualifier.m sope/files/patch-sope-core__EOControl__EOOrQualifier.m
+--- sope.orig/files/patch-sope-core__EOControl__EOOrQualifier.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__EOControl__EOOrQualifier.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,15 +0,0 @@
+---- sope-core/EOControl/EOOrQualifier.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/EOControl/EOOrQualifier.m
+-@@ -22,6 +22,12 @@
+- #include <EOControl/EOQualifier.h>
+- #include "common.h"
+- 
+-+#ifdef __GNUSTEP_RUNTIME__
+-+#define objc_calloc(x,y) calloc(x,y)
+-+#define objc_free(x) free(x)
+-+#endif
+-+
+-+
+- @interface EOQualifier(EvalContext)
+- - (BOOL)evaluateWithObject:(id)_object inEvalContext:(id)_ctx;
+- @end
+diff -ruN sope.orig/files/patch-sope-core__EOControl__EOSQLParser.h sope/files/patch-sope-core__EOControl__EOSQLParser.h
+--- sope.orig/files/patch-sope-core__EOControl__EOSQLParser.h	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__EOControl__EOSQLParser.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-core/EOControl/EOSQLParser.h.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/EOControl/EOSQLParser.h
+-@@ -64,7 +64,7 @@
+-   consume:(BOOL)consume;
+- - (BOOL)parseQualifier:(EOQualifier **)result
+-   from:(unichar **)pos length:(unsigned *)len;
+--- (BOOL)parseScope:(NSString **)_scope:(NSString **)_entity
+-+- (BOOL)parseScope:(NSString **)_scope :(NSString **)_entity
+-   from:(unichar **)pos length:(unsigned *)len;
+- 
+- - (BOOL)parseColumnName:(NSString **)result
+diff -ruN sope.orig/files/patch-sope-core__EOControl__EOSQLParser.m sope/files/patch-sope-core__EOControl__EOSQLParser.m
+--- sope.orig/files/patch-sope-core__EOControl__EOSQLParser.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__EOControl__EOSQLParser.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-core/EOControl/EOSQLParser.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/EOControl/EOSQLParser.m
+-@@ -404,7 +404,7 @@ static inline BOOL isTokStopChar(unichar
+-   return YES;
+- }
+- 
+--- (BOOL)parseScope:(NSString **)_scope:(NSString **)_entity
+-+- (BOOL)parseScope:(NSString **)_scope :(NSString **)_entity
+-   from:(unichar **)pos length:(unsigned *)len
+- {
+-   /* 
+diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NGPropertyListParser.m sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NGPropertyListParser.m
+--- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NGPropertyListParser.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NGPropertyListParser.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-core/NGExtensions/FdExt.subproj/NGPropertyListParser.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/NGExtensions/FdExt.subproj/NGPropertyListParser.m
+-@@ -453,7 +453,7 @@ static NSException *_makeException(NSExc
+-           }
+-         */
+-         if (!atEof && (_idx > 0)) {
+--            register unsigned pos;
+-+            NSInteger pos;
+-             const unsigned char *startPos, *endPos;
+- 
+-             for (pos = _idx; (pos > 0) && (_buffer[pos] != '\n'); pos--)
+diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSException+misc.m sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSException+misc.m
+--- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSException+misc.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSException+misc.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-core/NGExtensions/FdExt.subproj/NSException+misc.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/NGExtensions/FdExt.subproj/NSException+misc.m
+-@@ -85,7 +85,7 @@
+- 
+- - (id)copyWithZone:(NSZone *)_zone {
+-   // TODO: should make a real copy?
+--  return [self retain];
+-+  return (id)[self retain];
+- }
+- 
+- @end /* NSException(NGMiscellaneous) */
+diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Logs.m sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Logs.m
+--- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Logs.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Logs.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,16 +0,0 @@
+---- sope-core/NGExtensions/FdExt.subproj/NSObject+Logs.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/NGExtensions/FdExt.subproj/NSObject+Logs.m
+-@@ -52,10 +52,10 @@ static inline Class NSStringClass(void) 
+-                                          200);
+-     lm = [NGLoggerManager defaultLoggerManager];
+-   }
+--  logger = NSMapGet(loggerForClassMap, self->isa);
+-+  logger = NSMapGet(loggerForClassMap, object_getClass(self));
+-   if (!logger) {
+--    logger = [lm loggerForClass:self->isa];
+--    NSMapInsert(loggerForClassMap, self->isa, logger);
+-+    logger = [lm loggerForClass: object_getClass(self)];
+-+    NSMapInsert(loggerForClassMap, object_getClass(self), logger);
+-   }
+- 
+-   return logger;
+diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Values.m sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Values.m
+--- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Values.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSObject+Values.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-core/NGExtensions/FdExt.subproj/NSObject+Values.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/NGExtensions/FdExt.subproj/NSObject+Values.m
+-@@ -82,7 +82,7 @@
+- 
+- + (NSString *) stringWithUnsignedLongLong: (unsigned long long)value
+- {
+--  return [NSString stringWithFormat: @"0x%.16"PRIx64, value];
+-+  return [NSString stringWithFormat: @"0x%.16llx", value];
+- }
+- 
+- - (BOOL)boolValue {
+diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSSet+enumerator.m sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSSet+enumerator.m
+--- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSSet+enumerator.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSSet+enumerator.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,10 +0,0 @@
+---- sope-core/NGExtensions/FdExt.subproj/NSSet+enumerator.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/NGExtensions/FdExt.subproj/NSSet+enumerator.m
+-@@ -21,6 +21,7 @@
+- */
+- 
+- #include "NSSet+enumerator.h"
+-+#include "NSArray+enumerator.h"
+- #include "common.h"
+- 
+- @implementation NSSet(enumerator)
+diff -ruN sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSString+misc.m sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSString+misc.m
+--- sope.orig/files/patch-sope-core__NGExtensions__FdExt.subproj__NSString+misc.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__NGExtensions__FdExt.subproj__NSString+misc.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,10 +0,0 @@
+---- sope-core/NGExtensions/FdExt.subproj/NSString+misc.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/NGExtensions/FdExt.subproj/NSString+misc.m
+-@@ -21,6 +21,7 @@
+- */
+- 
+- #include "NSString+misc.h"
+-+#include "NSException+misc.h"
+- #include "common.h"
+- 
+- @implementation NSObject(StringBindings)
+diff -ruN sope.orig/files/patch-sope-core__NGExtensions__NGDirectoryEnumerator.m sope/files/patch-sope-core__NGExtensions__NGDirectoryEnumerator.m
+--- sope.orig/files/patch-sope-core__NGExtensions__NGDirectoryEnumerator.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__NGExtensions__NGDirectoryEnumerator.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-core/NGExtensions/NGDirectoryEnumerator.m.orig	2015-09-16 18:26:49 UTC
+-+++ sope-core/NGExtensions/NGDirectoryEnumerator.m
+-@@ -54,7 +54,7 @@
+- {
+-   self->fileManager = _fm
+-     ? [_fm retain]
+--    : [[NSFileManager defaultManager] retain];
+-+    : (id)[[NSFileManager defaultManager] retain];
+- 
+-   self->pathStack = [[NSMutableArray alloc] init];
+-   self->enumStack = [[NSMutableArray alloc] init];
+diff -ruN sope.orig/files/patch-sope-core__NGStreams__NGBufferedStream.m sope/files/patch-sope-core__NGStreams__NGBufferedStream.m
+--- sope.orig/files/patch-sope-core__NGStreams__NGBufferedStream.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__NGStreams__NGBufferedStream.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,29 +0,0 @@
+---- sope-core/NGStreams/NGBufferedStream.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-core/NGStreams/NGBufferedStream.m
+-@@ -66,7 +66,7 @@ static Class DataStreamClass = Nil;
+-   }
+-   if (*(Class *)_source == DataStreamClass) {
+-     [self release];
+--    return [_source retain];
+-+    return (id)[_source retain];
+-   }
+- 
+-   if ((self = [super initWithSource:_source])) {
+-@@ -90,7 +90,7 @@ static Class DataStreamClass = Nil;
+-   }
+-   if (*(Class *)_source == DataStreamClass) {
+-     [self release];
+--    return [_source retain];
+-+    return (id)[_source retain];
+-   }
+- 
+-   if ((self = [super initWithInputSource:_source])) {
+-@@ -109,7 +109,7 @@ static Class DataStreamClass = Nil;
+-   }
+-   if (*(Class *)_src == DataStreamClass) {
+-     [self release];
+--    return [_src retain];
+-+    return (id)[_src retain];
+-   }
+- 
+-   if ((self = [super initWithOutputSource:_src])) {
+diff -ruN sope.orig/files/patch-sope-core__NGStreams__NGByteBuffer.m sope/files/patch-sope-core__NGStreams__NGByteBuffer.m
+--- sope.orig/files/patch-sope-core__NGStreams__NGByteBuffer.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__NGStreams__NGByteBuffer.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-core/NGStreams/NGByteBuffer.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-core/NGStreams/NGByteBuffer.m
+-@@ -44,7 +44,7 @@ static Class DataStreamClass = Nil;
+-   DataStreamClass   = NSClassFromString(@"NGDataStream");
+- }
+- 
+--+ (int)version {
+-++ (NSInteger)version {
+-   return [super version] + 1;
+- }
+- 
+-@@ -61,7 +61,7 @@ static Class DataStreamClass = Nil;
+-   }
+-   if (*(Class *)_source == DataStreamClass) {
+-     [self release];
+--    return [_source retain];
+-+    return (id)[_source retain];
+-   }
+-   if ((self = [super initWithSource:_source])) {
+-     unsigned size = 0;
+diff -ruN sope.orig/files/patch-sope-core__NGStreams__NGByteCountStream.m sope/files/patch-sope-core__NGStreams__NGByteCountStream.m
+--- sope.orig/files/patch-sope-core__NGStreams__NGByteCountStream.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__NGStreams__NGByteCountStream.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-core/NGStreams/NGByteCountStream.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-core/NGStreams/NGByteCountStream.m
+-@@ -87,7 +87,7 @@
+-   {
+-     register unsigned char *byteBuffer = _buf;
+- 
+--    for (_len = result - 1; _len >= 0; _len--, byteBuffer++) {
+-+    for (NSInteger len = result - 1; len >= 0; len--, byteBuffer++) {
+-       if (*byteBuffer == byteToCount)
+-         byteReadCount++;
+-     }
+-@@ -106,7 +106,7 @@
+-   {
+-     register unsigned char *byteBuffer = (unsigned char *)_buf;
+- 
+--    for (_len = result - 1; _len >= 0; _len--, byteBuffer++) {
+-+    for (NSInteger len = result - 1; len >= 0; len--, byteBuffer++) {
+-       if (*byteBuffer == byteToCount)
+-         byteWriteCount++;
+-     }
+diff -ruN sope.orig/files/patch-sope-core__NGStreams__NGCTextStream.m sope/files/patch-sope-core__NGStreams__NGCTextStream.m
+--- sope.orig/files/patch-sope-core__NGStreams__NGCTextStream.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__NGStreams__NGCTextStream.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-core/NGStreams/NGCTextStream.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-core/NGStreams/NGCTextStream.m
+-@@ -265,7 +265,7 @@ static void _flushAtExit(void) {
+-                  format:
+-                    @"called writeCharacter: with character code (0x%X)"
+-                    @" exceeding the maximum system character code (0x%X)",
+--                   _character, ((sizeof(unsigned char) * 256) - 1)];
+-+                   _character, (int)((sizeof(unsigned char) * 256) - 1)];
+-   }
+- 
+-   c = _character;
+diff -ruN sope.orig/files/patch-sope-core__NGStreams__NGConcreteStreamFileHandle.m sope/files/patch-sope-core__NGStreams__NGConcreteStreamFileHandle.m
+--- sope.orig/files/patch-sope-core__NGStreams__NGConcreteStreamFileHandle.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__NGStreams__NGConcreteStreamFileHandle.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-core/NGStreams/NGConcreteStreamFileHandle.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-core/NGStreams/NGConcreteStreamFileHandle.m
+-@@ -118,7 +118,7 @@
+- 
+-   *(&data) = [NSMutableData dataWithCapacity:2048];
+-   *(&bs) = [self->stream isKindOfClass:[NGBufferedStream class]]
+--    ? [self->stream retain]
+-+    ? (id)[self->stream retain]
+-     : [(NGBufferedStream *)[NGBufferedStream alloc] 
+-           initWithSource:self->stream];
+- 
+diff -ruN sope.orig/files/patch-sope-core__NGStreams__NGLocalSocketAddress.m sope/files/patch-sope-core__NGStreams__NGLocalSocketAddress.m
+--- sope.orig/files/patch-sope-core__NGStreams__NGLocalSocketAddress.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-core__NGStreams__NGLocalSocketAddress.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,24 +0,0 @@
+---- sope-core/NGStreams/NGLocalSocketAddress.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-core/NGStreams/NGLocalSocketAddress.m
+-@@ -77,8 +77,8 @@ static NSString *socketDirectoryPath = @
+-         sizeof(((struct sockaddr_un *)self->address)->sun_path)) {
+-       
+-       NSLog(@"LocalDomain name too long: maxlen=%i, len=%i, path=%@",
+--            sizeof(((struct sockaddr_un *)self->address)->sun_path),
+--            [_path cStringLength],
+-+            (int)sizeof(((struct sockaddr_un *)self->address)->sun_path),
+-+            (int)[_path cStringLength],
+-             _path);
+-       [NSException raise:NSInvalidArgumentException
+-                    format:@"path to long as local domain socket address !"];
+-@@ -100,8 +100,8 @@ static NSString *socketDirectoryPath = @
+-   int      addressCounter = 0;
+-   NSString *newPath;
+-   
+--  newPath = [NSString stringWithFormat:@"_ngsocket_%p_%p_%03d",
+--                        getpid(), [NSThread currentThread], addressCounter];
+-+  newPath = [NSString stringWithFormat:@"_ngsocket_%d_%p_%03d",
+-+                        (int)getpid(), [NSThread currentThread], addressCounter];
+-   newPath = [socketDirectoryPath stringByAppendingPathComponent:newPath];
+- 
+-   return [self initWithPath:newPath];
+diff -ruN sope.orig/files/patch-sope-gdl1_GDLAccess_common.h sope/files/patch-sope-gdl1_GDLAccess_common.h
+--- sope.orig/files/patch-sope-gdl1_GDLAccess_common.h	2015-09-22 18:32:08.000000000 +0800
++++ sope/files/patch-sope-gdl1_GDLAccess_common.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-gdl1/GDLAccess/common.h.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/common.h
+-@@ -55,7 +55,7 @@
+- #  endif
+- #endif
+- 
+--#if __GNU_LIBOBJC__ >= 20100911
+-+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(__GNUSTEP_RUNTIME__)
+- #  define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
+- #  ifndef SEL_EQ
+- #    define SEL_EQ(__A__,__B__) sel_isEqual(__A__,__B__)
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EOAdaptor.m sope/files/patch-sope-gdl1__GDLAccess__EOAdaptor.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EOAdaptor.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EOAdaptor.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,10 +0,0 @@
+---- sope-gdl1/GDLAccess/EOAdaptor.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EOAdaptor.m
+-@@ -31,6 +31,7 @@
+- #include "EOFExceptions.h"
+- #include "EOModel.h"
+- #include "EOSQLExpression.h"
+-+#include "NGExtensions/NSException+misc.h"
+- #include "common.h"
+- 
+- @implementation EOAdaptor
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EOAttribute.m sope/files/patch-sope-gdl1__GDLAccess__EOAttribute.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EOAttribute.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EOAttribute.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-gdl1/GDLAccess/EOAttribute.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EOAttribute.m
+-@@ -84,7 +84,7 @@ static EONull   *null = nil;
+- }
+- 
+- // Is equal only if same name; used to make aliasing ordering stable
+--- (unsigned)hash {
+-+- (NSUInteger)hash {
+-   return [self->name hash];
+- }
+- 
+-@@ -535,7 +535,7 @@ static inline void _addToPropList(NSMuta
+-     return @"";
+- 
+-   clen = [self cStringLength];
+--#if GNU_RUNTIME
+-+#if GNU_RUNTIME && !defined(__GNUSTEP_RUNTIME__)
+-   s = objc_atomic_malloc(clen + 4);
+- #else
+-   s = malloc(clen + 4);
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EODatabase.m sope/files/patch-sope-gdl1__GDLAccess__EODatabase.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EODatabase.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EODatabase.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,64 +0,0 @@
+---- sope-gdl1/GDLAccess/EODatabase.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EODatabase.m
+-@@ -185,7 +185,7 @@ static inline void _removeDatabaseInstan
+-   if ([self hasOpenChannels]) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--              @"EODatabase:%x: All channels must be closed when changing "
+-+              @"EODatabase:%@: All channels must be closed when changing "
+-               @"uniquing mode in the EODatabase, "
+-               @"in [EODatabase setUniquesObjects:]",
+- 		 self];
+-@@ -203,7 +203,7 @@ static inline void _removeDatabaseInstan
+-   if ([self hasOpenChannels]) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--              @"EODatabase:%x: All channels must be closed when changing "
+-+              @"EODatabase:%@: All channels must be closed when changing "
+-               @"snapshoting mode in the EODatabase, "
+-               @"in [EODatabase setKeepsSnapshots:]",
+- 		 self];
+-@@ -328,14 +328,14 @@ static inline void _removeDatabaseInstan
+-   if (_object == nil) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--		   @"EODatabase:%x: Cannot record null object, "
+-+		   @"EODatabase:%@: Cannot record null object, "
+-   		   @"in [EODatabase recordObject:primaryKey:entity:snapshot:]",
+- 		   self];
+-   }
+-   if ((_entity == nil) && self->flags.isUniquingObjects) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--              @"EODatabase:%x: Cannot record object with null entity "
+-+              @"EODatabase:%@: Cannot record object with null entity "
+-               @"when the database is uniquing objects, "
+-               @"in [EODatabase recordObject:primaryKey:entity:snapshot:]",
+- 		 self];
+-@@ -344,7 +344,7 @@ static inline void _removeDatabaseInstan
+-   if ((_key == nil) && self->flags.isUniquingObjects) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--              @"EODatabase:%x: Cannot record object with null key "
+-+              @"EODatabase:%@: Cannot record object with null key "
+-               @"when the database is uniquing objects, "
+-               @"in [EODatabase recordObject:primaryKey:entity:snapshot:]",
+- 		 self];
+-@@ -352,7 +352,7 @@ static inline void _removeDatabaseInstan
+-   if ((_snapshot == nil) && self->flags.isKeepingSnapshots) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--              @"EODatabase:%x: Cannot record object with null snapshot "
+-+              @"EODatabase:%@: Cannot record object with null snapshot "
+-               @"when the database is keeping snapshots, "
+-               @"in [EODatabase recordObject:primaryKey:entity:snapshot:]",
+- 		 self];
+-@@ -408,7 +408,7 @@ static inline void _removeDatabaseInstan
+- 
+- - (void)reportError:(NSString*)error {
+-   if (self->flags.isLoggingWarnings)
+--    NSLog(@"EODatabase:%x:%@", self, error);
+-+    NSLog(@"EODatabase:%@:%@", self, error);
+- }
+- 
+- @end /* EODatabase */
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EODatabaseChannel.m sope/files/patch-sope-gdl1__GDLAccess__EODatabaseChannel.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EODatabaseChannel.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EODatabaseChannel.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-gdl1/GDLAccess/EODatabaseChannel.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EODatabaseChannel.m
+-@@ -81,7 +81,7 @@ NSString *EODatabaseChannelDidLockObject
+- - (Class)privateClassForEntity:(EOEntity *)anEntity;
+- - (void)privateUpdateCurrentEntityInfo;
+- - (void)privateClearCurrentEntityInfo;
+--- (void)privateReportError:(SEL)method:(NSString *)format, ...;
+-+- (void)privateReportError:(SEL)method :(NSString *)format, ...;
+- @end
+- 
+- /*
+-@@ -593,7 +593,7 @@ NSString *EODatabaseChannelDidLockObject
+-   }
+-   // Record object in database context
+-   if (![new_pkey isEqual:old_pkey]) {
+--    NSLog(@"WARNING: (%@) primary key changed from %@ to %@",
+-+    NSLog(@"WARNING: (%s) primary key changed from %@ to %@",
+-           __PRETTY_FUNCTION__, old_pkey, new_pkey);
+-     [databaseContext forgetObject:anObj];
+-   }
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EODatabaseContext.m sope/files/patch-sope-gdl1__GDLAccess__EODatabaseContext.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EODatabaseContext.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EODatabaseContext.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,142 +0,0 @@
+---- sope-gdl1/GDLAccess/EODatabaseContext.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EODatabaseContext.m
+-@@ -118,7 +118,7 @@ static inline void _checkTxInProgress(EO
+-   if (self->transactionNestingLevel == 0) {
+-     [NSException raise:NSInternalInconsistencyException
+- 		 format:
+--              @"EODatabaseContext:%x: No transaction in progress "
+-+              @"EODatabaseContext:%@: No transaction in progress "
+-               @"in %s", self, _function];
+-   }
+- }
+-@@ -264,7 +264,7 @@ static inline void _checkTxInProgress(EO
+-       (unsigned)transactionNestingLevel) {
+-     [NSException raise:NSInternalInconsistencyException
+- 		 format:
+--              @"EODatabaseContext:%x:transaction nesting levels do not match: "
+-+              @"EODatabaseContext:%@:transaction nesting levels do not match: "
+-               @"database has %d, adaptor has %d, "
+-               @"in [EODatabaseContext beginTransaction]",
+-               self, transactionNestingLevel, 
+-@@ -295,7 +295,7 @@ static inline void _checkTxInProgress(EO
+-       (unsigned)self->transactionNestingLevel) {
+-     [NSException raise:NSInternalInconsistencyException
+- 		 format:
+--              @"EODatabaseContext:%x:transaction nesting levels do not match: "
+-+              @"EODatabaseContext:%@:transaction nesting levels do not match: "
+-               @"database has %d, adaptor has %d, "
+-               @"in [EODatabaseContext commitTransaction]",
+-               self, transactionNestingLevel, 
+-@@ -325,7 +325,7 @@ static inline void _checkTxInProgress(EO
+-       (unsigned)self->transactionNestingLevel) {
+-     [NSException raise:NSInternalInconsistencyException
+- 		 format:
+--              @"EODatabaseContext:%x:transaction nesting levels do not match: "
+-+              @"EODatabaseContext:%@:transaction nesting levels do not match: "
+-               @"database has %d, adaptor has %d, "
+-               @"in [EODatabaseContext rollbackTransaction]",
+-               self, transactionNestingLevel, 
+-@@ -385,7 +385,7 @@ static inline void _checkTxInProgress(EO
+-   if ([self transactionNestingLevel]) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--        @"EODatabaseContext:%x: Cannot change update strategy "
+-+        @"EODatabaseContext:%@: Cannot change update strategy "
+-         @"when context has a transaction open, "
+-         @"in [EODatabaseContext setUpdateStrategy]",
+-         self];
+-@@ -483,14 +483,14 @@ static inline void _checkTxInProgress(EO
+-   if (_object == nil) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--              @"EODatabaseContext:%x: Cannot forget null object, "
+-+              @"EODatabaseContext:%@: Cannot forget null object, "
+-               @"in [EODatabaseContext forgetObject]",
+-               self];
+-   }
+-   if ([EOFault isFault:_object]) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--              @"EODatabaseContext:%x: Cannot forget forget a fault object, "
+-+              @"EODatabaseContext:%@: Cannot forget forget a fault object, "
+-               @"in [EODatabaseContext forgetObject]",
+-               self];
+-   }
+-@@ -532,14 +532,14 @@ static inline void _checkTxInProgress(EO
+-   if (_object == nil) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--              @"EODatabaseContext:%x: Cannot record null object, "
+-+              @"EODatabaseContext:%@: Cannot record null object, "
+-               @"in [EODatabaseContext recordObject:primaryKey:entity:snapshot:]",
+-               self];
+-   }
+-   if ((_entity == nil) && self->isUniquingObjects) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--              @"EODatabaseContext:%x: Cannot record object with null entity "
+-+              @"EODatabaseContext:%@: Cannot record object with null entity "
+-               @"when uniquing objects, "
+-               @"in [EODatabaseContext recordObject:primaryKey:entity:snapshot:]",
+-               self];
+-@@ -550,7 +550,7 @@ static inline void _checkTxInProgress(EO
+-   if ((_key == nil) && self->isUniquingObjects) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--              @"EODatabaseContext:%x: Cannot record object with null key "
+-+              @"EODatabaseContext:%@: Cannot record object with null key "
+-               @"when uniquing objects, "
+-               @"in [EODatabaseContext recordObject:primaryKey:entity:snapshot:]",
+-               self];
+-@@ -558,7 +558,7 @@ static inline void _checkTxInProgress(EO
+-   if ((snapshot == nil) && isKeepingSnapshots && ![EOFault isFault:_object]) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--              @"EODatabaseContext:%x: Cannot record object with null snapshot "
+-+              @"EODatabaseContext:%@: Cannot record object with null snapshot "
+-               @"when keeping snapshots, "
+-               @"in [EODatabaseContext recordObject:primaryKey:entity:snapshot:]"
+-               @": snapshot=%s keepsSnapshots=%s isFault=%s",
+-@@ -665,14 +665,14 @@ static inline void _checkTxInProgress(EO
+-   if (_object == nil) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--              @"EODatabaseContext:%x: Cannot record null object as locked, "
+-+              @"EODatabaseContext:%@: Cannot record null object as locked, "
+-               @"in [EODatabaseContext recordLockedObject:]",
+-               self];
+-   }
+-   if ([EOFault isFault:_object]) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--              @"EODatabaseContext:%x: Cannot record a fault object as locked, "
+-+              @"EODatabaseContext:%@: Cannot record a fault object as locked, "
+-               @"in [EODatabaseContext recordLockedObject:]",
+-               self];
+-   }
+-@@ -695,14 +695,14 @@ static inline void _checkTxInProgress(EO
+-   if (_object == nil) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--               @"EODatabaseContext:%x: Cannot record null object as updatetd, "
+-+               @"EODatabaseContext:%@: Cannot record null object as updatetd, "
+-                @"in [EODatabaseContext recordUpdatedObject:]",
+-                self];
+-   }
+-   if ([EOFault isFault:_object]) {
+-     [NSException raise:NSInvalidArgumentException
+- 		 format:
+--               @"EODatabaseContext:%x: Cannot record fault object as updated, "
+-+               @"EODatabaseContext:%@: Cannot record fault object as updated, "
+-                @"in [EODatabaseContext recordUpdatedObject:]",
+-                self];
+-   }
+-@@ -728,7 +728,7 @@ static inline void _checkTxInProgress(EO
+-   return [NSString stringWithFormat:
+- 		     @"<%@[0x%p]: #channels=%i tx-nesting=%i>",
+-                      NSStringFromClass([self class]), self,
+--                     [self->channels count],
+-+                     (int)[self->channels count],
+-                      [self transactionNestingLevel]];
+- }
+- 
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EODatabaseFault.m sope/files/patch-sope-gdl1__GDLAccess__EODatabaseFault.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EODatabaseFault.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EODatabaseFault.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,107 +0,0 @@
+---- sope-gdl1/GDLAccess/EODatabaseFault.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EODatabaseFault.m
+-@@ -35,6 +35,7 @@
+- #import "EODatabaseFaultResolver.h"
+- #import "EOArrayProxy.h"
+- #import "common.h"
+-+#import "NGExtensions/NSException+misc.h"
+- 
+- #if NeXT_RUNTIME || APPLE_RUNTIME
+- #  include <objc/objc-class.h>
+-@@ -78,15 +79,15 @@ typedef struct {
+- 		       @"to fault",
+- 		       NSStringFromClass([fault class]),
+- #if defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__) || (__GNU_LIBOBJC__ >= 20100911)
+--		       class_getInstanceSize([self class])];
+-+		       (int)class_getInstanceSize([self class])];
+- #else
+- 			   ((Class)self)->instance_size];
+- #endif
+-     }
+-     fault->faultResolver = [[EOObjectFault alloc] initWithPrimaryKey:key
+-         entity:entity databaseChannel:channel zone:zone 
+--        targetClass:fault->isa];
+--    fault->isa = self;
+-+        targetClass:object_getClass(fault)];
+-+    object_setClass(fault, self);
+-     
+-     return (EODatabaseFault *)AUTORELEASE(fault);
+- }
+-@@ -130,7 +131,7 @@ typedef struct {
+- {
+-   EODatabaseFault *fault;
+-     
+--  fault = [NSMutableArray allocWithZone:zone];
+-+  fault = (EODatabaseFault*)[NSMutableArray allocWithZone:zone];
+- 
+- #if defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__) || (__GNU_LIBOBJC__ >= 20100911)
+-   if (class_getInstanceSize([fault class]) < class_getInstanceSize([self class])) {
+-@@ -140,19 +141,19 @@ typedef struct {
+-         (void)[fault autorelease];
+- 	[NSException raise:NSInvalidArgumentException
+- 		     format:
+--                    @"Instances from class %s must be at least %d "
+-+                    @"Instances from class %@ must be at least %d "
+-                     @"in size to fault",
+-                     NSStringFromClass([fault class]),
+- #if defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__) || (__GNU_LIBOBJC__ >= 20100911)
+--                    class_getInstanceSize([self class])];
+-+                    (int)class_getInstanceSize([self class])];
+- #else
+- 					((Class)self)->instance_size];
+- #endif
+-   }
+-   fault->faultResolver = [[EOArrayFault alloc] initWithQualifier:qualifier
+-         fetchOrder:fetchOrder databaseChannel:channel zone:zone 
+--        targetClass:fault->isa];
+--  fault->isa = self;
+-+        targetClass:object_getClass(fault)];
+-+  object_setClass(fault, self);
+- 
+-   return (NSArray *)AUTORELEASE(fault);
+- }
+-@@ -161,7 +162,7 @@ typedef struct {
+-   EODatabaseFault *aFault = (EODatabaseFault *)fault;
+- 
+-   // Check that argument is fault
+--  if (aFault->isa != self)
+-+  if (object_getClass(aFault) != self)
+-     return nil;
+-     
+-   return [(EODatabaseFaultResolver *)aFault->faultResolver primaryKey];
+-@@ -171,7 +172,7 @@ typedef struct {
+-   EODatabaseFault *aFault = (EODatabaseFault *)fault;
+- 
+-   // Check that argument is fault
+--  if (aFault->isa != self)
+-+  if (object_getClass(aFault) != self)
+-     return nil;
+- 
+-   return [(EODatabaseFaultResolver *)aFault->faultResolver entity];
+-@@ -181,7 +182,7 @@ typedef struct {
+-   EODatabaseFault *aFault = (EODatabaseFault *)fault;
+- 
+-   // Check that argument is fault
+--  if (aFault->isa != self)
+-+  if (object_getClass(aFault) != self)
+-     return nil;
+-     
+-   return [(EODatabaseFaultResolver *)aFault->faultResolver qualifier];
+-@@ -191,7 +192,7 @@ typedef struct {
+-   EODatabaseFault *aFault = (EODatabaseFault *)fault;
+- 
+-   // Check that argument is fault
+--  if (aFault->isa != self)
+-+  if (object_getClass(aFault) != self)
+-     return nil;
+-     
+-   return [(EODatabaseFaultResolver *)aFault->faultResolver fetchOrder];
+-@@ -201,7 +202,7 @@ typedef struct {
+-   EODatabaseFault *aFault = (EODatabaseFault *)fault;
+- 
+-   // Check that argument is fault
+--  if (aFault->isa != self)
+-+  if (object_getClass(aFault) != self)
+-     return nil;
+-     
+-   return [(EODatabaseFaultResolver *)aFault->faultResolver databaseChannel];
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EODatabaseFaultResolver.m sope/files/patch-sope-gdl1__GDLAccess__EODatabaseFaultResolver.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EODatabaseFaultResolver.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EODatabaseFaultResolver.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-gdl1/GDLAccess/EODatabaseFaultResolver.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EODatabaseFaultResolver.m
+-@@ -191,7 +191,7 @@
+- 
+- - (NSString *)descriptionForObject:(id)_fault {
+-   return [NSString stringWithFormat:
+--                   @"<Array fault 0x%x (qualifier=%@, order=%@, channel=%@)>",
+-+                   @"<Array fault %p (qualifier=%@, order=%@, channel=%@)>",
+-                    _fault, qualifier, fetchOrder, channel];
+- }
+- 
+-@@ -302,7 +302,7 @@
+- 
+- - (NSString *)descriptionForObject:(id)_fault {
+-   return [NSString stringWithFormat:
+--                     @"<Object fault 0x%X "
+-+                     @"<Object fault %p "
+-                      @"(class=%@, entity=%@, key=%@, channel=%@)>",
+-                      _fault,
+-                      NSStringFromClass(targetClass), 
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EOEntity.m sope/files/patch-sope-gdl1__GDLAccess__EOEntity.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EOEntity.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EOEntity.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-gdl1/GDLAccess/EOEntity.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EOEntity.m
+-@@ -106,7 +106,7 @@ static int _compareByName(id obj1, id ob
+- }
+- 
+- // Is equal only if same name; used to make aliasing ordering stable
+--- (unsigned)hash {
+-+- (NSUInteger)hash {
+-   return [name hash];
+- }
+- 
+-@@ -1100,7 +1100,7 @@ static inline void _addToPropList(NSMuta
+-     unsigned cnt, cnt2;
+- 
+-     clen = [self cStringLength];
+--#if GNU_RUNTIME
+-+#if GNU_RUNTIME && !defined(__GNUSTEP_RUNTIME__)
+-     s = objc_atomic_malloc(clen + 4);
+- #else
+-     s = malloc(clen + 4);
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EOFExceptions.m sope/files/patch-sope-gdl1__GDLAccess__EOFExceptions.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EOFExceptions.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EOFExceptions.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,38 +0,0 @@
+---- sope-gdl1/GDLAccess/EOFExceptions.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EOFExceptions.m
+-@@ -63,7 +63,7 @@
+-                             [destinationEntity name],
+-                             definition,
+-                             [relationship name]];
+--    [self initWithName:NSStringFromClass(isa)
+-+    [self initWithName:NSStringFromClass(object_getClass(self))
+-             reason:_reason userInfo:nil];
+-     return self;
+- }
+-@@ -74,7 +74,7 @@
+- - initWithName:(NSString*)_name
+- {
+-     id _reason = [NSString stringWithFormat:@"invalid name: '%@'", _name];
+--    [self initWithName:NSStringFromClass(isa) reason:_reason userInfo:nil];
+-+    [self initWithName:NSStringFromClass(object_getClass(self)) reason:_reason userInfo:nil];
+-     return self;
+- }
+- @end /* InvalidNameException */
+-@@ -86,7 +86,7 @@
+-     id _reason = [NSString stringWithFormat:@"property '%@' does not exist in "
+-                             @"entity '%@'", propertyName,
+-                             [(EOEntity*)currentEntity name]];
+--    [self initWithName:NSStringFromClass(isa)
+-+    [self initWithName:NSStringFromClass(object_getClass(self))
+-             reason:_reason userInfo:nil];
+-     return self;
+- }
+-@@ -99,7 +99,7 @@
+-     id _reason = [NSString stringWithFormat:@"property '%@' must be to one in "
+-                     @"entity '%@' to allow flattened attribute",
+-                     propertyName, [(EOEntity*)currentEntity name]];
+--    [self initWithName:NSStringFromClass(isa)
+-+    [self initWithName:NSStringFromClass(object_getClass(self))
+-             reason:_reason userInfo:nil];
+-     return self;
+- }
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EOFault.h sope/files/patch-sope-gdl1__GDLAccess__EOFault.h
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EOFault.h	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EOFault.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,12 +0,0 @@
+---- sope-gdl1/GDLAccess/EOFault.h.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EOFault.h
+-@@ -9,6 +9,9 @@
+- 
+- @class EOFaultHandler;
+- 
+-+#ifdef __clang__
+-+__attribute__((objc_root_class))
+-+#endif
+- @interface EOFault
+- {
+-   Class          isa;
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EOFault.m sope/files/patch-sope-gdl1__GDLAccess__EOFault.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EOFault.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EOFault.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,82 +0,0 @@
+---- sope-gdl1/GDLAccess/EOFault.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EOFault.m
+-@@ -67,7 +67,7 @@ typedef struct objc_method      *Method_
+- + (void)makeObjectIntoFault:(id)_object withHandler:(EOFaultHandler *)_handler{
+-   [_handler setTargetClass:[_object class] extraData:((id *)_object)[1]];
+- 
+--  ((EOFault *)_object)->isa           = self;
+-+  object_setClass(_object, self);
+-   ((EOFault *)_object)->faultResolver = [_handler retain];
+- }
+- 
+-@@ -85,14 +85,14 @@ typedef struct objc_method      *Method_
+-   int refs;
+- 
+-   /* check if fault */
+--  if (aFault->isa != self)
+-+  if (object_getClass(aFault) != self)
+-     return;
+-     
+-   /* get fault instance reference count + 1 set in creation methods */
+-   refs = aFault->faultResolver->faultReferences;
+- 
+-   /* make clear instance */
+--  aFault->isa           = [aFault->faultResolver targetClass];
+-+  object_setClass(aFault, [aFault->faultResolver targetClass]);
+-   aFault->faultResolver = [aFault->faultResolver autorelease];
+-   aFault->faultResolver = [aFault->faultResolver extraData];
+-   
+-@@ -112,7 +112,7 @@ typedef struct objc_method      *Method_
+-   if (EOFaultClass == Nil) EOFaultClass = [EOFault class];
+- 
+- #if defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__) || (__GNU_LIBOBJC__ >= 20100911)
+--  for (clazz = ((EOFault *)fault)->isa; clazz; clazz = class_getSuperclass(clazz)) {
+-+  for (clazz = object_getClass(fault); clazz; clazz = class_getSuperclass(clazz)) {
+- #else
+-   for (clazz = ((EOFault *)fault)->isa; clazz; clazz = clazz->super_class) {
+- #endif
+-@@ -132,7 +132,7 @@ typedef struct objc_method      *Method_
+-   EOFault *aFault = (EOFault*)_fault;
+- 
+-   // Check that argument is fault
+--  if (aFault->isa != self)
+-+  if (object_getClass(aFault) != self)
+-     return nil;
+-     
+-   return [aFault->faultResolver targetClass];
+-@@ -182,7 +182,7 @@ typedef struct objc_method      *Method_
+- #if GNU_RUNTIME
+-   return (object_is_instance(self))
+-     ? [self->faultResolver respondsToSelector:_selector forFault:self]
+--    : class_get_class_method(self->isa, _selector) != METHOD_NULL;
+-+    : class_get_class_method(object_getClass(self), _selector) != METHOD_NULL;
+- #else
+- #  warning TODO: add complete implementation for Apple/NeXT runtime!
+-   return [self->faultResolver respondsToSelector:_selector forFault:self];
+-@@ -239,7 +239,7 @@ typedef struct objc_method      *Method_
+-   NSLog(@"WARNING: tried to deallocate EOFault class ..");
+- }
+- - (void)dealloc {
+--  [self->isa clearFault:self];
+-+  [object_getClass(self) clearFault:self];
+-   [self dealloc];
+- }
+- 
+-@@ -285,7 +285,7 @@ static inline void _resolveFault(EOFault
+-   handler = self->faultResolver;
+-   [handler completeInitializationOfObject:self];
+-   
+--  if (self->isa == [EOFault class]) {
+-+  if (object_getClass(self) == [EOFault class]) {
+-     [NSException raise:@"NSInvalidArgumentException" 
+- 		 format:
+- 		   @"fault error: %@ was not cleared during fault fetching",
+-@@ -294,7 +294,7 @@ static inline void _resolveFault(EOFault
+- }
+- 
+- + (id)self {
+--  _resolveFault(self);
+-+  _resolveFault((id)self);
+-   return self;
+- }
+- 
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EOModel.m sope/files/patch-sope-gdl1__GDLAccess__EOModel.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EOModel.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EOModel.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-gdl1/GDLAccess/EOModel.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EOModel.m
+-@@ -255,7 +255,7 @@ void EOModel_linkCategories(void) {
+-   NSMutableDictionary *model = [NSMutableDictionary dictionaryWithCapacity:64];
+-   int i, count;
+-     
+--  [model setObject:[[NSNumber numberWithInt:[isa version]] stringValue]
+-+  [model setObject:[[NSNumber numberWithInt:[object_getClass(self) version]] stringValue]
+- 	 forKey:@"EOModelVersion"];
+-   if (name)
+-         [model setObject:name forKey:@"name"];
+-@@ -416,7 +416,7 @@ void EOModel_linkCategories(void) {
+-   if ((s = [self adaptorName]))      [ms appendFormat:@" adaptor=%@", s];
+-   if ((s = [self adaptorClassName])) [ms appendFormat:@" adaptor-class=%@", s];
+-   
+--  [ms appendFormat:@" #entities=%d", [self->entities count]];
+-+  [ms appendFormat:@" #entities=%d", (int)[self->entities count]];
+-   
+-   [ms appendString:@">"];
+-   return ms;
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EOObjectUniquer.m sope/files/patch-sope-gdl1__GDLAccess__EOObjectUniquer.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EOObjectUniquer.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EOObjectUniquer.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-gdl1/GDLAccess/EOObjectUniquer.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EOObjectUniquer.m
+-@@ -49,7 +49,7 @@ static BOOL uniquerCompare(NSMapTable *t
+- 
+- static NSString* uniqDescription(NSMapTable *t, EOUniquerRecord* rec) {
+-   return [NSString stringWithFormat:
+--                     @"<<pkey:%08x entity:%08x object:%08x snapshot:%08x>>",
+-+                     @"<<pkey:%p entity:%p object:%p snapshot:%p>>",
+-                      rec->pkey, rec->entity, rec->object, rec->snapshot];
+- }
+- 
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EOPrimaryKeyDictionary.m sope/files/patch-sope-gdl1__GDLAccess__EOPrimaryKeyDictionary.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EOPrimaryKeyDictionary.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EOPrimaryKeyDictionary.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,46 +0,0 @@
+---- sope-gdl1/GDLAccess/EOPrimaryKeyDictionary.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EOPrimaryKeyDictionary.m
+-@@ -130,7 +130,7 @@
+- - (BOOL)isEqualToDictionary:(NSDictionary *)other {
+-     if (self == (EOSinglePrimaryKeyDictionary*)other)
+-         return YES;
+--    if (self->isa == ((EOSinglePrimaryKeyDictionary*)other)->isa) {
+-+    if (object_getClass(self) == object_getClass(other)) {
+-         if (fastHash == ((EOSinglePrimaryKeyDictionary*)other)->fastHash &&
+-             [key isEqual:((EOSinglePrimaryKeyDictionary*)other)->key] &&
+-             [value isEqual:((EOSinglePrimaryKeyDictionary*)other)->value])
+-@@ -157,7 +157,7 @@
+- - (BOOL)fastIsEqual:(id)other {
+-     if (self == other)
+-         return YES;
+--    if (self->isa == ((EOSinglePrimaryKeyDictionary*)other)->isa) {
+-+    if (object_getClass(self) == object_getClass(other)) {
+-         if (fastHash == ((EOSinglePrimaryKeyDictionary*)other)->fastHash &&
+-             key == ((EOSinglePrimaryKeyDictionary*)other)->key &&
+-             [value isEqual:((EOSinglePrimaryKeyDictionary*)other)->value])
+-@@ -263,14 +263,14 @@
+-     return nil;
+- }
+- 
+--- (unsigned int)count {
+-+- (NSUInteger)count {
+-     return self->count;
+- }
+- - (BOOL)isNotEmpty {
+-   return self->count > 0 ? YES : NO;
+- }
+- 
+--- (unsigned int)hash {
+-+- (NSUInteger)hash {
+-     return self->count;
+- }
+- 
+-@@ -316,7 +316,7 @@
+- - (BOOL)fastIsEqual:(id)aDict {
+-     int i;
+-     
+--    if (self->isa != ((EOMultiplePrimaryKeyDictionary*)aDict)->isa) {
+-+    if (object_getClass(self) == object_getClass(aDict)) {
+-       [NSException raise:NSInvalidArgumentException
+- 		   format:@"fastIsEqual: can compare only "
+-                            @"EOPrimaryKeyDictionary instances"];
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EORecordDictionary.m sope/files/patch-sope-gdl1__GDLAccess__EORecordDictionary.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EORecordDictionary.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EORecordDictionary.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,26 +0,0 @@
+---- sope-gdl1/GDLAccess/EORecordDictionary.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EORecordDictionary.m
+-@@ -55,7 +55,7 @@ static NSDictionary *emptyDict = nil;
+- - (id)init  {
+-   RELEASE(self);
+-   if (emptyDict == nil) emptyDict = [[NSDictionary alloc] init];
+--  return [emptyDict retain];
+-+  return (id)[emptyDict retain];
+- }
+- 
+- - (id)initWithObjects:(id *)_objects forKeys:(id *)_keys 
+-@@ -64,12 +64,12 @@ static NSDictionary *emptyDict = nil;
+-   if (_count == 0) {
+-         RELEASE(self);
+- 	if (emptyDict == nil) emptyDict = [[NSDictionary alloc] init];
+--	return [emptyDict retain];
+-+	return (id)[emptyDict retain];
+-   }
+-   
+-   if (_count == 1) {
+-         RELEASE(self);
+--        return [[NSDictionary alloc]
+-+        return (id)[[NSDictionary alloc]
+-                               initWithObjects:_objects forKeys:_keys
+-                               count:_count];
+-   }
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EORelationship.m sope/files/patch-sope-gdl1__GDLAccess__EORelationship.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EORelationship.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EORelationship.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-gdl1/GDLAccess/EORelationship.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EORelationship.m
+-@@ -84,7 +84,7 @@ static EONull *null = nil;
+- }
+- 
+- // Is equal only if same name; used to make aliasing ordering stable
+--- (unsigned)hash {
+-+- (NSUInteger)hash {
+-   return [self->name hash];
+- }
+- 
+-@@ -405,7 +405,7 @@ static EONull *null = nil;
+-     NS_DURING
+-       [self setDefinition:self->definition];
+-     NS_HANDLER {
+--      NSLog([localException reason]);
+-+      NSLog(@"%@", [localException reason]);
+-       [[self->entity model] errorInReading];
+-     }
+-     NS_ENDHANDLER;
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EOSQLExpression.m sope/files/patch-sope-gdl1__GDLAccess__EOSQLExpression.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EOSQLExpression.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EOSQLExpression.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,10 +0,0 @@
+---- sope-gdl1/GDLAccess/EOSQLExpression.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EOSQLExpression.m
+-@@ -39,6 +39,7 @@
+- #include <EOControl/EONull.h>
+- #include <EOControl/EOQualifier.h>
+- #include <EOControl/EOSortOrdering.h>
+-+#import "NGExtensions/NSException+misc.h"
+- 
+- #if LIB_FOUNDATION_LIBRARY
+- #  include <extensions/DefaultScannerHandler.h>
+diff -ruN sope.orig/files/patch-sope-gdl1__GDLAccess__EOSQLQualifier.m sope/files/patch-sope-gdl1__GDLAccess__EOSQLQualifier.m
+--- sope.orig/files/patch-sope-gdl1__GDLAccess__EOSQLQualifier.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__GDLAccess__EOSQLQualifier.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,19 +0,0 @@
+---- sope-gdl1/GDLAccess/EOSQLQualifier.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/GDLAccess/EOSQLQualifier.m
+-@@ -39,6 +39,7 @@
+- #include <EOControl/EOKeyValueCoding.h>
+- #include <EOControl/EONull.h>
+- #import "EOQualifierScanner.h"
+-+#import "NGExtensions/NSException+misc.h"
+- 
+- #if LIB_FOUNDATION_LIBRARY
+- #  include <extensions/DefaultScannerHandler.h>
+-@@ -468,7 +469,7 @@ handle_attribute(EOSQLQualifier *self, i
+- - (id)copyWithZone:(NSZone*)zone {
+-   EOSQLQualifier* copy = nil;
+- 
+--  copy                    = [[self->isa allocWithZone:zone] init];
+-+  copy                    = [[object_getClass(self) allocWithZone:zone] init];
+-   copy->entity            = RETAIN(self->entity);
+-   copy->content           = [self->content           mutableCopyWithZone:zone];
+-   copy->relationshipPaths = [self->relationshipPaths mutableCopyWithZone:zone];
+diff -ruN sope.orig/files/patch-sope-gdl1__PostgreSQL__NSData+PGVal.m sope/files/patch-sope-gdl1__PostgreSQL__NSData+PGVal.m
+--- sope.orig/files/patch-sope-gdl1__PostgreSQL__NSData+PGVal.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__PostgreSQL__NSData+PGVal.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-gdl1/PostgreSQL/NSData+PGVal.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/PostgreSQL/NSData+PGVal.m
+-@@ -84,7 +84,7 @@ static NSData *EmptyData = nil;
+- 
+-   if (doDebug) {
+-     NSLog(@"Note: made string (len=%i) for data (len=%i), type %@",
+--	  [str length], [self length], _type);
+-+	  (int)[str length], (int)[self length], _type);
+-   }
+-   
+-   if ((len = [_type length]) == 0) {
+-@@ -108,7 +108,7 @@ static NSData *EmptyData = nil;
+-       t = [[str stringValueForPostgreSQLType:_type 
+- 		attribute:_attribute] copy];
+-       [str release];
+--      if (doDebug) NSLog(@"  result len %i", [t length]);
+-+      if (doDebug) NSLog(@"  result len %i", (int)[t length]);
+-       return [t autorelease];
+-     }
+-   }
+diff -ruN sope.orig/files/patch-sope-gdl1__PostgreSQL__NSString+PostgreSQL72.m sope/files/patch-sope-gdl1__PostgreSQL__NSString+PostgreSQL72.m
+--- sope.orig/files/patch-sope-gdl1__PostgreSQL__NSString+PostgreSQL72.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__PostgreSQL__NSString+PostgreSQL72.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-gdl1/PostgreSQL/NSString+PostgreSQL72.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/PostgreSQL/NSString+PostgreSQL72.m
+-@@ -145,13 +145,15 @@ static NSCharacterSet *spaceSet = nil;
+-   range.length = 0;
+- 
+-   for (range.location = ([self length] - 1);
+--         range.location >= 0;
+--         range.location++, range.length++) {
+-+         ;
+-+         range.location--, range.length++) {
+-       unichar c;
+-       
+-       c = charAtIndex(self, @selector(characterAtIndex:), range.location);
+-       if (![spaceSet characterIsMember:c])
+-         break;
+-+      if (range.location == 0)
+-+        break;
+-   }
+-     
+-   if (range.length > 0) {
+diff -ruN sope.orig/files/patch-sope-gdl1__PostgreSQL__PostgreSQL72Channel.m sope/files/patch-sope-gdl1__PostgreSQL__PostgreSQL72Channel.m
+--- sope.orig/files/patch-sope-gdl1__PostgreSQL__PostgreSQL72Channel.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__PostgreSQL__PostgreSQL72Channel.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-gdl1/PostgreSQL/PostgreSQL72Channel.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/PostgreSQL/PostgreSQL72Channel.m
+-@@ -203,7 +203,7 @@ static int openConnectionCount = 0;
+-   /* set client encoding */
+- #if NG_SET_CLIENT_ENCODING
+-   if (![self->connection setClientEncoding:PGClientEncoding]) {
+--    NSLog(@"WARNING: could not set client encoding to: '%s'", 
+-+    NSLog(@"WARNING: could not set client encoding to: '%@'", 
+- 	  PGClientEncoding);
+-   }
+- #endif
+diff -ruN sope.orig/files/patch-sope-gdl1__PostgreSQL__PostgreSQL72DataTypeMappingException.m sope/files/patch-sope-gdl1__PostgreSQL__PostgreSQL72DataTypeMappingException.m
+--- sope.orig/files/patch-sope-gdl1__PostgreSQL__PostgreSQL72DataTypeMappingException.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-gdl1__PostgreSQL__PostgreSQL72DataTypeMappingException.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-gdl1/PostgreSQL/PostgreSQL72DataTypeMappingException.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-gdl1/PostgreSQL/PostgreSQL72DataTypeMappingException.m
+-@@ -46,7 +46,7 @@
+-   typeName = _dt;
+- 
+-   if (typeName == nil)
+--    typeName = [NSString stringWithFormat:@"Oid[%i]", _dt];
+-+    typeName = [NSString stringWithFormat:@"Oid[%i]", (int)_dt];
+-   
+-   // TODO: fix for Cocoa/gstep Foundation?
+-   [self setName:@"DataTypeMappingNotSupported"];
+diff -ruN sope.orig/files/patch-sope-ldap_NGLdap_EOQualifier+LDAP.m sope/files/patch-sope-ldap_NGLdap_EOQualifier+LDAP.m
+--- sope.orig/files/patch-sope-ldap_NGLdap_EOQualifier+LDAP.m	2015-09-22 18:32:08.000000000 +0800
++++ sope/files/patch-sope-ldap_NGLdap_EOQualifier+LDAP.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-ldap/NGLdap/EOQualifier+LDAP.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-ldap/NGLdap/EOQualifier+LDAP.m
+-@@ -26,7 +26,7 @@
+- #define sel_eq(sel1, sel2) ((sel1)) == ((sel2))
+- #endif
+- 
+--#if __GNU_LIBOBJC__ >= 20100911
+-+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+- #  define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
+- #endif
+- 
+diff -ruN sope.orig/files/patch-sope-ldap_NGLdap_NGLdapConnection.m sope/files/patch-sope-ldap_NGLdap_NGLdapConnection.m
+--- sope.orig/files/patch-sope-ldap_NGLdap_NGLdapConnection.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-ldap_NGLdap_NGLdapConnection.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-ldap/NGLdap/NGLdapConnection.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-ldap/NGLdap/NGLdapConnection.m
+-@@ -1223,7 +1223,7 @@ static void freeMods(LDAPMod **mods) {
+-   
+-   if ([self doesUseCache]) {
+-     [s appendFormat:@" cache[to=%.2fs,mem=%i]",
+--         [self cacheTimeout], [self cacheMaxMemoryUsage]];
+-+         [self cacheTimeout], (int)[self cacheMaxMemoryUsage]];
+-   }
+-   
+-   [s appendString:@">"];
+diff -ruN sope.orig/files/patch-sope-ldap_NGLdap_NGLdapFileManager.m sope/files/patch-sope-ldap_NGLdap_NGLdapFileManager.m
+--- sope.orig/files/patch-sope-ldap_NGLdap_NGLdapFileManager.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-ldap_NGLdap_NGLdapFileManager.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- sope-ldap/NGLdap/NGLdapFileManager.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-ldap/NGLdap/NGLdapFileManager.m
+-@@ -317,7 +317,7 @@ static NSArray  *fileInfoAttrs    = nil;
+-   short count;
+-   
+-   if ((dn = [self dnForPath:_path]) == nil)
+--    return NO;
+-+    return nil;
+-   
+-   entry = [self->connection entryAtDN:dn attributes:fileInfoAttrs];
+-   if (entry == nil)
+-@@ -432,7 +432,7 @@ static NSArray  *fileInfoAttrs    = nil;
+-   NGLdapEntry     *entry;
+-   
+-   if ((dn = [self dnForPath:_path]) == nil)
+--    return NO;
+-+    return nil;
+-   
+-   entry = [self->connection entryAtDN:dn attributes:nil];
+-   if (entry == nil)
+diff -ruN sope.orig/files/patch-sope-ldap_NGLdap_NGLdapGlobalID.m sope/files/patch-sope-ldap_NGLdap_NGLdapGlobalID.m
+--- sope.orig/files/patch-sope-ldap_NGLdap_NGLdapGlobalID.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-ldap_NGLdap_NGLdapGlobalID.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-ldap/NGLdap/NGLdapGlobalID.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-ldap/NGLdap/NGLdapGlobalID.m
+-@@ -53,7 +53,7 @@
+- 
+- /* equality */
+- 
+--- (unsigned)hash {
+-+- (NSUInteger)hash {
+-   return [self->dn hash] + [self->host hash];
+- }
+- 
+diff -ruN sope.orig/files/patch-sope-mime_NGImap4_NGImap4Client.h sope/files/patch-sope-mime_NGImap4_NGImap4Client.h
+--- sope.orig/files/patch-sope-mime_NGImap4_NGImap4Client.h	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime_NGImap4_NGImap4Client.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,17 +0,0 @@
+---- sope-mime/NGImap4/NGImap4Client.h.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGImap4/NGImap4Client.h
+-@@ -195,6 +195,14 @@ typedef enum {
+-   qualifierString:(NSString *)_qualString
+-   encoding:(NSString *)_encoding;
+- 
+-+/* Previously in Private category, but required by SoObjects/Mailer/SOGoMailBaseObject.m */
+-+
+-+- (NGHashMap *)processCommand:(NSString *)_command;
+-+- (NGHashMap *)processCommand:(NSString *)_command withTag:(BOOL)_tag;
+-+- (NGHashMap *)processCommand:(NSString *)_command withTag:(BOOL)_tag
+-+  withNotification:(BOOL)_notification;
+-+- (NGHashMap *)processCommand:(NSString *)_command logText:(NSString *)_txt;
+-+
+- @end
+- 
+- #endif /* __SOPE_NGImap4_NGImap4Client_H__ */
+diff -ruN sope.orig/files/patch-sope-mime_NGImap4_NGImap4Client.m sope/files/patch-sope-mime_NGImap4_NGImap4Client.m
+--- sope.orig/files/patch-sope-mime_NGImap4_NGImap4Client.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime_NGImap4_NGImap4Client.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,78 +0,0 @@
+---- sope-mime/NGImap4/NGImap4Client.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGImap4/NGImap4Client.m
+-@@ -77,12 +77,6 @@
+- 
+- - (NSString *)_folder2ImapFolder:(NSString *)_folder;
+- 
+--- (NGHashMap *)processCommand:(NSString *)_command;
+--- (NGHashMap *)processCommand:(NSString *)_command withTag:(BOOL)_tag;
+--- (NGHashMap *)processCommand:(NSString *)_command withTag:(BOOL)_tag
+--  withNotification:(BOOL)_notification;
+--- (NGHashMap *)processCommand:(NSString *)_command logText:(NSString *)_txt;
+--
+- - (void)sendCommand:(NSString *)_command;
+- - (void)sendCommand:(NSString *)_command withTag:(BOOL)_tag;
+- - (void)sendCommand:(NSString *)_command withTag:(BOOL)_tag
+-@@ -646,7 +640,7 @@ static NSMutableDictionary *namespaces;
+- 
+-   if (![self passwordIsSimple])
+-     s = [NSString stringWithFormat:@"login \"%@\" {%d}",
+--		  self->login, plength];
+-+		  self->login, (int)plength];
+-   else
+-     s = [NSString stringWithFormat:@"login \"%@\" \"%@\"",
+-           self->login, self->password];
+-@@ -962,9 +956,9 @@ static NSMutableDictionary *namespaces;
+- 
+-   if (_folder == nil)
+-     return nil;
+--  if ((_entry == nil))
+-+  if (_entry == nil)
+-     return nil;
+--  if ((_attribute == nil))
+-+  if (_attribute == nil)
+-     return nil;
+-   if ((_folder = [self _folder2ImapFolder:_folder]) == nil)
+-     return nil;
+-@@ -994,11 +988,11 @@ static NSMutableDictionary *namespaces;
+-   
+-   if (_folder == nil)
+-     return nil;
+--  if ((_entry == nil))
+-+  if (_entry == nil)
+-     return nil;
+--  if ((_attribute == nil))
+-+  if (_attribute == nil)
+-     return nil;
+--  if ((_value == nil))
+-+  if (_value == nil)
+-     return nil;
+-   if ((_folder = [self _folder2ImapFolder:_folder]) == nil)
+-     return nil;
+-@@ -1186,7 +1180,7 @@ static NSMutableDictionary *namespaces;
+- 
+-   cmd  = [NSString stringWithFormat:
+-                      @"UID FETCH %llu:%llu (UID) (CHANGEDSINCE 1)",
+--                   _uid, _uid];
+-+                   (unsigned long long)_uid, (unsigned long long)_uid];
+-   fetchres = [self processCommand:cmd];
+-   result   = [self->normer normalizeFetchResponse:fetchres];
+-   return result;
+-@@ -1203,7 +1197,7 @@ static NSMutableDictionary *namespaces;
+-   
+-   cmd  = [NSString stringWithFormat:
+-                      @"UID FETCH 1:* (UID) (CHANGEDSINCE %llu VANISHED)",
+--                   _modseq];
+-+                   (unsigned long long)_modseq];
+-   fetchres = [self processCommand:cmd];
+-   result   = [[self->normer normalizeFetchResponse:fetchres] retain];
+-   [pool release];
+-@@ -1329,7 +1323,7 @@ static NSMutableDictionary *namespaces;
+-   
+-   icmd = [NSString stringWithFormat:@"append \"%@\" (%@) {%d}",
+-                    _folder, [flags componentsJoinedByString:@" "],
+--                   [rfc822Data length]];
+-+                   (int)[rfc822Data length]];
+-   result = [self processCommand:icmd
+-                  withTag:YES withNotification:NO];
+-   
+diff -ruN sope.orig/files/patch-sope-mime_NGImap4_NGImap4Functions.m sope/files/patch-sope-mime_NGImap4_NGImap4Functions.m
+--- sope.orig/files/patch-sope-mime_NGImap4_NGImap4Functions.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime_NGImap4_NGImap4Functions.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-mime/NGImap4/NGImap4Functions.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGImap4/NGImap4Functions.m
+-@@ -129,7 +129,7 @@ NGImap4Folder *_subFolderWithName
+-       if (debugFolderLookup) {
+- 	NSLog(@"  FAILED: %@", [[_parent context] lastException]);
+-       }
+--      return NO;
+-+      return nil;
+-     }
+-   }
+-   if (debugFolderLookup) NSLog(@"  NOT FOUND.");
+diff -ruN sope.orig/files/patch-sope-mime_NGImap4_NGImap4ResponseParser.m sope/files/patch-sope-mime_NGImap4_NGImap4ResponseParser.m
+--- sope.orig/files/patch-sope-mime_NGImap4_NGImap4ResponseParser.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime_NGImap4_NGImap4ResponseParser.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,29 +0,0 @@
+---- sope-mime/NGImap4/NGImap4ResponseParser.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGImap4/NGImap4ResponseParser.m
+-@@ -1463,7 +1463,7 @@ _purifyQuotedString(NSMutableString *quo
+-   NSString            *name  = nil;
+-   NSString            *entry  = nil;
+-   NSMutableDictionary *attributes = nil;
+--  NSDictionary *d, *f;
+-+  NSMutableDictionary *d, *f;
+- 
+-   if (!_matchesString(self, "ANNOTATION "))
+-     return NO;
+-@@ -1511,7 +1511,7 @@ _purifyQuotedString(NSMutableString *quo
+-     [attributes setObject:value
+-            forKey:[key lowercaseString]];
+- 
+--    [d setObject:[NSDictionary dictionaryWithDictionary:attributes]
+-+    [d setObject:[NSMutableDictionary dictionaryWithDictionary:attributes]
+-        forKey:entry];
+-   }
+-   _consumeIfMatch(self, ')');
+-@@ -2484,7 +2484,7 @@ static BOOL _parseBadUntaggedResponse(NG
+- static BOOL _parseNoOrOkArguments(NGImap4ResponseParser *self,
+-                                   NGMutableHashMap *result_, NSString *_key) 
+- {
+--  NSString *obj;
+-+  id obj;
+- 
+-   obj = nil;
+-   
+diff -ruN sope.orig/files/patch-sope-mime_NGImap4_imCommon.h sope/files/patch-sope-mime_NGImap4_imCommon.h
+--- sope.orig/files/patch-sope-mime_NGImap4_imCommon.h	2015-09-22 18:32:08.000000000 +0800
++++ sope/files/patch-sope-mime_NGImap4_imCommon.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,18 +0,0 @@
+---- sope-mime/NGImap4/imCommon.h.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGImap4/imCommon.h
+-@@ -37,13 +37,13 @@
+- #include <NGMime/NGMime.h>
+- #include <NGMail/NGMail.h>
+- 
+--#if NeXT_RUNTIME || APPLE_RUNTIME
+-+#if NeXT_RUNTIME
+- #  ifndef sel_eq
+- #    define sel_eq(__A__,__B__) (__A__==__B__)
+- #  endif
+- #endif
+- 
+--#if __GNU_LIBOBJC__ >= 20100911
+-+#if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+- #  ifndef sel_eq
+- #    define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
+- #  endif
+diff -ruN sope.orig/files/patch-sope-mime_NGMime_common.h sope/files/patch-sope-mime_NGMime_common.h
+--- sope.orig/files/patch-sope-mime_NGMime_common.h	2015-09-22 18:32:08.000000000 +0800
++++ sope/files/patch-sope-mime_NGMime_common.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,13 +0,0 @@
+---- sope-mime/NGMime/common.h.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGMime/common.h
+-@@ -37,7 +37,9 @@
+- #include "NGMimeType.h"
+- 
+- #if !GNU_RUNTIME
+--#  ifndef sel_eq
+-+#  if (defined(__GNU_LIBOBJC__) && (__GNU_LIBOBJC__ >= 20100911)) || defined(APPLE_RUNTIME) || defined(__GNUSTEP_RUNTIME__)
+-+#    define sel_eq(__A__,__B__) sel_isEqual(__A__,__B__)
+-+#  else ifndef sel_eq
+- #    define sel_eq(__A__, __B__) (__A__==__B__)
+- #  endif
+- #endif
+diff -ruN sope.orig/files/patch-sope-mime__NGImap4__NGImap4Connection.m sope/files/patch-sope-mime__NGImap4__NGImap4Connection.m
+--- sope.orig/files/patch-sope-mime__NGImap4__NGImap4Connection.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGImap4__NGImap4Connection.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,15 +0,0 @@
+---- sope-mime/NGImap4/NGImap4Connection.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGImap4/NGImap4Connection.m
+-@@ -1174,10 +1174,10 @@ NSArray *SOGoMailGetDirectChildren(NSArr
+-   [ms appendFormat:@" created=%@", self->creationTime];
+-   
+-   if (self->subfolders != nil)
+--    [ms appendFormat:@" #cached-folders=%d", [self->subfolders count]];
+-+    [ms appendFormat:@" #cached-folders=%d", (int)[self->subfolders count]];
+-   
+-   if (self->cachedUIDs != nil)
+--    [ms appendFormat:@" #cached-uids=%d", [self->cachedUIDs count]];
+-+    [ms appendFormat:@" #cached-uids=%d", (int)[self->cachedUIDs count]];
+-   
+-   [ms appendString:@">"];
+-   return ms;
+diff -ruN sope.orig/files/patch-sope-mime__NGImap4__NGImap4Context.m sope/files/patch-sope-mime__NGImap4__NGImap4Context.m
+--- sope.orig/files/patch-sope-mime__NGImap4__NGImap4Context.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGImap4__NGImap4Context.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,12 +0,0 @@
+---- sope-mime/NGImap4/NGImap4Context.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGImap4/NGImap4Context.m
+-@@ -944,8 +944,7 @@ static int ImapLogEnabled               
+-         [self serverName],
+-         [self serverKind],
+-         [self serverVersion],
+--        [self serverSubVersion],
+--        [self serverTag]];
+-+        [self serverSubVersion]];
+-   
+-   if (self->syncMode)
+-     [ms appendString:@" syncmode"];
+diff -ruN sope.orig/files/patch-sope-mime__NGImap4__NGImap4FileManager.m sope/files/patch-sope-mime__NGImap4__NGImap4FileManager.m
+--- sope.orig/files/patch-sope-mime__NGImap4__NGImap4FileManager.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGImap4__NGImap4FileManager.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-mime/NGImap4/NGImap4FileManager.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGImap4/NGImap4FileManager.m
+-@@ -225,7 +225,7 @@ static BOOL debugOn = NO;
+-   if ((folder = [self _lookupFolderAtPathString:_path]) == nil)
+-     return NO;
+- 
+--  ASSIGN(self->currentFolder, folder);
+-+  ASSIGN(self->currentFolder, (id)folder);
+- 
+-   return YES;
+- }
+diff -ruN sope.orig/files/patch-sope-mime__NGImap4__NGImap4Folder.m sope/files/patch-sope-mime__NGImap4__NGImap4Folder.m
+--- sope.orig/files/patch-sope-mime__NGImap4__NGImap4Folder.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGImap4__NGImap4Folder.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,16 +0,0 @@
+---- sope-mime/NGImap4/NGImap4Folder.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGImap4/NGImap4Folder.m
+-@@ -646,11 +646,11 @@ static int FetchNewUnseenMessagesInSubFo
+-       [m release];
+-     }
+-   }
+--  m = [mes copy];
+-+  NSArray *a = [mes copy];
+-   [mes release]; mes = nil;
+-   [pool release];
+-   
+--  return [m autorelease];;
+-+  return [a autorelease];;
+- }
+- 
+- - (NSArray *)_buildMessagesFromFetch:(NSDictionary *)_fetch {
+diff -ruN sope.orig/files/patch-sope-mime__NGImap4__NGImap4FolderGlobalID.m sope/files/patch-sope-mime__NGImap4__NGImap4FolderGlobalID.m
+--- sope.orig/files/patch-sope-mime__NGImap4__NGImap4FolderGlobalID.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGImap4__NGImap4FolderGlobalID.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-mime/NGImap4/NGImap4FolderGlobalID.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGImap4/NGImap4FolderGlobalID.m
+-@@ -62,7 +62,7 @@
+- 
+- /* comparison */
+- 
+--- (unsigned)hash {
+-+- (NSUInteger)hash {
+-   return [self->absoluteName hash];
+- }
+- 
+diff -ruN sope.orig/files/patch-sope-mime__NGImap4__NGImap4Message.m sope/files/patch-sope-mime__NGImap4__NGImap4Message.m
+--- sope.orig/files/patch-sope-mime__NGImap4__NGImap4Message.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGImap4__NGImap4Message.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,22 +0,0 @@
+---- sope-mime/NGImap4/NGImap4Message.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGImap4/NGImap4Message.m
+-@@ -243,8 +243,8 @@ static BOOL              ImapDebugEnable
+- }
+- 
+- - (void)markUnread {
+--  if ([self isRead]);
+--  [self removeFlag:@"seen"];
+-+  if ([self isRead])
+-+    [self removeFlag:@"seen"];
+- }
+- 
+- - (BOOL)isFlagged {
+-@@ -345,7 +345,7 @@ static BOOL              ImapDebugEnable
+-   return YES;
+- }
+- 
+--- (unsigned)hash {
+-+- (NSUInteger)hash {
+-   return self->uid;
+- }
+- 
+diff -ruN sope.orig/files/patch-sope-mime__NGImap4__NGImap4ServerGlobalID.m sope/files/patch-sope-mime__NGImap4__NGImap4ServerGlobalID.m
+--- sope.orig/files/patch-sope-mime__NGImap4__NGImap4ServerGlobalID.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGImap4__NGImap4ServerGlobalID.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-mime/NGImap4/NGImap4ServerGlobalID.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGImap4/NGImap4ServerGlobalID.m
+-@@ -65,7 +65,7 @@
+- 
+- /* comparison */
+- 
+--- (unsigned)hash {
+-+- (NSUInteger)hash {
+-   return [self->login hash];
+- }
+- 
+diff -ruN sope.orig/files/patch-sope-mime__NGImap4__NGSieveClient.m sope/files/patch-sope-mime__NGImap4__NGSieveClient.m
+--- sope.orig/files/patch-sope-mime__NGImap4__NGSieveClient.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGImap4__NGSieveClient.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,28 +0,0 @@
+---- sope-mime/NGImap4/NGSieveClient.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGImap4/NGSieveClient.m
+-@@ -444,14 +444,14 @@ static BOOL     debugImap4         = NO;
+-     NSString *s;
+-     
+-     s = [NSString stringWithFormat:@"AUTHENTICATE \"PLAIN\" {%d+}\r\n%s",
+--                  [auth length], [auth bytes]];
+-+                  (int)[auth length], [auth bytes]];
+-     map = [self processCommand:s];
+-   }
+-   else {
+-     NSString *s;
+-     
+-     s = [NSString stringWithFormat:@"AUTHENTICATE \"PLAIN\" {%d+}\r\n%s",
+--                  [auth length], [auth bytes]];
+-+                  (int)[auth length], [auth bytes]];
+-     map = [self processCommand:s
+-                 logText:@"AUTHENTICATE \"PLAIN\" {%d+}\r\nLOGIN:PASSWORD\r\n"];
+-   }
+-@@ -548,7 +548,7 @@ static BOOL     debugImap4         = NO;
+-   s = [s stringByAppendingString:_name];
+-   s = [s stringByAppendingString:@"\" "];
+-   s = [s stringByAppendingFormat:@"{%d+}\r\n%@",
+--         [_script lengthOfBytesUsingEncoding: NSUTF8StringEncoding],
+-+         (int)[_script lengthOfBytesUsingEncoding: NSUTF8StringEncoding],
+-          _script];
+-   map = [self processCommand:s];
+-   return [self normalizeResponse:map];
+diff -ruN sope.orig/files/patch-sope-mime__NGMail__NGMailAddress.m sope/files/patch-sope-mime__NGMail__NGMailAddress.m
+--- sope.orig/files/patch-sope-mime__NGMail__NGMailAddress.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGMail__NGMailAddress.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-mime/NGMail/NGMailAddress.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGMail/NGMailAddress.m
+-@@ -66,7 +66,7 @@
+-   return NO;
+- }
+- 
+--- (unsigned)hash {
+-+- (NSUInteger)hash {
+-   return [self->address hash];
+- }
+- 
+diff -ruN sope.orig/files/patch-sope-mime__NGMail__NGMailAddressParser.m sope/files/patch-sope-mime__NGMail__NGMailAddressParser.m
+--- sope.orig/files/patch-sope-mime__NGMail__NGMailAddressParser.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGMail__NGMailAddressParser.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,21 +0,0 @@
+---- sope-mime/NGMail/NGMailAddressParser.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGMail/NGMailAddressParser.m
+-@@ -349,15 +349,15 @@ static inline id parseDomainLiteral(NGMa
+-   uniString = [NSString stringWithCharacters:(unichar *)[_data bytes]
+- 			length:([_data length] / sizeof(unichar))];
+- 
+--  return [(NGMailAddressParser *)self mailAddressParserWithString:uniString];
+-+  return [(id)self mailAddressParserWithString:uniString];
+- }
+- 
+--+ (id)mailAddressParserWithCString:(char *)_cString {
+-++ (id)mailAddressParserWithCString:(const char *)_cString {
+-   NSString *nsCString;
+- 
+-   nsCString = [NSString stringWithCString:_cString];
+- 
+--  return [(NGMailAddressParser *)self mailAddressParserWithString:nsCString];
+-+  return [(id)self mailAddressParserWithString:nsCString];
+- }
+- 
+- + (id)mailAddressParserWithString:(NSString *)_string {
+diff -ruN sope.orig/files/patch-sope-mime__NGMail__NGMimeMessage.m sope/files/patch-sope-mime__NGMail__NGMimeMessage.m
+--- sope.orig/files/patch-sope-mime__NGMail__NGMimeMessage.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGMail__NGMimeMessage.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-mime/NGMail/NGMimeMessage.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGMail/NGMimeMessage.m
+-@@ -230,7 +230,7 @@ static NGMimeType *defaultDataType = nil
+-     if ([b length] < 512)
+-       [d appendFormat:@" body=%@", b];
+-     else
+--      [d appendFormat:@" body[len=%i]", [b length]];
+-+      [d appendFormat:@" body[len=%i]", (int)[b length]];
+-   }
+-   else
+-     [d appendFormat:@" body=%@", b];
+diff -ruN sope.orig/files/patch-sope-mime__NGMime__NGMimeBodyPart.m sope/files/patch-sope-mime__NGMime__NGMimeBodyPart.m
+--- sope.orig/files/patch-sope-mime__NGMime__NGMimeBodyPart.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGMime__NGMimeBodyPart.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,15 +0,0 @@
+---- sope-mime/NGMime/NGMimeBodyPart.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGMime/NGMimeBodyPart.m
+-@@ -206,10 +206,10 @@
+-   else if ([b isKindOfClass:[NSString class]] ||
+-            [b isKindOfClass:[NSData class]]) {
+-     if ([b length] < 512) {
+--      [d appendFormat:@" bodyLen=%i body=%@", [b length], b];
+-+      [d appendFormat:@" bodyLen=%i body=%@", (int)[b length], b];
+-     }
+-     else
+--      [d appendFormat:@" body[len=%i]", [b length]];
+-+      [d appendFormat:@" body[len=%i]", (int)[b length]];
+-   }
+-   else
+-     [d appendFormat:@" body=%@", b];
+diff -ruN sope.orig/files/patch-sope-mime__NGMime__NGMimeJoinedData.m sope/files/patch-sope-mime__NGMime__NGMimeJoinedData.m
+--- sope.orig/files/patch-sope-mime__NGMime__NGMimeJoinedData.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGMime__NGMimeJoinedData.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-mime/NGMime/NGMimeJoinedData.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGMime/NGMimeJoinedData.m
+-@@ -168,7 +168,7 @@
+-   ms = [NSMutableString stringWithCapacity:128];
+-   [ms appendFormat:@"<0x%p[%@]:", self, NSStringFromClass([self class])];
+-   [ms appendFormat:@" joinedDataObjects=%d>",
+--        [self->joinedDataObjects count]];
+-+        (int)[self->joinedDataObjects count]];
+-   [ms appendString:@">"];
+-   return ms;
+- }
+diff -ruN sope.orig/files/patch-sope-mime__NGMime__NGMimePartGenerator.h sope/files/patch-sope-mime__NGMime__NGMimePartGenerator.h
+--- sope.orig/files/patch-sope-mime__NGMime__NGMimePartGenerator.h	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGMime__NGMimePartGenerator.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-mime/NGMime/NGMimePartGenerator.h.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGMime/NGMimePartGenerator.h
+-@@ -149,7 +149,7 @@
+-   The delegate can select which NGMimeBodyGenerator should de used
+-   for generate the given part.
+- */  
+--- (id<NGMimePartGenerator>)multipartBodyGenerator:(id<NGMimeBodyGenerator>)
+-+- (id<NGMimePartGenerator>)multipartBodyGenerator:(id<NGMimeBodyGenerator>)aGenerator
+-   generatorForPart:(id<NGMimePart>)_part;
+- 
+- - (BOOL)useMimeData;
+diff -ruN sope.orig/files/patch-sope-mime__NGMime__NGMimePartGenerator.m sope/files/patch-sope-mime__NGMime__NGMimePartGenerator.m
+--- sope.orig/files/patch-sope-mime__NGMime__NGMimePartGenerator.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGMime__NGMimePartGenerator.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-mime/NGMime/NGMimePartGenerator.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGMime/NGMimePartGenerator.m
+-@@ -92,7 +92,7 @@ static BOOL       debugOn = NO;
+-     self->result = nil;
+-   }
+-   self->result = (self->useMimeData)
+--    ? [[NGMimeJoinedData alloc] init]
+-+    ? (NSMutableData*)[[NGMimeJoinedData alloc] init]
+-     : [[NSMutableData alloc] initWithCapacity:4096];
+-   
+-   if ([self->result respondsToSelector:@selector(methodForSelector:)]) {
+diff -ruN sope.orig/files/patch-sope-mime__NGMime__NGMimePartParser.m sope/files/patch-sope-mime__NGMime__NGMimePartParser.m
+--- sope.orig/files/patch-sope-mime__NGMime__NGMimePartParser.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGMime__NGMimePartParser.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-mime/NGMime/NGMimePartParser.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGMime/NGMimePartParser.m
+-@@ -1025,7 +1025,7 @@ static NSString *fieldNameForCString(id 
+-               NSMakeRange(self->dataIdx, self->byteLen - self->dataIdx)];
+-   if ([data length] != _len) {
+-     NSLog(@"%s[%i]: got wrong data %d _len %d", __PRETTY_FUNCTION__, __LINE__,
+--          [data length], _len);
+-+          (int)[data length], _len);
+-     return nil;
+-   }
+-   return data;
+diff -ruN sope.orig/files/patch-sope-mime__NGMime__NGMimeRFC822DateHeaderFieldParser.m sope/files/patch-sope-mime__NGMime__NGMimeRFC822DateHeaderFieldParser.m
+--- sope.orig/files/patch-sope-mime__NGMime__NGMimeRFC822DateHeaderFieldParser.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-mime__NGMime__NGMimeRFC822DateHeaderFieldParser.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-mime/NGMime/NGMimeRFC822DateHeaderFieldParser.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-mime/NGMime/NGMimeRFC822DateHeaderFieldParser.m
+-@@ -161,7 +161,7 @@ static NSTimeZone *parseTimeZone(const c
+-     hours += 10 * (*(s + pos) - 48) + *(s + pos + 1) - 48;
+-     break;
+-   default:
+--    NSLog (@"parseTimeZone: cannot parse time notation '%.*s'", len, s);
+-+    NSLog (@"parseTimeZone: cannot parse time notation '%.*s'", (int)len, s);
+-   }
+- 
+-   seconds += sign * (3600 * hours + 60 * minutes);
+diff -ruN sope.orig/files/patch-sope-xml_SaxObjC_SaxObjectDecoder.m sope/files/patch-sope-xml_SaxObjC_SaxObjectDecoder.m
+--- sope.orig/files/patch-sope-xml_SaxObjC_SaxObjectDecoder.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-xml_SaxObjC_SaxObjectDecoder.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-xml/SaxObjC/SaxObjectDecoder.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-xml/SaxObjC/SaxObjectDecoder.m
+-@@ -172,7 +172,7 @@ static NSNull *null = nil;
+- 		      reason:_ns
+- 		      userInfo:nil];
+- }
+--- (NSException *)missingElementMapping:(NSString *)_ns:(NSString *)_tag {
+-+- (NSException *)missingElementMapping:(NSString *)_ns :(NSString *)_tag {
+-   return [NSException exceptionWithName:@"MissingElementMapping"
+- 		      reason:_tag
+- 		      userInfo:nil];
+diff -ruN sope.orig/files/patch-sope-xml__DOM__DOMQueryPathExpression.m sope/files/patch-sope-xml__DOM__DOMQueryPathExpression.m
+--- sope.orig/files/patch-sope-xml__DOM__DOMQueryPathExpression.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-xml__DOM__DOMQueryPathExpression.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-xml/DOM/DOMQueryPathExpression.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-xml/DOM/DOMQueryPathExpression.m
+-@@ -318,7 +318,7 @@
+-   qpexpr = [DOMQueryPathExpression queryPathWithString:_expr];
+-   //NSLog(@"Expr: %@", qpexpr);
+-   
+--  pred =
+-+  pred = (_DOMQPPredicateExpression*)
+-     [[_DOMQPPredicateQPExpression alloc] initWithQueryPathExpression:qpexpr];
+-   
+-   return [pred autorelease];
+diff -ruN sope.orig/files/patch-sope-xml__XmlRpc__NSNotification+XmlRpcCoding.m sope/files/patch-sope-xml__XmlRpc__NSNotification+XmlRpcCoding.m
+--- sope.orig/files/patch-sope-xml__XmlRpc__NSNotification+XmlRpcCoding.m	2015-10-25 14:47:26.000000000 +0800
++++ sope/files/patch-sope-xml__XmlRpc__NSNotification+XmlRpcCoding.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- sope-xml/XmlRpc/NSNotification+XmlRpcCoding.m.orig	2015-09-16 18:26:50 UTC
+-+++ sope-xml/XmlRpc/NSNotification+XmlRpcCoding.m
+-@@ -30,7 +30,7 @@
+- }
+- 
+- + (id)decodeObjectWithXmlRpcCoder:(XmlRpcDecoder *)_coder {
+--  self = [NSNotification notificationWithName:
+-+  self = (id)[NSNotification notificationWithName:
+-                            [_coder decodeStringForKey:@"name"]
+-                          object:[_coder decodeObjectForKey:@"object"]
+-                          userInfo:[_coder decodeStructForKey:@"userInfo"]];

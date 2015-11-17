@@ -1,0 +1,2352 @@
+diff -ruN sogo.orig/Makefile sogo/Makefile
+--- sogo.orig/Makefile	2015-10-25 14:49:11.000000000 +0800
++++ sogo/Makefile	2015-11-17 09:46:14.000000000 +0800
+@@ -2,8 +2,7 @@
+ # $FreeBSD: head/www/sogo/Makefile 400146 2015-10-25 06:49:11Z pi $
+ 
+ PORTNAME=		sogo
+-PORTVERSION=		2.3.2
+-PORTREVISION=		2
++PORTVERSION=		2.3.3
+ CATEGORIES=		www gnustep
+ MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
+ DISTNAME=		SOGo-${PORTVERSION}
+@@ -20,7 +19,7 @@
+ OPTIONS_DEFINE=		ACTIVESYNC
+ OPTIONS_SUB=		yes
+ 
+-ACTIVESYNC_DESC=	Enable support for ActiveSync protocol (Experimental)
++ACTIVESYNC_DESC=	Enable support for ActiveSync protocol
+ 
+ ACTIVESYNC_LIB_DEPENDS=	libwbxml2.so:${PORTSDIR}/textproc/wbxml2
+ 
+@@ -40,6 +39,15 @@
+ 
+ .include <bsd.port.options.mk>
+ 
++.if !${PORT_OPTIONS:MACTIVESYNC}
++CONFLICTS+=		sogo-activesync-[0.9]*
++.endif
++
++.if ${PORT_OPTIONS:MACTIVESYNC}
++PKGNAMESUFFIX=		-activesync
++CONFLICTS+=		sogo-[0.9]*
++.endif
++
+ post-patch:
+ 	${GREP} -rlF '/etc/sogo' ${WRKSRC} \
+ 		| ${XARGS} ${REINPLACE_CMD} 's#/etc/sogo#${PREFIX}/etc/sogo#g'
+@@ -55,6 +63,8 @@
+ 	${MKDIR} ${STAGEDIR}/var/spool/sogo
+ 	${MKDIR} ${STAGEDIR}${ETCDIR}
+ 	(cp ${WRKSRC}/Scripts/sogo.conf ${STAGEDIR}${ETCDIR}/sogo.conf.sample)
++	(cp ${WRKSRC}/Apache/SOGo.conf ${STAGEDIR}${ETCDIR}/SOGo-Apache.conf.sample)
++	(cp ${WRKSRC}/Apache/SOGo-apple-ab.conf ${STAGEDIR}${ETCDIR}/SOGo-apple-ab.Apache.conf.sample)
+ 	(cp ${FILESDIR}/expire-autoreply.creds.sample ${STAGEDIR}${ETCDIR}/)
+ 	(cp ${FILESDIR}/ealarms-notify.creds.sample ${STAGEDIR}${ETCDIR}/)
+ 	(cp ${FILESDIR}/cron-ealarms-notify.sample ${STAGEDIR}${PREFIX}/GNUstep/Local/Tools/Admin/)
+diff -ruN sogo.orig/distinfo sogo/distinfo
+--- sogo.orig/distinfo	2015-09-23 13:30:12.000000000 +0800
++++ sogo/distinfo	2015-11-17 06:34:48.000000000 +0800
+@@ -1,2 +1,2 @@
+-SHA256 (SOGo-2.3.2.tar.gz) = 7830e2ad684b54c89a4720edf7e73250a076885a3e25052c093e7894227939ac
+-SIZE (SOGo-2.3.2.tar.gz) = 11781695
++SHA256 (SOGo-2.3.3.tar.gz) = 9c369f07799d4adfd9981664f342339f487f3873063c981e5c8e057e006f2d96
++SIZE (SOGo-2.3.3.tar.gz) = 11847195
+diff -ruN sogo.orig/files/patch-ActiveSync_GNUmakefile sogo/files/patch-ActiveSync_GNUmakefile
+--- sogo.orig/files/patch-ActiveSync_GNUmakefile	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-ActiveSync_GNUmakefile	2015-11-17 09:10:46.000000000 +0800
+@@ -1,4 +1,4 @@
+---- ActiveSync/GNUmakefile.orig	2015-09-16 18:41:28 UTC
++--- ActiveSync/GNUmakefile.orig	2015-11-11 19:25:43 UTC
+ +++ ActiveSync/GNUmakefile
+ @@ -34,7 +34,7 @@ ActiveSync_RESOURCE_FILES +=		\
+  ADDITIONAL_OBJCFLAGS += -Wno-deprecated-declarations
+diff -ruN sogo.orig/files/patch-Main_SOGo+DAV.m sogo/files/patch-Main_SOGo+DAV.m
+--- sogo.orig/files/patch-Main_SOGo+DAV.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Main_SOGo+DAV.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- Main/SOGo+DAV.m.orig	2015-09-16 18:41:29 UTC
+-+++ Main/SOGo+DAV.m
+-@@ -267,7 +267,7 @@
+-   NSObject <DOMNodeList> *list;
+-   NSObject <DOMNode> *valueNode;
+-   NSArray *elements;
+--  NSString *property, *match;
+-+  NSString *property=nil, *match=nil;
+- 
+-   list = [searchElement getElementsByTagName: @"prop"];
+-   if ([list length])
+diff -ruN sogo.orig/files/patch-SOPE_GDLContentStore_GCSChannelManager.m sogo/files/patch-SOPE_GDLContentStore_GCSChannelManager.m
+--- sogo.orig/files/patch-SOPE_GDLContentStore_GCSChannelManager.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SOPE_GDLContentStore_GCSChannelManager.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SOPE/GDLContentStore/GCSChannelManager.m.orig	2015-09-16 18:41:29 UTC
+-+++ SOPE/GDLContentStore/GCSChannelManager.m
+-@@ -500,7 +500,7 @@ static NSTimeInterval ChannelCollectionT
+-   ms = [NSMutableString stringWithCapacity: 256];
+-   [ms appendFormat: @"<0x%p[%@]: ", self, NSStringFromClass ([self class])];
+- 
+--  [ms appendFormat: @" #adaptors=%d", [urlToAdaptor count]];
+-+  [ms appendFormat: @" #adaptors=%d", (int)[urlToAdaptor count]];
+- 
+-   [ms appendString: @">"];
+-   return ms;
+diff -ruN sogo.orig/files/patch-SOPE_NGCards_CardElement.m sogo/files/patch-SOPE_NGCards_CardElement.m
+--- sogo.orig/files/patch-SOPE_NGCards_CardElement.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SOPE_NGCards_CardElement.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SOPE/NGCards/CardElement.m.orig	2015-09-16 18:41:29 UTC
+-+++ SOPE/NGCards/CardElement.m
+-@@ -414,7 +414,7 @@
+-   if (group)
+-     [str appendFormat: @"%@ (group: %@)\n", tag, group];
+-   else
+--    [str appendFormat: @"%@\n", tag, group];
+-+    [str appendFormat: @"%@\n", tag];
+- 
+-   [str appendString: [self versitString]];
+- 
+diff -ruN sogo.orig/files/patch-SOPE_NGCards_CardGroup.m sogo/files/patch-SOPE_NGCards_CardGroup.m
+--- sogo.orig/files/patch-SOPE_NGCards_CardGroup.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SOPE_NGCards_CardGroup.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SOPE/NGCards/CardGroup.m.orig	2015-09-16 18:41:29 UTC
+-+++ SOPE/NGCards/CardGroup.m
+-@@ -409,7 +409,7 @@ static NGCardsSaxHandler *sax = nil;
+-   max = [children count];
+-   if (max > 0)
+-     {
+--      [str appendFormat: @"\n  %d children: {\n", [children count]];
+-+      [str appendFormat: @"\n  %d children: {\n", (int)[children count]];
+-       for (count = 0; count < max; count++)
+-         [str appendFormat: @"  %@\n",
+-              [[children objectAtIndex: count] description]];
+diff -ruN sogo.orig/files/patch-SOPE_NGCards_NSCalendarDate+NGCards.m sogo/files/patch-SOPE_NGCards_NSCalendarDate+NGCards.m
+--- sogo.orig/files/patch-SOPE_NGCards_NSCalendarDate+NGCards.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SOPE_NGCards_NSCalendarDate+NGCards.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,24 +0,0 @@
+---- SOPE/NGCards/NSCalendarDate+NGCards.m.orig	2015-09-16 18:41:29 UTC
+-+++ SOPE/NGCards/NSCalendarDate+NGCards.m
+-@@ -32,16 +32,16 @@
+- - (NSString *) iCalFormattedDateTimeString
+- {
+-   return [NSString stringWithFormat: @"%.4d%.2d%.2dT%.2d%.2d%.2d",
+--                   [self yearOfCommonEra], [self monthOfYear],
+--                   [self dayOfMonth], [self hourOfDay],
+--                   [self minuteOfHour], [self secondOfMinute]];
+-+                   (int)[self yearOfCommonEra], (int)[self monthOfYear],
+-+                   (int)[self dayOfMonth], (int)[self hourOfDay],
+-+                   (int)[self minuteOfHour], (int)[self secondOfMinute]];
+- }
+- 
+- - (NSString *) iCalFormattedDateString
+- {
+-   return [NSString stringWithFormat: @"%.4d%.2d%.2d",
+--                   [self yearOfCommonEra], [self monthOfYear],
+--                   [self dayOfMonth]];
+-+                   (int)[self yearOfCommonEra], (int)[self monthOfYear],
+-+                   (int)[self dayOfMonth]];
+- }
+- 
+- @end
+diff -ruN sogo.orig/files/patch-SOPE_NGCards_iCalMonthlyRecurrenceCalculator.m sogo/files/patch-SOPE_NGCards_iCalMonthlyRecurrenceCalculator.m
+--- sogo.orig/files/patch-SOPE_NGCards_iCalMonthlyRecurrenceCalculator.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SOPE_NGCards_iCalMonthlyRecurrenceCalculator.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- SOPE/NGCards/iCalMonthlyRecurrenceCalculator.m.orig	2015-09-16 18:41:29 UTC
+-+++ SOPE/NGCards/iCalMonthlyRecurrenceCalculator.m
+-@@ -348,7 +348,7 @@ static inline unsigned iCalDoWForNSDoW (
+-                   if ([byDayMask occursOnDay: currentWeekDay])
+-                     {
+-                       if ([bySetPos containsObject:
+--                                      [NSString stringWithFormat: @"%d", currentPos]])
+-+                                      [NSString stringWithFormat: @"%d", (int)currentPos]])
+-                         monthDays[monthDay+1] = YES;
+-                       currentPos++;
+-                     }
+-@@ -362,7 +362,7 @@ static inline unsigned iCalDoWForNSDoW (
+-                   if ([byDayMask occursOnDay: currentWeekDay])
+-                     {
+-                       if ([bySetPos containsObject:
+--                                      [NSString stringWithFormat: @"%d", currentPos]])
+-+                                      [NSString stringWithFormat: @"%d", (int)currentPos]])
+-                         monthDays[monthDay] = YES;
+-                       currentPos--;
+-                     }
+diff -ruN sogo.orig/files/patch-SOPE_NGCards_iCalPerson.m sogo/files/patch-SOPE_NGCards_iCalPerson.m
+--- sogo.orig/files/patch-SOPE_NGCards_iCalPerson.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SOPE_NGCards_iCalPerson.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SOPE/NGCards/iCalPerson.m.orig	2015-09-16 18:41:36 UTC
+-+++ SOPE/NGCards/iCalPerson.m
+-@@ -256,7 +256,7 @@
+- - (BOOL)isEqual:(id)_other {
+-   if(_other == nil)
+-     return NO;
+--  if([_other class] != self->isa)
+-+  if([_other class] != object_getClass(self))
+-     return NO;
+-   if([_other hash] != [self hash])
+-     return NO;
+diff -ruN sogo.orig/files/patch-SOPE_NGCards_iCalRecurrenceRule.m sogo/files/patch-SOPE_NGCards_iCalRecurrenceRule.m
+--- sogo.orig/files/patch-SOPE_NGCards_iCalRecurrenceRule.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SOPE_NGCards_iCalRecurrenceRule.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,15 +0,0 @@
+---- SOPE/NGCards/iCalRecurrenceRule.m.orig	2015-09-16 18:41:29 UTC
+-+++ SOPE/NGCards/iCalRecurrenceRule.m
+-@@ -309,10 +309,10 @@ NSString *iCalWeekDayString[] = { @"SU",
+-       else if ([frequency isEqualToString:@"SECONDLY"])
+- 	freq = iCalRecurrenceFrequenceSecondly;
+-       else
+--	freq = NSNotFound;
+-+	freq = (iCalRecurrenceFrequency) NSNotFound;
+-     }
+-   else
+--    freq = NSNotFound;
+-+    freq = (iCalRecurrenceFrequency) NSNotFound;
+- 
+-   return freq;
+- }
+diff -ruN sogo.orig/files/patch-SOPE_NGCards_versitCardsSaxDriver_VSSaxDriver.m sogo/files/patch-SOPE_NGCards_versitCardsSaxDriver_VSSaxDriver.m
+--- sogo.orig/files/patch-SOPE_NGCards_versitCardsSaxDriver_VSSaxDriver.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SOPE_NGCards_versitCardsSaxDriver_VSSaxDriver.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- SOPE/NGCards/versitCardsSaxDriver/VSSaxDriver.m.orig	2015-09-16 18:41:29 UTC
+-+++ SOPE/NGCards/versitCardsSaxDriver/VSSaxDriver.m
+-@@ -1045,7 +1045,7 @@ static NSCharacterSet *whitespaceCharSet
+-   if (debugOn)
+-     {
+-       NSLog(@"%s: trying to decode data (0x%p,len=%d) ...",
+--	    __PRETTY_FUNCTION__, _data, [_data length]);
+-+	    __PRETTY_FUNCTION__, _data, (int)[_data length]);
+-     }
+-   
+-   if ((len = [_data length]) == 0)
+-@@ -1164,7 +1164,7 @@ static NSCharacterSet *whitespaceCharSet
+-   if (debugOn)
+-     {
+-       NSLog(@"%s: trying to parse string (0x%p,len=%d) ...",
+--            __PRETTY_FUNCTION__, _source, [_source length]);
+-+            __PRETTY_FUNCTION__, _source, (int)[_source length]);
+-     }
+-   if (!_sysId) _sysId = @"<string>";
+-   [self _parseString: _source];
+diff -ruN sogo.orig/files/patch-SoObjects_Appointments_MSExchangeFreeBusy.m sogo/files/patch-SoObjects_Appointments_MSExchangeFreeBusy.m
+--- sogo.orig/files/patch-SoObjects_Appointments_MSExchangeFreeBusy.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Appointments_MSExchangeFreeBusy.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/Appointments/MSExchangeFreeBusy.m.orig	2015-09-16 18:41:29 UTC
+-+++ SoObjects/Appointments/MSExchangeFreeBusy.m
+-@@ -344,7 +344,7 @@ size_t curl_body_function_freebusy(void 
+-   NSMutableString *s;
+- 
+-   s = [NSMutableString stringWithCapacity: 64];
+--  [s appendFormat:@"<0x%08X[%@]:", self, NSStringFromClass([self class])];
+-+  [s appendFormat:@"<0x%08X[%@]:", (unsigned int)self, NSStringFromClass([self class])];
+-   if (freeBusyViewType)
+-     [s appendFormat:@" freeBusyViewType='%@'", freeBusyViewType];
+-   if (mergedFreeBusy)
+diff -ruN sogo.orig/files/patch-SoObjects_Appointments_SOGoAppointmentFolder.m sogo/files/patch-SoObjects_Appointments_SOGoAppointmentFolder.m
+--- sogo.orig/files/patch-SoObjects_Appointments_SOGoAppointmentFolder.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Appointments_SOGoAppointmentFolder.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/Appointments/SOGoAppointmentFolder.m.orig	2015-09-16 18:41:36 UTC
+-+++ SoObjects/Appointments/SOGoAppointmentFolder.m
+-@@ -2387,7 +2387,7 @@ firstInstanceCalendarDateRange: (NGCalen
+-   request = [context request];
+-   if (!([request isIPhone] || [request isICal4]))
+-     {
+--      gdRT = [self groupDavResourceType];
+-+      gdRT = (NSArray *) [self groupDavResourceType];
+-       gdVEventCol = [NSArray arrayWithObjects: [gdRT objectAtIndex: 0],
+-                   XMLNS_GROUPDAV, nil];
+-       [colType addObject: gdVEventCol];
+diff -ruN sogo.orig/files/patch-SoObjects_Appointments_SOGoAppointmentObject.m sogo/files/patch-SoObjects_Appointments_SOGoAppointmentObject.m
+--- sogo.orig/files/patch-SoObjects_Appointments_SOGoAppointmentObject.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Appointments_SOGoAppointmentObject.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,64 +0,0 @@
+---- SoObjects/Appointments/SOGoAppointmentObject.m.orig	2015-09-16 18:41:36 UTC
+-+++ SoObjects/Appointments/SOGoAppointmentObject.m
+-@@ -45,6 +45,7 @@
+- #import <NGCards/iCalDateTime.h>
+- #import <NGCards/iCalTimeZone.h>
+- #import <NGCards/iCalTimeZonePeriod.h>
+-+#import <NGCards/iCalToDo.h>
+- #import <NGCards/NSString+NGCards.h>
+- 
+- #import <SOGo/SOGoConstants.h>
+-@@ -747,11 +748,14 @@ inRecurrenceExceptionsForEvent: (iCalEve
+-     {
+-       e = [events objectAtIndex: i];
+-       if ([e recurrenceId])
+--        for (j = 0; j < [theAttendees count]; j++)
+--          if (shouldAdd)
+-+        for (j = 0; j < [theAttendees count]; j++) {
+-+          if (shouldAdd) {
+-             [e addToAttendees: [theAttendees objectAtIndex: j]];
+--          else
+-+          }
+-+          else {
+-             [e removeFromAttendees: [theAttendees objectAtIndex: j]];
+-+          }
+-+        }
+-     }
+- }
+- 
+-@@ -1037,7 +1041,7 @@ inRecurrenceExceptionsForEvent: (iCalEve
+-           if ([delegateEmail length])
+-             otherDelegate = [event findAttendeeWithEmail: delegateEmail];
+-           else
+--            otherDelegate = NO;
+-+            otherDelegate = nil;
+-           
+-           /* we handle the addition/deletion of delegate users */
+-           addDelegate = NO;
+-@@ -1075,7 +1079,7 @@ inRecurrenceExceptionsForEvent: (iCalEve
+-                   if ([delegateEmail length])
+-                     otherDelegate = [event findAttendeeWithEmail: delegateEmail];
+-                   else
+--                    otherDelegate = NO;
+-+                    otherDelegate = nil;
+-                 }
+-             }
+-           if (addDelegate)
+-@@ -1232,7 +1236,7 @@ inRecurrenceExceptionsForEvent: (iCalEve
+-               if ([delegateEmail length])
+-                 otherDelegate = [event findAttendeeWithEmail: delegateEmail];
+-               else
+--                otherDelegate = NO;
+-+                otherDelegate = nil;
+-             }
+-           
+-           [self sendEMailUsingTemplateNamed: @"Deletion"
+-@@ -1990,7 +1994,7 @@ inRecurrenceExceptionsForEvent: (iCalEve
+-       if ([container resourceNameForEventUID: eventUID])
+-         {
+-           return [NSException exceptionWithHTTPStatus: 403
+--                                               reason: [NSString stringWithFormat: @"Event UID already in use. (%s)", eventUID]];
+-+                                               reason: [NSString stringWithFormat: @"Event UID already in use. (%s)", (char *)eventUID]];
+-         }
+-      
+-       //
+diff -ruN sogo.orig/files/patch-SoObjects_Appointments_SOGoCalendarComponent.m sogo/files/patch-SoObjects_Appointments_SOGoCalendarComponent.m
+--- sogo.orig/files/patch-SoObjects_Appointments_SOGoCalendarComponent.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Appointments_SOGoCalendarComponent.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,25 +0,0 @@
+---- SoObjects/Appointments/SOGoCalendarComponent.m.orig	2015-09-16 18:41:30 UTC
+-+++ SoObjects/Appointments/SOGoCalendarComponent.m
+-@@ -140,6 +140,13 @@
+-   return aclManager;
+- }
+- 
+-+- (NSException *) changeParticipationStatus: (NSString *) newPartStat
+-+                               withDelegate: (iCalPerson *) delegate
+-+                                      alarm: (iCalAlarm *) alarm;
+-+{
+-+  return nil;
+-+}
+-+
+- - (id) init
+- {
+-   if ((self = [super init]))
+-@@ -171,7 +178,7 @@
+- 
+- - (Class *) parsingClass
+- {
+--  return [iCalCalendar class];
+-+  return (Class *) [iCalCalendar class];
+- }
+- 
+- - (NSString *) davContentType
+diff -ruN sogo.orig/files/patch-SoObjects_Appointments_iCalAlarm+SOGo.m sogo/files/patch-SoObjects_Appointments_iCalAlarm+SOGo.m
+--- sogo.orig/files/patch-SoObjects_Appointments_iCalAlarm+SOGo.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Appointments_iCalAlarm+SOGo.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,14 +0,0 @@
+---- SoObjects/Appointments/iCalAlarm+SOGo.m.orig	2015-09-16 18:41:30 UTC
+-+++ SoObjects/Appointments/iCalAlarm+SOGo.m
+-@@ -102,9 +102,9 @@
+-         }
+-       
+-       if ([reminderReference caseInsensitiveCompare: @"BEFORE"] == NSOrderedSame)
+--        aValue = [NSString stringWithString: @"-P"];
+-+        aValue = (NSString *) @"-P";
+-       else
+--        aValue = [NSString stringWithString: @"P"];
+-+        aValue = (NSString *) @"P";
+-       
+-       if ([reminderUnit caseInsensitiveCompare: @"MINUTES"] == NSOrderedSame ||
+-           [reminderUnit caseInsensitiveCompare: @"HOURS"] == NSOrderedSame)
+diff -ruN sogo.orig/files/patch-SoObjects_Appointments_iCalEvent+SOGo.h sogo/files/patch-SoObjects_Appointments_iCalEvent+SOGo.h
+--- sogo.orig/files/patch-SoObjects_Appointments_iCalEvent+SOGo.h	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Appointments_iCalEvent+SOGo.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/Appointments/iCalEvent+SOGo.h.orig	2015-09-16 18:41:36 UTC
+-+++ SoObjects/Appointments/iCalEvent+SOGo.h
+-@@ -28,7 +28,7 @@
+- @interface iCalEvent (SOGoExtensions)
+- 
+- - (BOOL) isStillRelevant;
+--- (unsigned int) occurenceInterval;
+-+- (NSTimeInterval) occurenceInterval;
+- - (void) updateRecurrenceRulesUntilDate: (NSCalendarDate *) previousEndDate;
+- 
+- @end
+diff -ruN sogo.orig/files/patch-SoObjects_Appointments_iCalEvent+SOGo.m sogo/files/patch-SoObjects_Appointments_iCalEvent+SOGo.m
+--- sogo.orig/files/patch-SoObjects_Appointments_iCalEvent+SOGo.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Appointments_iCalEvent+SOGo.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/Appointments/iCalEvent+SOGo.m.orig	2015-09-16 18:41:36 UTC
+-+++ SoObjects/Appointments/iCalEvent+SOGo.m
+-@@ -259,7 +259,7 @@
+- 
+- - (NSTimeInterval) occurenceInterval
+- {
+--  return [[self endDate] timeIntervalSinceDate: [self startDate]];
+-+  return (NSTimeInterval) [[self endDate] timeIntervalSinceDate: [self startDate]];
+- }
+- 
+- /**
+diff -ruN sogo.orig/files/patch-SoObjects_Contacts_NGVCard+SOGo.m sogo/files/patch-SoObjects_Contacts_NGVCard+SOGo.m
+--- sogo.orig/files/patch-SoObjects_Contacts_NGVCard+SOGo.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Contacts_NGVCard+SOGo.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,26 +0,0 @@
+---- SoObjects/Contacts/NGVCard+SOGo.m.orig	2015-09-16 18:41:36 UTC
+-+++ SoObjects/Contacts/NGVCard+SOGo.m
+-@@ -297,7 +297,7 @@ convention:
+- 
+-   if (year && month && day)
+-     [self setBday: [NSString stringWithFormat: @"%.4d-%.2d-%.2d",
+--                             year, month, day]];
+-+                             (int)year, (int)month, (int)day]];
+-   else
+-     [self setBday: @""];
+- 
+-@@ -614,11 +614,11 @@ convention:
+-   birthDay = [[self bday] asCalendarDate];
+-   if (birthDay)
+-     {
+--      stringValue = [NSString stringWithFormat: @"%.4d", [birthDay yearOfCommonEra]];
+-+      stringValue = [NSString stringWithFormat: @"%.4d", (int)[birthDay yearOfCommonEra]];
+-       [self _setValue: @"birthyear" to: stringValue inLDIFRecord: ldifRecord];
+--      stringValue = [NSString stringWithFormat: @"%.2d", [birthDay monthOfYear]];
+-+      stringValue = [NSString stringWithFormat: @"%.2d", (int)[birthDay monthOfYear]];
+-       [self _setValue: @"birthmonth" to: stringValue inLDIFRecord: ldifRecord];
+--      stringValue = [NSString stringWithFormat: @"%.2d", [birthDay dayOfMonth]];
+-+      stringValue = [NSString stringWithFormat: @"%.2d", (int)[birthDay dayOfMonth]];
+-       [self _setValue: @"birthday" to: stringValue inLDIFRecord: ldifRecord];
+-     }
+-   [self _setValue: @"description" to: [self note] inLDIFRecord: ldifRecord];
+diff -ruN sogo.orig/files/patch-SoObjects_Contacts_SOGoContactEntryPhoto.m sogo/files/patch-SoObjects_Contacts_SOGoContactEntryPhoto.m
+--- sogo.orig/files/patch-SoObjects_Contacts_SOGoContactEntryPhoto.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Contacts_SOGoContactEntryPhoto.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/Contacts/SOGoContactEntryPhoto.m.orig	2015-09-16 18:41:30 UTC
+-+++ SoObjects/Contacts/SOGoContactEntryPhoto.m
+-@@ -59,7 +59,7 @@
+- 
+-       [response setHeader: [self davContentType] forKey: @"content-type"];
+-       [response setHeader: [NSString stringWithFormat:@" %d",
+--                                     [data length]]
+-+                                     (int)[data length]]
+-                    forKey: @"content-length"];
+-       [response setContent: data];
+-     }
+diff -ruN sogo.orig/files/patch-SoObjects_Contacts_SOGoContactFolders.m sogo/files/patch-SoObjects_Contacts_SOGoContactFolders.m
+--- sogo.orig/files/patch-SoObjects_Contacts_SOGoContactFolders.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Contacts_SOGoContactFolders.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,15 +0,0 @@
+---- SoObjects/Contacts/SOGoContactFolders.m.orig	2015-09-16 18:41:30 UTC
+-+++ SoObjects/Contacts/SOGoContactFolders.m
+-@@ -268,9 +268,9 @@ Class SOGoContactSourceFolderK;
+-   SOGoUser *currentUser;
+-   id <SOGoSource> source;
+- 
+--  if ([sourceID isEqualToString: @"personal"])
+--    result = [NSException exceptionWithHTTPStatus: 403
+--                                           reason: (@"folder '%@' cannot be deleted", sourceID)];
+-+  if ([sourceID isEqualToString: @"personal"]){
+-+    result = [NSException exceptionWithHTTPStatus: 403 reason: [NSString stringWithFormat: (@"folder '%@' cannot be deleted"), sourceID]];
+-+  }
+-   else
+-     {
+-       result = nil;
+diff -ruN sogo.orig/files/patch-SoObjects_Contacts_SOGoContactGCSEntry.m sogo/files/patch-SoObjects_Contacts_SOGoContactGCSEntry.m
+--- sogo.orig/files/patch-SoObjects_Contacts_SOGoContactGCSEntry.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Contacts_SOGoContactGCSEntry.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/Contacts/SOGoContactGCSEntry.m.orig	2015-09-16 18:41:30 UTC
+-+++ SoObjects/Contacts/SOGoContactGCSEntry.m
+-@@ -50,7 +50,7 @@
+- 
+- - (Class *) parsingClass
+- {
+--  return [NGVCard class];
+-+  return (Class *)[NGVCard class];
+- }
+- 
+- /* content */
+diff -ruN sogo.orig/files/patch-SoObjects_Contacts_SOGoContactGCSList.m sogo/files/patch-SoObjects_Contacts_SOGoContactGCSList.m
+--- sogo.orig/files/patch-SoObjects_Contacts_SOGoContactGCSList.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Contacts_SOGoContactGCSList.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/Contacts/SOGoContactGCSList.m.orig	2015-09-16 18:41:30 UTC
+-+++ SoObjects/Contacts/SOGoContactGCSList.m
+-@@ -45,7 +45,7 @@
+- 
+- - (Class *) parsingClass
+- {
+--  return [NGVList class];
+-+  return (Class *)[NGVList class];
+- }
+- 
+- 
+diff -ruN sogo.orig/files/patch-SoObjects_Contacts_SOGoContactSourceFolder.m sogo/files/patch-SoObjects_Contacts_SOGoContactSourceFolder.m
+--- sogo.orig/files/patch-SoObjects_Contacts_SOGoContactSourceFolder.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Contacts_SOGoContactSourceFolder.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- SoObjects/Contacts/SOGoContactSourceFolder.m.orig	2015-09-16 18:41:36 UTC
+-+++ SoObjects/Contacts/SOGoContactSourceFolder.m
+-@@ -94,7 +94,7 @@
+-     {
+-       if (![newDisplayName length])
+-         newDisplayName = newName;
+--      ASSIGN (displayName, newDisplayName);
+-+      ASSIGN (displayName, [newDisplayName mutableCopy]);
+-     }
+- 
+-   return self;
+-@@ -657,7 +657,7 @@
+-   BOOL otherIsPersonal;
+- 
+-   otherIsPersonal = ([otherFolder isKindOfClass: [SOGoContactGCSFolder class]]
+--                     || ([otherFolder isKindOfClass: isa] && [otherFolder isPersonalSource]));
+-+                     || ([otherFolder isKindOfClass: object_getClass(self)] && [otherFolder isPersonalSource]));
+- 
+-   if (isPersonalSource)
+-     {
+diff -ruN sogo.orig/files/patch-SoObjects_Mailer_NSDictionary+Mail.m sogo/files/patch-SoObjects_Mailer_NSDictionary+Mail.m
+--- sogo.orig/files/patch-SoObjects_Mailer_NSDictionary+Mail.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Mailer_NSDictionary+Mail.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,10 +0,0 @@
+---- SoObjects/Mailer/NSDictionary+Mail.m.orig	2015-09-16 18:41:30 UTC
+-+++ SoObjects/Mailer/NSDictionary+Mail.m
+-@@ -20,6 +20,7 @@
+- 
+- #import <Foundation/NSDictionary.h>
+- #import <Foundation/NSString.h>
+-+#import <NGExtensions/NSString+misc.h>
+- 
+- #import "NSDictionary+Mail.h"
+- 
+diff -ruN sogo.orig/files/patch-SoObjects_Mailer_NSString+Mail.m sogo/files/patch-SoObjects_Mailer_NSString+Mail.m
+--- sogo.orig/files/patch-SoObjects_Mailer_NSString+Mail.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Mailer_NSString+Mail.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/Mailer/NSString+Mail.m.orig	2015-09-16 18:41:30 UTC
+-+++ SoObjects/Mailer/NSString+Mail.m
+-@@ -533,7 +533,7 @@
+-   messageID = [NSMutableString string];
+-   [messageID appendFormat: @"<%@", [SOGoObject globallyUniqueObjectId]];
+-   pGUID = [[NSProcessInfo processInfo] globallyUniqueString];
+--  [messageID appendFormat: @"@%u>", [pGUID hash]];
+-+  [messageID appendFormat: @"@%u>", (unsigned int)[pGUID hash]];
+- 
+-   return [messageID lowercaseString];
+- }
+diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailAccounts.m sogo/files/patch-SoObjects_Mailer_SOGoMailAccounts.m
+--- sogo.orig/files/patch-SoObjects_Mailer_SOGoMailAccounts.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Mailer_SOGoMailAccounts.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,28 +0,0 @@
+---- SoObjects/Mailer/SOGoMailAccounts.m.orig	2015-09-16 18:41:30 UTC
+-+++ SoObjects/Mailer/SOGoMailAccounts.m
+-@@ -41,6 +41,8 @@
+- 
+- #define XMLNS_INVERSEDAV @"urn:inverse:params:xml:ns:inverse-dav"
+- 
+-+// TODO: prune redundant methods
+-+
+- @implementation SOGoMailAccounts
+- 
+- - (NSArray *) mailAccounts
+-@@ -206,6 +208,9 @@
+- </D:multistatus>
+- 
+- */
+-+
+-+/* No longer in use, causes objc-method-access warning
+-+
+- - (NSException *) setDavMailsLabels: (NSString *) newLabels
+- {
+-   id <DOMElement> documentElement, labelNode;
+-@@ -253,5 +258,6 @@
+- 
+-   return nil;
+- }
+-+*/
+- 
+- @end /* SOGoMailAccounts */
+diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailBaseObject.m sogo/files/patch-SoObjects_Mailer_SOGoMailBaseObject.m
+--- sogo.orig/files/patch-SoObjects_Mailer_SOGoMailBaseObject.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Mailer_SOGoMailBaseObject.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,14 +0,0 @@
+---- SoObjects/Mailer/SOGoMailBaseObject.m.orig	2015-09-16 18:41:30 UTC
+-+++ SoObjects/Mailer/SOGoMailBaseObject.m
+-@@ -32,9 +32,11 @@
+- #import <NGExtensions/NSString+misc.h>
+- #import <NGExtensions/NSURL+misc.h>
+- #import <NGImap4/NGImap4Connection.h>
+-+#import <NGImap4/NGImap4Client.h>
+- 
+- #import <SOGo/SOGoCache.h>
+- #import <SOGo/SOGoUser.h>
+-+#import <SOGo/WORequest+SOGo.h>
+- 
+- #import "SOGoMailAccount.h"
+- #import "SOGoMailManager.h"
+diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailBodyPart.m sogo/files/patch-SoObjects_Mailer_SOGoMailBodyPart.m
+--- sogo.orig/files/patch-SoObjects_Mailer_SOGoMailBodyPart.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Mailer_SOGoMailBodyPart.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/Mailer/SOGoMailBodyPart.m.orig	2015-09-16 18:41:30 UTC
+-+++ SoObjects/Mailer/SOGoMailBodyPart.m
+-@@ -396,7 +396,7 @@ static BOOL debugOn = NO;
+- 	    mimeType = @"application/octet-stream";
+- 	  
+- 	  [response setHeader: mimeType forKey: @"content-type"];
+--	  [response setHeader: [NSString stringWithFormat:@"%d", [data length]]
+-+	  [response setHeader: [NSString stringWithFormat:@"%d", (int)[data length]]
+- 		    forKey: @"content-length"];
+-   
+- 	  if (asAttachment)
+diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailFolder.m sogo/files/patch-SoObjects_Mailer_SOGoMailFolder.m
+--- sogo.orig/files/patch-SoObjects_Mailer_SOGoMailFolder.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Mailer_SOGoMailFolder.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/Mailer/SOGoMailFolder.m.orig	2015-09-16 18:41:36 UTC
+-+++ SoObjects/Mailer/SOGoMailFolder.m
+-@@ -1645,7 +1645,7 @@ _compareFetchResultsByMODSEQ (id entry1,
+- 
+-   sortOrderings = [NSMutableArray array];
+- 
+--  if ([self _sortElementIsAscending: sortElement])
+-+  if ([self _sortElementIsAscending: (NGDOMNodeWithChildren <DOMElement> *)sortElement])
+-     sortOrderingOrder = EOCompareAscending;
+-   else
+-     sortOrderingOrder = EOCompareDescending;
+diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailForward.m sogo/files/patch-SoObjects_Mailer_SOGoMailForward.m
+--- sogo.orig/files/patch-SoObjects_Mailer_SOGoMailForward.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Mailer_SOGoMailForward.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,15 +0,0 @@
+---- SoObjects/Mailer/SOGoMailForward.m.orig	2015-09-16 18:41:30 UTC
+-+++ SoObjects/Mailer/SOGoMailForward.m
+-@@ -73,10 +73,10 @@
+- 
+- - (NSString *) newLine
+- {
+--  NSString *rc = [NSString stringWithString: @" "];
+-+  NSString *rc = @" ";
+-   
+-   if (htmlComposition)
+--    rc = [NSString stringWithString: @"<br/>"];
+-+    rc = @"<br/>";
+- 
+-   return rc;
+- }
+diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailLabel.m sogo/files/patch-SoObjects_Mailer_SOGoMailLabel.m
+--- sogo.orig/files/patch-SoObjects_Mailer_SOGoMailLabel.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Mailer_SOGoMailLabel.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/Mailer/SOGoMailLabel.m.orig	2015-09-16 18:41:36 UTC
+-+++ SoObjects/Mailer/SOGoMailLabel.m
+-@@ -74,7 +74,7 @@
+-   int i;
+- 
+-   allLabels = [NSMutableArray array];
+--  allKeys = [[theDefaults allKeys] sortedArrayUsingSelector: @selector (caseInsensitiveCompare:)];
+-+  allKeys = [[[theDefaults allKeys] sortedArrayUsingSelector: @selector (caseInsensitiveCompare:)] mutableCopy];
+-   
+-   for (i = 0; i < [allKeys count]; i++)
+-     {
+diff -ruN sogo.orig/files/patch-SoObjects_Mailer_SOGoMailObject.m sogo/files/patch-SoObjects_Mailer_SOGoMailObject.m
+--- sogo.orig/files/patch-SoObjects_Mailer_SOGoMailObject.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_Mailer_SOGoMailObject.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,46 +0,0 @@
+---- SoObjects/Mailer/SOGoMailObject.m.orig	2015-09-16 18:41:36 UTC
+-+++ SoObjects/Mailer/SOGoMailObject.m
+-@@ -765,7 +765,7 @@ static BOOL debugSoParts       = NO;
+- 		       [part objectForKey: @"type"],
+- 		       [part objectForKey: @"subtype"]];
+- 
+--  if (!filename)
+-+  if (!filename) {
+-       // We might end up here because of MUA that actually strips the
+-       // Content-Disposition (and thus, the filename) when mails containing
+-       // attachments have been forwarded. Thunderbird (2.x) does just that
+-@@ -773,10 +773,14 @@ static BOOL debugSoParts       = NO;
+-       if ([mimeType hasPrefix: @"application/"] ||
+- 	  [mimeType hasPrefix: @"audio/"] ||
+- 	  [mimeType hasPrefix: @"image/"] ||
+--	  [mimeType hasPrefix: @"video/"])
+-+	  [mimeType hasPrefix: @"video/"]) {
+-           filename = [NSString stringWithFormat: @"unknown_%@", path];
+--      else if ([mimeType isEqualToString: @"message/rfc822"])
+--        filename = [NSString stringWithFormat: @"email_%@.eml", path];
+-+      }
+-+      else {
+-+        if ([mimeType isEqualToString: @"message/rfc822"])
+-+          filename = [NSString stringWithFormat: @"email_%@.eml", path];
+-+      }
+-+  }
+-   
+- 
+-   if (filename)
+-@@ -820,13 +824,13 @@ static BOOL debugSoParts       = NO;
+- 	{
+- 	  currentPart = [subparts objectAtIndex: i-1];
+- 	  if (path)
+--	    newPath = [NSString stringWithFormat: @"%@.%d", path, i];
+-+	    newPath = [NSString stringWithFormat: @"%@.%d", path, (int)i];
+- 	  else
+--	    newPath = [NSString stringWithFormat: @"%d", i];
+-+	    newPath = [NSString stringWithFormat: @"%d", (int)i];
+- 	  [self _fetchFileAttachmentKeysInPart: currentPart
+-                                      intoArray: keys
+-                                       withPath: newPath
+--                                     andPrefix: [NSString stringWithFormat: @"%@/%i", prefix, i]];
+-+                                     andPrefix: [NSString stringWithFormat: @"%@/%i", prefix, (int)i]];
+- 	}
+-     }
+-   else
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_BSONCodec.m sogo/files/patch-SoObjects_SOGo_BSONCodec.m
+--- sogo.orig/files/patch-SoObjects_SOGo_BSONCodec.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_BSONCodec.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- SoObjects/SOGo/BSONCodec.m.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/BSONCodec.m
+-@@ -310,7 +310,7 @@ static NSDictionary *BSONTypes()
+- 
+- 		case 'q': return 0x12;
+- 		default:
+--			[NSException raise: NSInvalidArgumentException format: @"%@::%s - invalid encoding type '%c'", [self class], _cmd, encoding];
+-+			[NSException raise: NSInvalidArgumentException format: @"%@::%s - invalid encoding type '%c'", [self class], (char *)NSStringFromSelector(_cmd), encoding];
+- 	}
+- 	return 0;
+- }
+-@@ -385,7 +385,7 @@ static NSDictionary *BSONTypes()
+- 	}
+- 
+- 
+--	[NSException raise: NSInvalidArgumentException format: @"%@::%s - invalid encoding type '%c'", [self class], _cmd, encoding];
+-+	[NSException raise: NSInvalidArgumentException format: @"%@::%s - invalid encoding type '%c'", [self class], (char *)NSStringFromSelector(_cmd), encoding];
+- 	return nil;
+- }
+- 
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_LDAPSource.m sogo/files/patch-SoObjects_SOGo_LDAPSource.m
+--- sogo.orig/files/patch-SoObjects_SOGo_LDAPSource.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_LDAPSource.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/SOGo/LDAPSource.m.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/LDAPSource.m
+-@@ -1703,7 +1703,7 @@ _makeLDAPChanges (NGLdapConnection *ldap
+-                             hostname: hostname
+-                                 port: [NSString stringWithFormat: @"%d", port]
+-                           encryption: encryption
+--                   bindAsCurrentUser: NO];
+-+                   bindAsCurrentUser: [NSString stringWithFormat: @"%d", NO]];
+-               [ab                     setBaseDN: [entry dn]
+-                                         IDField: @"cn"
+-                                         CNField: @"displayName"
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_NSCalendarDate+SOGo.m sogo/files/patch-SoObjects_SOGo_NSCalendarDate+SOGo.m
+--- sogo.orig/files/patch-SoObjects_SOGo_NSCalendarDate+SOGo.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_NSCalendarDate+SOGo.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,28 +0,0 @@
+---- SoObjects/SOGo/NSCalendarDate+SOGo.m.orig	2015-09-16 18:41:36 UTC
+-+++ SoObjects/SOGo/NSCalendarDate+SOGo.m
+-@@ -88,9 +88,9 @@ static NSString *rfc822Months[] = {@"", 
+-   NSString *str;
+- 
+-   str = [NSString stringWithFormat: @"%.4d%.2d%.2d",
+--                  [self yearOfCommonEra],
+--                  [self monthOfYear],
+--                  [self dayOfMonth]];
+-+                  (int)[self yearOfCommonEra],
+-+                  (int)[self monthOfYear],
+-+                  (int)[self dayOfMonth]];
+- 
+-   return str;
+- }
+-@@ -107,9 +107,9 @@ static NSString *rfc822Months[] = {@"", 
+- 
+-   return
+-     [NSString stringWithFormat: @"%@, %.2d %@ %d %.2d:%.2d:%.2d %+.4d",
+--	      rfc822Days[[self dayOfWeek]], [self dayOfMonth],
+--	      rfc822Months[[self monthOfYear]], [self yearOfCommonEra],
+--	      [self hourOfDay], [self minuteOfHour], [self secondOfMinute],
+-+	      rfc822Days[[self dayOfWeek]], (int)[self dayOfMonth],
+-+	      rfc822Months[[self monthOfYear]], (int)[self yearOfCommonEra],
+-+	      (int)[self hourOfDay], (int)[self minuteOfHour], (int)[self secondOfMinute],
+- 	      timeZoneShift];
+- }
+- 
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_NSData+Crypto.m sogo/files/patch-SoObjects_SOGo_NSData+Crypto.m
+--- sogo.orig/files/patch-SoObjects_SOGo_NSData+Crypto.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_NSData+Crypto.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/SOGo/NSData+Crypto.m.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/NSData+Crypto.m
+-@@ -23,7 +23,7 @@
+-  * Boston, MA 02111-1307, USA.
+-  */
+- 
+--#ifndef __OpenBSD__
+-+#if !defined(__OpenBSD__) && !defined(__FreeBSD__)
+- #include <crypt.h>
+- #endif
+- 
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_NSDictionary+DAV.m sogo/files/patch-SoObjects_SOGo_NSDictionary+DAV.m
+--- sogo.orig/files/patch-SoObjects_SOGo_NSDictionary+DAV.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_NSDictionary+DAV.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/SOGo/NSDictionary+DAV.m.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/NSDictionary+DAV.m
+-@@ -46,7 +46,7 @@
+- {
+-   NSString *newTag;
+- 
+--  newTag = [NSString stringWithFormat: @"n%d", [namespaces count]];
+-+  newTag = [NSString stringWithFormat: @"n%d", (int)[namespaces count]];
+-   [namespaces setObject: newTag forKey: newNS];
+- 
+-   return newTag;
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_NSString+Utilities.m sogo/files/patch-SoObjects_SOGo_NSString+Utilities.m
+--- sogo.orig/files/patch-SoObjects_SOGo_NSString+Utilities.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_NSString+Utilities.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/SOGo/NSString+Utilities.m.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/NSString+Utilities.m
+-@@ -309,7 +309,7 @@ static int cssEscapingCount;
+-           c == 0xD ||
+-           (c >= 0x20 && c <= 0xD7FF) ||
+-           (c >= 0xE000 && c <= 0xFFFD) ||
+--          (c >= 0x10000 && c <= 0x10FFFF))
+-+          (c >= (unichar)0x10000 && c <= (unichar)0x10FFFF))
+-         {
+-           *(start+j) = c;
+-           j++;
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoCache.h sogo/files/patch-SoObjects_SOGo_SOGoCache.h
+--- sogo.orig/files/patch-SoObjects_SOGo_SOGoCache.h	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoCache.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,10 +0,0 @@
+---- SoObjects/SOGo/SOGoCache.h.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/SOGoCache.h
+-@@ -21,6 +21,7 @@
+- #ifndef SOGOCACHE_H
+- #define SOGOCACHE_H
+- 
+-+#import <Foundation/Foundation.h>
+- #import <Foundation/NSObject.h>
+- 
+- #include <libmemcached/memcached.h>
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.h sogo/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.h
+--- sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.h	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/SOGo/SOGoCacheGCSFolder.h.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/SOGoCacheGCSFolder.h
+-@@ -40,6 +40,8 @@
+- 
+- - (NSMutableString *) pathForChild: (NSString *) childName;
+- 
+-+- (void) addUserInAcls: (NSString *) user;
+-+
+- - (NSArray *) toOneRelationshipKeys;
+- - (NSArray *) toManyRelationshipKeys;
+- 
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.m sogo/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.m
+--- sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoCacheGCSFolder.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/SOGo/SOGoCacheGCSFolder.m.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/SOGoCacheGCSFolder.m
+-@@ -364,7 +364,7 @@ Class SOGoCacheGCSObjectK = Nil;
+-   if (record)
+-     {
+-       if ([[record objectForKey: @"c_type"] intValue] == MAPIFolderCacheObject)
+--        objectClass = isa;
+-+        objectClass = object_getClass(self);
+-       else
+-         objectClass = SOGoCacheGCSObjectK;
+- 
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheGCSObject.m sogo/files/patch-SoObjects_SOGo_SOGoCacheGCSObject.m
+--- sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheGCSObject.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoCacheGCSObject.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,68 +0,0 @@
+---- SoObjects/SOGo/SOGoCacheGCSObject.m.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/SOGoCacheGCSObject.m
+-@@ -87,7 +87,7 @@ static EOAttribute *textColumn = nil;
+-     {
+-       tableUrl = nil;
+-       initialized = NO;
+--      objectType = -1;
+-+      objectType = (SOGoCacheObjectType) -1;
+-       deleted = NO;
+-       version = 0;
+-     }
+-@@ -383,7 +383,7 @@ static EOAttribute *textColumn = nil;
+-                            @"SELECT * FROM %@ WHERE c_path = %@",
+-                          tableName, pathValue];
+-   if (startVersion > -1)
+--    [sql appendFormat: @" AND c_version > %d", startVersion];
+-+    [sql appendFormat: @" AND c_version > %d", (int)startVersion];
+- 
+-   /* execution */
+-   records = [self performSQLQuery: sql];
+-@@ -411,18 +411,16 @@ static EOAttribute *textColumn = nil;
+- 
+-   tableName = [self tableName];
+-   adaptor = [self tableChannelAdaptor];
+--  pathValue = [adaptor formatValue: [NSString stringWithFormat: @"/%@", deviceId]
+--                      forAttribute: textColumn];
+- 
+-   /* query */
+-   sql = [NSMutableString stringWithFormat:
+-                            @"SELECT * FROM %@ WHERE c_type = %d AND c_deleted <> 1", tableName, objectType];
+- 
+-   if (startVersion > -1)
+--    [sql appendFormat: @" AND c_version > %d", startVersion];
+-+    [sql appendFormat: @" AND c_version > %d", (int)startVersion];
+- 
+-   if (deviceId) {
+--    pathValue = [adaptor formatValue: [NSString stringWithFormat: @"/%@%", deviceId]
+-+    pathValue = [adaptor formatValue: [NSString stringWithFormat: @"/%@", deviceId]
+-                       forAttribute: textColumn];
+-     [sql appendFormat: @" AND c_path like %@", pathValue];
+-   }
+-@@ -546,7 +544,7 @@ static EOAttribute *textColumn = nil;
+-   
+-   lastModifiedValue = (NSInteger) [lastModified timeIntervalSince1970];
+-   
+--  if (objectType == -1)
+-+  if (objectType == (SOGoCacheObjectType) -1)
+-     [NSException raise: @"SOGoCacheIOException"
+-                 format: @"object type has not been set for object '%@'",
+-                  self];
+-@@ -576,7 +574,7 @@ static EOAttribute *textColumn = nil;
+-                          @")"),
+-                       tableName,
+-                       pathValue, parentPathValue, objectType,
+--                      creationDateValue, lastModifiedValue,
+-+                      (int)creationDateValue, (int)lastModifiedValue,
+-                       propsValue];
+-       isNew = NO;
+-     }
+-@@ -590,7 +588,7 @@ static EOAttribute *textColumn = nil;
+-                          @"      c_version = %d, c_content = %@"
+-                          @" WHERE c_path = %@"),
+-                       tableName,
+--                      lastModifiedValue, deletedValue, version, propsValue,
+-+                      (int)lastModifiedValue, (int)deletedValue, (int)version, propsValue,
+-                     pathValue];
+-     }
+- 
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheObject.h sogo/files/patch-SoObjects_SOGo_SOGoCacheObject.h
+--- sogo.orig/files/patch-SoObjects_SOGo_SOGoCacheObject.h	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoCacheObject.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/SOGo/SOGoCacheObject.h.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/SOGoCacheObject.h
+-@@ -42,8 +42,6 @@
+- - (NSCalendarDate *) creationDate;
+- - (NSCalendarDate *) lastModified;
+- 
+--- (NSException *) destroy;
+--
+- @end
+- 
+- #endif /* SOGOCACHEOBJECT_H */
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoContentObject.m sogo/files/patch-SoObjects_SOGo_SOGoContentObject.m
+--- sogo.orig/files/patch-SoObjects_SOGo_SOGoContentObject.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoContentObject.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,39 +0,0 @@
+---- SoObjects/SOGo/SOGoContentObject.m.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/SOGoContentObject.m
+-@@ -94,7 +94,7 @@
+- {
+-   [self subclassResponsibility: _cmd];
+-   
+--  return nil;
+-+  return (Class *) nil;
+- }
+- 
+- - (void) _setRecord: (NSDictionary *) objectRecord
+-@@ -254,6 +254,9 @@
+- - (NSException *) moveToFolder: (SOGoGCSFolder *) newFolder
+- {
+-   [self subclassResponsibility: _cmd];
+-+
+-+  // TODO: Add exception handling code and return it
+-+  return (NSException *) nil;
+- }
+- 
+- - (NSException *) delete
+-@@ -345,7 +348,7 @@
+- 
+-       /* attempt a save */
+-       
+--      error = [self saveComponent: [[self parsingClass] parseSingleFromSource: [rq contentAsString]]
+-+      error = [self saveComponent: [(id)[self parsingClass] parseSingleFromSource: [rq contentAsString]]
+-                       baseVersion: baseVersion];
+-       if (error)
+- 	response = (WOResponse *) error;
+-@@ -410,7 +413,7 @@
+-   else
+-     length = 0;
+- 
+--  return [NSString stringWithFormat: @"%u", length];
+-+  return [NSString stringWithFormat: @"%u", (unsigned int)length];
+- }
+- 
+- - (NSException *) davMoveToTargetObject: (id) _target
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoFolder.m sogo/files/patch-SoObjects_SOGo_SOGoFolder.m
+--- sogo.orig/files/patch-SoObjects_SOGo_SOGoFolder.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoFolder.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- SoObjects/SOGo/SOGoFolder.m.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/SOGoFolder.m
+-@@ -107,7 +107,7 @@
+- 
+- - (void) setDisplayName: (NSString *) newDisplayName
+- {
+--  ASSIGN (displayName, newDisplayName);
+-+  ASSIGN (displayName, [newDisplayName mutableCopy]);
+- }
+- 
+- - (NSString *) displayName
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoGCSFolder.m sogo/files/patch-SoObjects_SOGo_SOGoGCSFolder.m
+--- sogo.orig/files/patch-SoObjects_SOGo_SOGoGCSFolder.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoGCSFolder.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,27 +0,0 @@
+---- SoObjects/SOGo/SOGoGCSFolder.m.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/SOGoGCSFolder.m
+-@@ -376,12 +376,12 @@ static NSArray *childRecordFields = nil;
+-   if (!displayName)
+-     {
+-       if (activeUserIsOwner)
+--        displayName = [self _displayNameFromOwner];
+-+        displayName = [[self _displayNameFromOwner] mutableCopy];
+-       else
+-         {
+--          displayName = [self _displayNameFromSubscriber];
+-+          displayName = [[self _displayNameFromSubscriber] mutableCopy];
+-           if (!displayName)
+--            displayName = [self _displayNameFromOwner];
+-+            displayName = [[self _displayNameFromOwner] mutableCopy];
+-         }
+-       [displayName retain];
+-     }
+-@@ -829,7 +829,7 @@ static NSArray *childRecordFields = nil;
+-     {
+-       currentID = [ids objectAtIndex: count];
+-       names = [[currentID componentsSeparatedByString: @"/"] objectEnumerator];
+--      deleteObject = self;
+-+      deleteObject = (SOGoContentObject *)self;
+-       while ((currentName = [names nextObject]))
+-         {
+-           deleteObject = [deleteObject lookupName: currentName
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoGroup.m sogo/files/patch-SoObjects_SOGo_SOGoGroup.m
+--- sogo.orig/files/patch-SoObjects_SOGo_SOGoGroup.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoGroup.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- SoObjects/SOGo/SOGoGroup.m.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/SOGoGroup.m
+-@@ -135,7 +135,7 @@
+- {
+-   NSArray *allSources;
+-   NGLdapEntry *entry;
+--  NSObject <SOGoSource> *source;
+-+  NSObject <SOGoSource, SOGoDNSource> *source;
+-   id o;
+-   NSEnumerator *gclasses;
+-   NSString *gclass;
+-@@ -154,7 +154,7 @@
+- 
+-   for (i = 0; i < [allSources count]; i++)
+-     {
+--      source = [[SOGoUserManager sharedUserManager] sourceWithID: [allSources objectAtIndex: i]];
+-+      source = (NSObject <SOGoSource, SOGoDNSource> *) [[SOGoUserManager sharedUserManager] sourceWithID: [allSources objectAtIndex: i]];
+- 
+-       // Our different sources might not all implements groups support
+-       if ([source respondsToSelector: theSelector])
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoObject.m sogo/files/patch-SoObjects_SOGo_SOGoObject.m
+--- sogo.orig/files/patch-SoObjects_SOGo_SOGoObject.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoObject.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,29 +0,0 @@
+---- SoObjects/SOGo/SOGoObject.m.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/SOGoObject.m
+-@@ -1066,7 +1066,7 @@
+-     [_ms appendFormat:@" name=%@", nameInContainer];
+-   if (container)
+-     [_ms appendFormat:@" container=0x%08X/%@", 
+--         container, [container valueForKey:@"nameInContainer"]];
+-+         (unsigned int)container, [container valueForKey:@"nameInContainer"]];
+- }
+- 
+- - (NSString *) description
+-@@ -1074,7 +1074,7 @@
+-   NSMutableString *ms;
+- 
+-   ms = [NSMutableString stringWithCapacity:64];
+--  [ms appendFormat:@"<0x%08X[%@]:", self, NSStringFromClass([self class])];
+-+  [ms appendFormat:@"<0x%08X[%@]:", (unsigned int) self, NSStringFromClass([self class])];
+-   [self appendAttributesToDescription:ms];
+-   [ms appendString:@">"];
+- 
+-@@ -1084,7 +1084,7 @@
+- - (NSString *) loggingPrefix
+- {
+-   return [NSString stringWithFormat:@"<0x%08X[%@]:%@>",
+--		   self, NSStringFromClass([self class]),
+-+		   (unsigned int) self, NSStringFromClass([self class]),
+- 		   [self nameInContainer]];
+- }
+- 
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoParentFolder.h sogo/files/patch-SoObjects_SOGo_SOGoParentFolder.h
+--- sogo.orig/files/patch-SoObjects_SOGo_SOGoParentFolder.h	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoParentFolder.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,10 +0,0 @@
+---- SoObjects/SOGo/SOGoParentFolder.h.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/SOGoParentFolder.h
+-@@ -45,6 +45,7 @@
+- 
+- - (NSException *) appendPersonalSources;
+- - (void) removeSubFolder: (NSString *) subfolderName;
+-+- (NSException *) appendCollectedSources;
+- 
+- - (void) setBaseOCSPath: (NSString *) newOCSPath;
+- 
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SOGoParentFolder.m sogo/files/patch-SoObjects_SOGo_SOGoParentFolder.m
+--- sogo.orig/files/patch-SoObjects_SOGo_SOGoParentFolder.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_SOGoParentFolder.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,41 +0,0 @@
+---- SoObjects/SOGo/SOGoParentFolder.m.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/SOGoParentFolder.m
+-@@ -423,6 +423,38 @@ static SoSecurityManager *sm = nil;
+-   return error;
+- }
+- 
+-+- (NSException *) appendCollectedSources
+-+{
+-+  GCSChannelManager *cm;
+-+  EOAdaptorChannel *fc;
+-+  NSURL *folderLocation;
+-+  NSString *sql, *gcsFolderType;
+-+  NSException *error;
+-+
+-+  cm = [GCSChannelManager defaultChannelManager];
+-+  folderLocation = [[GCSFolderManager defaultFolderManager] folderInfoLocation];
+-+  fc = [cm acquireOpenChannelForURL: folderLocation];
+-+  if ([fc isOpen])
+-+  {
+-+    gcsFolderType = [[self class] gcsFolderType];
+-+
+-+    sql = [NSString stringWithFormat: (@"SELECT c_path4 FROM %@"
+-+                                       @" WHERE c_path2 = '%@'"
+-+                                       @" AND c_folder_type = '%@'"),
+-+           [folderLocation gcsTableName], owner, gcsFolderType];
+-+  
+-+    error = [self fetchSpecialFolders: sql withChannel: fc andFolderType: SOGoCollectedFolder];
+-+
+-+    [cm releaseChannel: fc];
+-+  }
+-+  else
+-+    error = [NSException exceptionWithName: @"SOGoDBException"
+-+                                    reason: @"database connection could not be open"
+-+                                  userInfo: nil];
+-+ 
+-+  return error;
+-+}
+-+
+- - (NSException *) initSubFolders
+- {
+-   NSException *error;
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_SQLSource.m sogo/files/patch-SoObjects_SOGo_SQLSource.m
+--- sogo.orig/files/patch-SoObjects_SOGo_SQLSource.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_SQLSource.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,56 +0,0 @@
+---- SoObjects/SOGo/SQLSource.m.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/SQLSource.m
+-@@ -880,7 +880,7 @@
+- 
+-   reason = [NSString stringWithFormat: @"method '%@' is not available"
+-                      @" for class '%@'", NSStringFromSelector (_cmd),
+--                     NSStringFromClass (isa)];
+-+                     NSStringFromClass (object_getClass(self))];
+- 
+-   return [NSException exceptionWithName: @"SQLSourceIOException"
+-                                  reason: reason
+-@@ -893,7 +893,7 @@
+- 
+-   reason = [NSString stringWithFormat: @"method '%@' is not available"
+-                      @" for class '%@'", NSStringFromSelector (_cmd),
+--                     NSStringFromClass (isa)];
+-+                     NSStringFromClass (object_getClass(self))];
+- 
+-   return [NSException exceptionWithName: @"SQLSourceIOException"
+-                                  reason: reason
+-@@ -906,7 +906,7 @@
+- 
+-   reason = [NSString stringWithFormat: @"method '%@' is not available"
+-                      @" for class '%@'", NSStringFromSelector (_cmd),
+--                     NSStringFromClass (isa)];
+-+                     NSStringFromClass (object_getClass(self))];
+- 
+-   return [NSException exceptionWithName: @"SQLSourceIOException"
+-                                  reason: reason
+-@@ -932,7 +932,7 @@
+- 
+-   reason = [NSString stringWithFormat: @"method '%@' is not available"
+-                      @" for class '%@'", NSStringFromSelector (_cmd),
+--                     NSStringFromClass (isa)];
+-+                     NSStringFromClass (object_getClass(self))];
+- 
+-   return [NSException exceptionWithName: @"SQLSourceIOException"
+-                                  reason: reason
+-@@ -947,7 +947,7 @@
+- 
+-   reason = [NSString stringWithFormat: @"method '%@' is not available"
+-                      @" for class '%@'", NSStringFromSelector (_cmd),
+--                     NSStringFromClass (isa)];
+-+                     NSStringFromClass (object_getClass(self))];
+- 
+-   return [NSException exceptionWithName: @"SQLSourceIOException"
+-                                  reason: reason
+-@@ -961,7 +961,7 @@
+- 
+-   reason = [NSString stringWithFormat: @"method '%@' is not available"
+-                      @" for class '%@'", NSStringFromSelector (_cmd),
+--                     NSStringFromClass (isa)];
+-+                     NSStringFromClass (object_getClass(self))];
+- 
+-   return [NSException exceptionWithName: @"SQLSourceIOException"
+-                                  reason: reason
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_WORequest+SOGo.m sogo/files/patch-SoObjects_SOGo_WORequest+SOGo.m
+--- sogo.orig/files/patch-SoObjects_SOGo_WORequest+SOGo.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_WORequest+SOGo.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,35 +0,0 @@
+---- SoObjects/SOGo/WORequest+SOGo.m.orig	2015-09-16 18:41:31 UTC
+-+++ SoObjects/SOGo/WORequest+SOGo.m
+-@@ -180,14 +180,24 @@
+-   cc = [self clientCapabilities];
+- 
+-   b = (
+--       [[cc userAgent] rangeOfString: @"CFNetwork"].location != NSNotFound
+--       && [[cc userAgent] rangeOfString: @"Darwin"].location != NSNotFound
+--       || (
+--           [[cc userAgent] rangeOfString: @"CFNetwork"].location != NSNotFound
+--            || [[cc userAgent] rangeOfString: @"Mac OS X"].location != NSNotFound
+--           )
+--       && [[cc userAgent] rangeOfString: @"AddressBook"].location != NSNotFound
+--       );
+-+        (
+-+          (
+-+            [[cc userAgent] rangeOfString: @"CFNetwork"].location != NSNotFound
+-+            && [[cc userAgent] rangeOfString: @"Darwin"].location != NSNotFound
+-+          )
+-+          ||
+-+          (
+-+            [[cc userAgent] rangeOfString: @"CFNetwork"].location != NSNotFound
+-+            &&
+-+            (
+-+              [[cc userAgent] rangeOfString: @"Mac OS X"].location != NSNotFound
+-+              ||
+-+              [[cc userAgent] rangeOfString: @"Mac_OS_X"].location != NSNotFound
+-+            )
+-+          )
+-+        )
+-+        && [[cc userAgent] rangeOfString: @"AddressBook"].location != NSNotFound
+-+      );
+- 
+-   return b;
+- }
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_instance-framework.make sogo/files/patch-SoObjects_SOGo_instance-framework.make
+--- sogo.orig/files/patch-SoObjects_SOGo_instance-framework.make	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_instance-framework.make	2015-11-17 06:43:09.000000000 +0800
+@@ -1,4 +1,4 @@
+---- SoObjects/SOGo/instance-framework.make.orig	2015-10-24 21:25:08 UTC
++--- SoObjects/SOGo/instance-framework.make.orig	2015-09-23 03:39:02 UTC
+ +++ SoObjects/SOGo/instance-framework.make
+ @@ -0,0 +1,821 @@
+ +#   -*-makefile-*-
+diff -ruN sogo.orig/files/patch-SoObjects_SOGo_master-framework.make sogo/files/patch-SoObjects_SOGo_master-framework.make
+--- sogo.orig/files/patch-SoObjects_SOGo_master-framework.make	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-SoObjects_SOGo_master-framework.make	2015-11-17 06:43:09.000000000 +0800
+@@ -1,4 +1,4 @@
+---- SoObjects/SOGo/master-framework.make.orig	2015-10-24 21:25:08 UTC
++--- SoObjects/SOGo/master-framework.make.orig	2015-09-23 03:38:31 UTC
+ +++ SoObjects/SOGo/master-framework.make
+ @@ -0,0 +1,30 @@
+ +#
+diff -ruN sogo.orig/files/patch-Tests_Unit_SOGoTest.m sogo/files/patch-Tests_Unit_SOGoTest.m
+--- sogo.orig/files/patch-Tests_Unit_SOGoTest.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Tests_Unit_SOGoTest.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,15 +0,0 @@
+---- Tests/Unit/SOGoTest.m.orig	2015-09-16 18:41:31 UTC
+-+++ Tests/Unit/SOGoTest.m
+-@@ -245,10 +245,10 @@ NSString *_stringForCharacterAtIndex(NSU
+-       sc2 = _stringForCharacterAtIndex(i, str2, length2);
+- 
+-       if ([sc1 isEqualToString: sc2]) 
+--        finalSTR = [finalSTR stringByAppendingFormat: @"%u |%@|\n", i, sc1];
+-+        finalSTR = [finalSTR stringByAppendingFormat: @"%lu |%@|\n", i, sc1];
+-       else
+-         {
+--          finalSTR = [finalSTR stringByAppendingFormat: @"%u |%@|%@|<--\n", i, sc1, sc2];
+-+          finalSTR = [finalSTR stringByAppendingFormat: @"%lu |%@|%@|<--\n", i, sc1, sc2];
+-           differencesFound = YES;
+-         }
+-     }
+diff -ruN sogo.orig/files/patch-Tests_Unit_TestNGMimeAddressHeaderFieldGenerator.m sogo/files/patch-Tests_Unit_TestNGMimeAddressHeaderFieldGenerator.m
+--- sogo.orig/files/patch-Tests_Unit_TestNGMimeAddressHeaderFieldGenerator.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Tests_Unit_TestNGMimeAddressHeaderFieldGenerator.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,23 +0,0 @@
+---- Tests/Unit/TestNGMimeAddressHeaderFieldGenerator.m.orig	2015-09-16 18:41:31 UTC
+-+++ Tests/Unit/TestNGMimeAddressHeaderFieldGenerator.m
+-@@ -39,8 +39,8 @@
+-         @"<wolfgang@test.com>",  // email between brackets
+-         @"\"<wolfgang@test.com>\" <wolfgang@test.com>", // doubled
+-         @"\"wolfgang@inverse.ca\" <wolfgang@test.com>", // with and without br.
+--        @"Àñinéoblabla <wolfgang@test.com>", // accented full name
+--        @"Àñinéoblabla Bla Blé <wolfgang@test.com>", // accented and multiword
+-+        @"=?utf-8?q?=C3=80=C3=B1in=C3=A9oblabla?= <wolfgang@test.com>", // accented full name
+-+        @"=?utf-8?q?=C3=80=C3=B1in=C3=A9oblabla_Bla_Bl=C3=A9?= <wolfgang@test.com>", // accented and multiword
+-         @"Wolfgang Sourdeau \"Bla Bla\" <wolfgang@test.com>", // partly quoted
+-         @"Wolfgang Sourdeau <wolfgang@test.com>", // full name + email
+-         nil };
+-@@ -50,8 +50,7 @@
+-         @"\"<wolfgang@test.com>\" <wolfgang@test.com>", // doubled
+-         @"\"wolfgang@inverse.ca\" <wolfgang@test.com>", // with and without br.
+-         @"=?utf-8?q?=C3=80=C3=B1in=C3=A9oblabla?= <wolfgang@test.com>", // accented full name
+--        @"=?utf-8?q?=C3=80=C3=B1in=C3=A9oblabla_Bla_Bl=C3=A9?= <wolfgang@test.com>", // accented
+--        // and multiword
+-+        @"=?utf-8?q?=C3=80=C3=B1in=C3=A9oblabla_Bla_Bl=C3=A9?= <wolfgang@test.com>", // accented and multiword
+- 
+-         /* NOTE: the following are wrong but tolerated for now */
+-         @"Wolfgang Sourdeau \"Bla Bla\" <wolfgang@test.com>", // partly quoted
+diff -ruN sogo.orig/files/patch-Tests_Unit_TestNGMimeMessageGenerator.m sogo/files/patch-Tests_Unit_TestNGMimeMessageGenerator.m
+--- sogo.orig/files/patch-Tests_Unit_TestNGMimeMessageGenerator.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Tests_Unit_TestNGMimeMessageGenerator.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- Tests/Unit/TestNGMimeMessageGenerator.m.orig	2015-09-16 18:41:31 UTC
+-+++ Tests/Unit/TestNGMimeMessageGenerator.m
+-@@ -117,7 +117,7 @@
+-       NSString *diff = [self stringFromDiffBetween: [NSString stringWithString: resultString]
+-                                                and: [NSString stringWithString: expected]];
+-       NSString *testErrorMsg = [NSString
+--                             stringWithFormat: @">> For %@ header received:\n%@[END]\n>> instead of:\n%@[END]\n>> for:\n%@\n>> diff:\n%@\n>> lengthReceived: %u lengthExpected: %u",
+-+                             stringWithFormat: @">> For %@ header received:\n%@[END]\n>> instead of:\n%@[END]\n>> for:\n%@\n>> diff:\n%@\n>> lengthReceived: %lu lengthExpected: %lu",
+-                               header,
+-                               resultString,
+-                               expected,
+diff -ruN sogo.orig/files/patch-Tests_Unit_TestVersit.m sogo/files/patch-Tests_Unit_TestVersit.m
+--- sogo.orig/files/patch-Tests_Unit_TestVersit.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Tests_Unit_TestVersit.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,41 +0,0 @@
+---- Tests/Unit/TestVersit.m.orig	2015-09-16 18:41:31 UTC
+-+++ Tests/Unit/TestVersit.m
+-@@ -34,6 +34,10 @@
+- 
+- - (void) test_rendering
+- {
+-+
+-+#pragma clang diagnostic push
+-+#pragma clang diagnostic ignored "-Wobjc-string-compare"
+-+
+-   CardElement *element;
+-   CardVersitRenderer *renderer;
+-   NSString *result;
+-@@ -137,10 +141,17 @@
+-   testEquals(result, @"ELEM:NONEMPTY=coucou\r\n");
+- 
+-   /** tests about parameters handling could be nice */
+-+
+-+#pragma clang diagnostic pop
+-+
+- }
+- 
+- - (void) test_parsing
+- {
+-+
+-+#pragma clang diagnostic push
+-+#pragma clang diagnostic ignored "-Wobjc-string-compare"
+-+
+-   CardGroup *group;
+-   CardElement *element;
+-   NSString *versit;
+-@@ -201,6 +212,9 @@
+-   element = [group firstChildWithTag: @"element"];
+-   testEquals([element flattenedValueAtIndex: 0 forKey: @""], @"value");
+-   testEquals([element value: 0 ofAttribute: @"param1"], @"paramvalue1, with comma");
+-+
+-+#pragma clang diagnostic pop
+-+
+- }
+- 
+- @end
+diff -ruN sogo.orig/files/patch-Tests_Unit_TestiCalRecurrenceCalculator.m sogo/files/patch-Tests_Unit_TestiCalRecurrenceCalculator.m
+--- sogo.orig/files/patch-Tests_Unit_TestiCalRecurrenceCalculator.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Tests_Unit_TestiCalRecurrenceCalculator.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,29 +0,0 @@
+---- Tests/Unit/TestiCalRecurrenceCalculator.m.orig	2015-09-16 18:41:31 UTC
+-+++ Tests/Unit/TestiCalRecurrenceCalculator.m
+-@@ -107,7 +107,7 @@
+- 			    [currentOccurrence descriptionWithCalendarFormat: dateFormat]];
+- 	  testWithMessage([currentOccurrence isDateOnSameDay: [[occurrences objectAtIndex: j] startDate]], error);
+- 	}
+--      error = [NSString stringWithFormat: @"Unexpected number of occurrences for recurrence rule %@ (found %i, expected %i)",
+-+      error = [NSString stringWithFormat: @"Unexpected number of occurrences for recurrence rule %@ (found %ld, expected %ld)",
+- 			[currentRule objectAtIndex: 1],
+- 			[occurrences count],
+- 			[currentRule count] - 2];
+-@@ -211,7 +211,7 @@
+- 			    [currentOccurrence descriptionWithCalendarFormat: dateFormat]];
+- 	  testWithMessage([currentOccurrence isDateOnSameDay: [[occurrences objectAtIndex: j] startDate]], error);
+- 	}
+--      error = [NSString stringWithFormat: @"Unexpected number of occurrences for recurrence rule %@ (found %i, expected %i)",
+-+      error = [NSString stringWithFormat: @"Unexpected number of occurrences for recurrence rule %@ (found %ld, expected %ld)",
+- 			[currentRule objectAtIndex: 1],
+- 			[occurrences count],
+- 			[currentRule count] - 2];
+-@@ -376,7 +376,7 @@
+- 			    [currentOccurrence descriptionWithCalendarFormat: dateFormat]];
+- 	  testWithMessage([currentOccurrence isDateOnSameDay: [[occurrences objectAtIndex: j] startDate]], error);
+- 	}
+--      error = [NSString stringWithFormat: @"Unexpected number of occurrences for recurrence rule %@ (found %i, expected %i)",
+-+      error = [NSString stringWithFormat: @"Unexpected number of occurrences for recurrence rule %@ (found %ld, expected %ld)",
+- 			[currentRule objectAtIndex: 1],
+- 			[occurrences count],
+- 			[currentRule count] - 2];
+diff -ruN sogo.orig/files/patch-Tests_Unit_TestiCalTimeZonePeriod.m sogo/files/patch-Tests_Unit_TestiCalTimeZonePeriod.m
+--- sogo.orig/files/patch-Tests_Unit_TestiCalTimeZonePeriod.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Tests_Unit_TestiCalTimeZonePeriod.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,13 +0,0 @@
+---- Tests/Unit/TestiCalTimeZonePeriod.m.orig	2015-09-16 18:41:31 UTC
+-+++ Tests/Unit/TestiCalTimeZonePeriod.m
+-@@ -80,8 +80,8 @@
+-       testWithMessage ((NSInteger) [testDate timeIntervalSince1970]
+-                        == occurrenceSeconds[count],
+-                        ([NSString stringWithFormat:
+--                                    @"test %d: seconds do not match:"
+--                                  @" delta = %d", count, delta]));
+-+                                    @"test %ld: seconds do not match:"
+-+                                  @" delta = %ld", count, delta]));
+-     }
+- }
+- 
+diff -ruN sogo.orig/files/patch-Tools_SOGoEAlarmsNotifier.m sogo/files/patch-Tools_SOGoEAlarmsNotifier.m
+--- sogo.orig/files/patch-Tools_SOGoEAlarmsNotifier.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Tools_SOGoEAlarmsNotifier.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,13 +0,0 @@
+---- Tools/SOGoEAlarmsNotifier.m.orig	2015-09-16 18:41:31 UTC
+-+++ Tools/SOGoEAlarmsNotifier.m
+-@@ -81,8 +81,8 @@
+-   timestamp = (int) [[NSDate date] timeIntervalSince1970];
+-   pGUID = [[NSProcessInfo processInfo] globallyUniqueString];
+- 
+--  messageID = [NSString stringWithFormat: @"<%0X-%0X-%0X-%0X@%u>",
+--                        pid, timestamp, sequence, random(), [pGUID hash]];
+-+  messageID = [NSString stringWithFormat: @"<%0X-%0X-%0X-%0X@%lu>",
+-+                        pid, timestamp, sequence, (unsigned int)random(), [pGUID hash]];
+- 
+-   return [messageID lowercaseString];
+- }
+diff -ruN sogo.orig/files/patch-Tools_SOGoSockDOperation.m sogo/files/patch-Tools_SOGoSockDOperation.m
+--- sogo.orig/files/patch-Tools_SOGoSockDOperation.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Tools_SOGoSockDOperation.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- Tools/SOGoSockDOperation.m.orig	2015-09-16 18:41:31 UTC
+-+++ Tools/SOGoSockDOperation.m
+-@@ -145,7 +145,7 @@ Class SOGoContactSourceFolderKlass = Nil
+-     [self _appendEntry: [resultEntries objectAtIndex: count]
+-               toResult: result];
+- 
+--  [result appendFormat: @"RESULT\ncode: %", resultCode];
+-+  [result appendFormat: @"RESULT\ncode: %d", resultCode];
+-   [responseSocket
+-     safeWriteData: [result dataUsingEncoding: NSASCIIStringEncoding]];
+- }
+diff -ruN sogo.orig/files/patch-Tools_SOGoToolCreateFolder.m sogo/files/patch-Tools_SOGoToolCreateFolder.m
+--- sogo.orig/files/patch-Tools_SOGoToolCreateFolder.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Tools_SOGoToolCreateFolder.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- Tools/SOGoToolCreateFolder.m.orig	2015-09-16 18:41:31 UTC
+-+++ Tools/SOGoToolCreateFolder.m
+-@@ -97,7 +97,7 @@
+-   rc = [self createFolder: folder withFM: fm];
+-   if (!rc)
+-     {
+--      NSLog (@"Create directory failed at path %s", folder);
+-+      NSLog (@"Create directory failed at path %@", folder);
+-       return NO;
+-     }
+- 
+diff -ruN sogo.orig/files/patch-Tools_SOGoToolExpireUserSessions.m sogo/files/patch-Tools_SOGoToolExpireUserSessions.m
+--- sogo.orig/files/patch-Tools_SOGoToolExpireUserSessions.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Tools_SOGoToolExpireUserSessions.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- Tools/SOGoToolExpireUserSessions.m.orig	2015-09-16 18:41:31 UTC
+-+++ Tools/SOGoToolExpireUserSessions.m
+-@@ -143,7 +143,7 @@
+-   else
+-   {
+-     if (verbose)
+--      NSLog(@"No session to remove", sessionsToDelete);
+-+      NSLog(@"No session to remove");
+-   }
+- 
+-   [cm releaseChannel: channel];
+diff -ruN sogo.orig/files/patch-Tools_SOGoToolManageEAS.m sogo/files/patch-Tools_SOGoToolManageEAS.m
+--- sogo.orig/files/patch-Tools_SOGoToolManageEAS.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Tools_SOGoToolManageEAS.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- Tools/SOGoToolManageEAS.m.orig	2015-09-16 18:41:31 UTC
+-+++ Tools/SOGoToolManageEAS.m
+-@@ -227,7 +227,7 @@ typedef enum
+- 
+-               NSMutableString *sql;
+- 
+--              sql = [NSMutableString stringWithFormat: @"DELETE FROM %@" @" WHERE c_path like '/%@%'", [oc tableName], deviceId];
+-+              sql = [NSMutableString stringWithFormat: @"DELETE FROM %@ WHERE c_path like '/%@'", [oc tableName], deviceId];
+- 
+-               [oc performBatchSQLQueries: [NSArray arrayWithObject: sql]];
+-               rc = YES;
+diff -ruN sogo.orig/files/patch-Tools_SOGoToolRemoveDoubles.m sogo/files/patch-Tools_SOGoToolRemoveDoubles.m
+--- sogo.orig/files/patch-Tools_SOGoToolRemoveDoubles.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Tools_SOGoToolRemoveDoubles.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- Tools/SOGoToolRemoveDoubles.m.orig	2015-09-16 18:41:31 UTC
+-+++ Tools/SOGoToolRemoveDoubles.m
+-@@ -175,7 +175,7 @@
+- 
+-   now = [NSCalendarDate date];
+-   delSql = [NSString stringWithFormat: @"UPDATE %@"
+--                     @" SET c_deleted = 1, c_lastmodified = %d,"
+-+                     @" SET c_deleted = 1, c_lastmodified = %lu,"
+-                      @" c_content = ''"
+- 		     @" WHERE c_name = '%@'",
+- 		     tableName,
+diff -ruN sogo.orig/files/patch-Tools_SOGoToolRenameUser.m sogo/files/patch-Tools_SOGoToolRenameUser.m
+--- sogo.orig/files/patch-Tools_SOGoToolRenameUser.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Tools_SOGoToolRenameUser.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- Tools/SOGoToolRenameUser.m.orig	2015-09-16 18:41:31 UTC
+-+++ Tools/SOGoToolRenameUser.m
+-@@ -148,7 +148,7 @@
+-   if (sqlError)
+-     {
+-       [ac rollbackTransaction];
+--      NSLog([sqlError reason]);
+-+      NSLog(@"%@", [sqlError reason]);
+-     }
+-   else
+-     rc = [ac commitTransaction];
+-@@ -201,7 +201,7 @@
+-   if (sqlError)
+-     {
+-       [ac rollbackTransaction];
+--      NSLog([sqlError reason]);
+-+      NSLog(@"%@", [sqlError reason]);
+-     }
+-   else
+-     rc = [ac commitTransaction];
+diff -ruN sogo.orig/files/patch-Tools_SOGoToolRestore.m sogo/files/patch-Tools_SOGoToolRestore.m
+--- sogo.orig/files/patch-Tools_SOGoToolRestore.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Tools_SOGoToolRestore.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,10 +0,0 @@
+---- Tools/SOGoToolRestore.m.orig	2015-09-16 18:41:31 UTC
+-+++ Tools/SOGoToolRestore.m
+-@@ -574,6 +574,7 @@
+-           NSLog (@"  %@ (%@)",
+-                  folderKey, [currentFolder objectForKey: @"displayname"]);
+-         }
+-+      rc = YES;
+-     }
+-   else
+-     {
+diff -ruN sogo.orig/files/patch-Tools_SOGoToolUserPreferences.m sogo/files/patch-Tools_SOGoToolUserPreferences.m
+--- sogo.orig/files/patch-Tools_SOGoToolUserPreferences.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Tools_SOGoToolUserPreferences.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- Tools/SOGoToolUserPreferences.m.orig	2015-09-16 18:41:31 UTC
+-+++ Tools/SOGoToolUserPreferences.m
+-@@ -115,7 +115,7 @@ typedef enum
+-       [theKey caseInsensitiveCompare: @"Vacation"] == NSOrderedSame)
+-     {
+-       /* credentials file handling */
+--      NSString *credsFilename, *authname, *authpwd;
+-+      NSString *credsFilename=nil, *authname=nil, *authpwd=nil;
+-       SOGoCredentialsFile *cf;
+- 
+-       credsFilename = [[NSUserDefaults standardUserDefaults] stringForKey: @"p"];
+diff -ruN sogo.orig/files/patch-Tools_sogo-tool.m sogo/files/patch-Tools_sogo-tool.m
+--- sogo.orig/files/patch-Tools_sogo-tool.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-Tools_sogo-tool.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- Tools/sogo-tool.m.orig	2015-09-16 18:41:31 UTC
+-+++ Tools/sogo-tool.m
+-@@ -149,7 +149,7 @@
+-                   command, [currentTool objectAtIndex: 1]];
+-     }
+- 
+--  NSLog (helpString);
+-+  NSLog (@"%@", helpString);
+- }
+- 
+- - (void) registerTools
+diff -ruN sogo.orig/files/patch-UI_Common_UIxToolbar.m sogo/files/patch-UI_Common_UIxToolbar.m
+--- sogo.orig/files/patch-UI_Common_UIxToolbar.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_Common_UIxToolbar.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- UI/Common/UIxToolbar.m.orig	2015-09-16 18:41:36 UTC
+-+++ UI/Common/UIxToolbar.m
+-@@ -166,7 +166,7 @@
+-     [self errorWithFormat:
+-             @"not toolbar configuration found on SoObject: %@ (%@)",
+-             [self clientObject], [[self clientObject] soClass]];
+--    toolbarConfig = [[NSNull null] retain];
+-+    toolbarConfig = (NSArray *)[[NSNull null] retain];
+-     return nil;
+-   }
+- 
+diff -ruN sogo.orig/files/patch-UI_Contacts_UIxContactActions.m sogo/files/patch-UI_Contacts_UIxContactActions.m
+--- sogo.orig/files/patch-UI_Contacts_UIxContactActions.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_Contacts_UIxContactActions.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- UI/Contacts/UIxContactActions.m.orig	2015-09-16 18:41:31 UTC
+-+++ UI/Contacts/UIxContactActions.m
+-@@ -141,7 +141,7 @@
+-   content = [NSMutableString string];
+-   response = [context response];
+- 
+--  [content appendFormat: [[self clientObject] contentAsString]];
+-+  [content appendFormat: @"%@", [[self clientObject] contentAsString]];
+-   [response setHeader: @"text/plain; charset=utf-8" 
+-             forKey: @"content-type"];
+-   [response appendContentString: content];
+diff -ruN sogo.orig/files/patch-UI_Contacts_UIxContactFolderActions.m sogo/files/patch-UI_Contacts_UIxContactFolderActions.m
+--- sogo.orig/files/patch-UI_Contacts_UIxContactFolderActions.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_Contacts_UIxContactFolderActions.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,14 +0,0 @@
+---- UI/Contacts/UIxContactFolderActions.m.orig	2015-09-16 18:41:36 UTC
+-+++ UI/Contacts/UIxContactFolderActions.m
+-@@ -78,9 +78,9 @@
+-                                     inContext: [self context]
+-                                       acquire: NO];
+-       if ([currentChild respondsToSelector: @selector (vCard)])
+--        [content appendFormat: [[currentChild ldifRecord] ldifRecordAsString]];
+-+        [content appendFormat: @"%@", [[currentChild ldifRecord] ldifRecordAsString]];
+-       else if ([currentChild respondsToSelector: @selector (vList)])
+--        [content appendFormat: [[currentChild vList] ldifString]];
+-+        [content appendFormat: @"%@", [[currentChild vList] ldifString]];
+-       [content appendString: @"\n"];
+-     }
+- 
+diff -ruN sogo.orig/files/patch-UI_Contacts_UIxContactFolderProperties.m sogo/files/patch-UI_Contacts_UIxContactFolderProperties.m
+--- sogo.orig/files/patch-UI_Contacts_UIxContactFolderProperties.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_Contacts_UIxContactFolderProperties.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- UI/Contacts/UIxContactFolderProperties.m.orig	2015-09-16 18:41:36 UTC
+-+++ UI/Contacts/UIxContactFolderProperties.m
+-@@ -19,6 +19,8 @@
+-  */
+- 
+- #import <SOGo/SOGoSystemDefaults.h>
+-+#import <Contacts/SOGoContactGCSFolder.h>
+-+#import <NGExtensions/NSURL+misc.h>
+- 
+- #import "UIxContactFolderProperties.h"
+- 
+diff -ruN sogo.orig/files/patch-UI_Contacts_UIxContactView.m sogo/files/patch-UI_Contacts_UIxContactView.m
+--- sogo.orig/files/patch-UI_Contacts_UIxContactView.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_Contacts_UIxContactView.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- UI/Contacts/UIxContactView.m.orig	2015-09-16 18:41:36 UTC
+-+++ UI/Contacts/UIxContactView.m
+-@@ -350,7 +350,7 @@
+-   data = [NSMutableString string];
+-   [data appendString: postalCode];
+-   if ([postalCode length] > 0 && [country length] > 0)
+--    [data appendFormat: @", ", country];
+-+    [data appendFormat: @", "];
+-   [data appendString: country];
+- 
+-   return [self _cardStringWithLabel: nil value: data];
+-@@ -562,7 +562,7 @@
+-   data = [NSMutableString string];
+-   [data appendString: postalCode];
+-   if ([postalCode length] > 0 && [country length] > 0)
+--    [data appendFormat: @" ", country];
+-+    [data appendFormat: @", "];
+-   [data appendString: country];
+- 
+-   return [self _cardStringWithLabel: nil value: data];
+diff -ruN sogo.orig/files/patch-UI_MailPartViewers_UIxMailPartHTMLViewer.m sogo/files/patch-UI_MailPartViewers_UIxMailPartHTMLViewer.m
+--- sogo.orig/files/patch-UI_MailPartViewers_UIxMailPartHTMLViewer.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_MailPartViewers_UIxMailPartHTMLViewer.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,32 +0,0 @@
+---- UI/MailPartViewers/UIxMailPartHTMLViewer.m.orig	2015-09-16 18:41:31 UTC
+-+++ UI/MailPartViewers/UIxMailPartHTMLViewer.m
+-@@ -551,9 +551,9 @@ static NSData* _sanitizeContent(NSData *
+-                   else
+-                     skipAttribute = YES;
+-                 }
+--              else if ([name isEqualToString: @"background"] ||
+-+              else if (([name isEqualToString: @"background"] ||
+-                        ([name isEqualToString: @"data"]
+--                        || [name isEqualToString: @"classid"])
+-+                        || [name isEqualToString: @"classid"]))
+-                        && [lowerName isEqualToString: @"object"])
+-                 {
+-                   value = [_attributes valueAtIndex: count];
+-@@ -741,7 +741,7 @@ static NSData* _sanitizeContent(NSData *
+- 
+- /* SaxLexicalHandler */
+- - (void) comment: (unichar *) _chars
+--          length: (NSUInteger) _len
+-+          length: (int) _len
+- {
+-   showWhoWeAre();
+-   if (inStyle)
+-@@ -807,7 +807,7 @@ static NSData* _sanitizeContent(NSData *
+-     }
+-   [dump appendFormat: @"--- end ---\n"];
+- 
+--  NSLog(dump);
+-+  NSLog(@"%@", dump);
+-   [dump release];
+- }
+- 
+diff -ruN sogo.orig/files/patch-UI_MailPartViewers_UIxMailPartViewer.m sogo/files/patch-UI_MailPartViewers_UIxMailPartViewer.m
+--- sogo.orig/files/patch-UI_MailPartViewers_UIxMailPartViewer.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_MailPartViewers_UIxMailPartViewer.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- UI/MailPartViewers/UIxMailPartViewer.m.orig	2015-09-16 18:41:36 UTC
+-+++ UI/MailPartViewers/UIxMailPartViewer.m
+-@@ -270,7 +270,7 @@
+-   if ([filename length])
+-     // We replace any slash by a dash since Apache won't allow encoded slashes by default.
+-     // See http://httpd.apache.org/docs/2.2/mod/core.html#allowencodedslashes
+--    filename = [filename stringByReplacingString: @"/" withString: @"-"];
+-+    filename = [[filename stringByReplacingString: @"/" withString: @"-"] mutableCopy];
+-   else
+-     [filename appendFormat: @"%@-%@",
+- 	      [self labelForKey: @"Untitled"],
+diff -ruN sogo.orig/files/patch-UI_MailerUI_UIxMailFolderActions.m sogo/files/patch-UI_MailerUI_UIxMailFolderActions.m
+--- sogo.orig/files/patch-UI_MailerUI_UIxMailFolderActions.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_MailerUI_UIxMailFolderActions.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- UI/MailerUI/UIxMailFolderActions.m.orig	2015-09-16 18:41:36 UTC
+-+++ UI/MailerUI/UIxMailFolderActions.m
+-@@ -383,7 +383,7 @@
+- - (WOResponse *) moveMessagesAction
+- {
+-   SOGoMailFolder *co;
+--  SOGoUserSettings *us;
+-+  SOGoUserSettings *us=nil;
+-   WOResponse *response;
+-   NSArray *uids;
+-   NSString *value, *destinationFolder;
+diff -ruN sogo.orig/files/patch-UI_MailerUI_UIxMailListActions.h sogo/files/patch-UI_MailerUI_UIxMailListActions.h
+--- sogo.orig/files/patch-UI_MailerUI_UIxMailListActions.h	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_MailerUI_UIxMailListActions.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,10 +0,0 @@
+---- UI/MailerUI/UIxMailListActions.h.orig	2015-09-16 18:41:36 UTC
+-+++ UI/MailerUI/UIxMailListActions.h
+-@@ -43,7 +43,6 @@
+- }
+- 
+- - (NSString *) defaultSortKey;
+--- (NSString *) imap4SortKey;
+- - (NSString *) imap4SortOrdering;
+- - (EOQualifier *) searchQualifier;
+- - (NSString *) msgLabels;
+diff -ruN sogo.orig/files/patch-UI_MailerUI_UIxMailMainFrame.m sogo/files/patch-UI_MailerUI_UIxMailMainFrame.m
+--- sogo.orig/files/patch-UI_MailerUI_UIxMailMainFrame.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_MailerUI_UIxMailMainFrame.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- UI/MailerUI/UIxMailMainFrame.m.orig	2015-09-16 18:41:36 UTC
+-+++ UI/MailerUI/UIxMailMainFrame.m
+-@@ -627,7 +627,7 @@
+- 
+- - (NSString *) columnsDisplayCount
+- {
+--  return [NSString stringWithFormat: @"%d", [[self columnsDisplayOrder] count]];
+-+  return [NSString stringWithFormat: @"%d", (int)[[self columnsDisplayOrder] count]];
+- }
+- 
+- - (void) setCurrentColumn: (NSDictionary *) newCurrentColumn
+diff -ruN sogo.orig/files/patch-UI_MainUI_SOGoMicrosoftActiveSyncActions.m sogo/files/patch-UI_MainUI_SOGoMicrosoftActiveSyncActions.m
+--- sogo.orig/files/patch-UI_MainUI_SOGoMicrosoftActiveSyncActions.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_MainUI_SOGoMicrosoftActiveSyncActions.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,21 +0,0 @@
+---- UI/MainUI/SOGoMicrosoftActiveSyncActions.m.orig	2015-09-16 18:41:32 UTC
+-+++ UI/MainUI/SOGoMicrosoftActiveSyncActions.m
+-@@ -30,6 +30,9 @@
+- #import <NGObjWeb/WORequest.h>
+- #import <NGObjWeb/WOResponse.h>
+- 
+-+#import <Common/WODirectAction+SOGo.h>
+-+#import <ActiveSync/SOGoActiveSyncDispatcher.h>
+-+
+- @interface SOGoMicrosoftActiveSyncActions : WODirectAction
+- @end
+- 
+-@@ -47,7 +50,7 @@
+-   id dispatcher;
+-   Class clazz;
+- 
+--  request = [context request];
+-+  request = (WORequest *)[context request];
+-   response = [self responseWithStatus: 200];
+- 
+-   bundle = [NSBundle bundleForClass: NSClassFromString(@"ActiveSyncProduct")];
+diff -ruN sogo.orig/files/patch-UI_PreferencesUI_UIxPreferences.m sogo/files/patch-UI_PreferencesUI_UIxPreferences.m
+--- sogo.orig/files/patch-UI_PreferencesUI_UIxPreferences.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_PreferencesUI_UIxPreferences.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,21 +0,0 @@
+---- UI/PreferencesUI/UIxPreferences.m.orig	2015-09-16 18:41:36 UTC
+-+++ UI/PreferencesUI/UIxPreferences.m
+-@@ -1366,15 +1366,15 @@ static NSArray *reminderValues = nil;
+-           if ([account updateFilters])
+-             // If Sieve is not enabled, the SOGoSieveManager will immediatly return a positive answer
+-             // See [SOGoSieveManager updateFiltersForAccount:withUsername:andPassword:]
+--            results = [self responseWithStatus: 200
+-+            results = (id <WOActionResults>)[self responseWithStatus: 200
+-                          andJSONRepresentation: [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithBool:hasChanged], @"hasChanged", nil]];
+- 
+-           else
+--            results = [self responseWithStatus: 502
+-+            results = (id <WOActionResults>)[self responseWithStatus: 502
+-                          andJSONRepresentation: [NSDictionary dictionaryWithObjectsAndKeys: @"Connection error", @"textStatus", nil]];
+-         }
+-       else
+--        results = [self responseWithStatus: 503
+-+        results = (id <WOActionResults>)[self responseWithStatus: 503
+-                      andJSONRepresentation: [NSDictionary dictionaryWithObjectsAndKeys: @"Service temporarily unavailable", @"textStatus", nil]];
+-     }
+-   else
+diff -ruN sogo.orig/files/patch-UI_SOGoUI_SOGoAptFormatter.m sogo/files/patch-UI_SOGoUI_SOGoAptFormatter.m
+--- sogo.orig/files/patch-UI_SOGoUI_SOGoAptFormatter.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_SOGoUI_SOGoAptFormatter.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,22 +0,0 @@
+---- UI/SOGoUI/SOGoAptFormatter.m.orig	2015-09-16 18:41:32 UTC
+-+++ UI/SOGoUI/SOGoAptFormatter.m
+-@@ -155,14 +155,14 @@
+-    */
+- 
+-   [_buf appendFormat:@"%02i:%02i",
+--                     [_date hourOfDay],
+--                     [_date minuteOfHour]];
+-+                     (int)[_date hourOfDay],
+-+                     (int)[_date minuteOfHour]];
+-   if (_refDate && ![_date isDateOnSameDay:_refDate]) {
+-     [_buf appendFormat:@" (%02i-%02i",
+--                       [_date monthOfYear],
+--                       [_date dayOfMonth]];
+-+                       (int)[_date monthOfYear],
+-+                       (int)[_date dayOfMonth]];
+-     if ([_date yearOfCommonEra] != [_refDate yearOfCommonEra])
+--      [_buf appendFormat:@"-%04i", [_date yearOfCommonEra]];
+-+      [_buf appendFormat:@"-%04i", (int)[_date yearOfCommonEra]];
+-     [_buf appendString:@")"];
+-   }
+- }
+diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalDateSelector.m sogo/files/patch-UI_Scheduler_UIxCalDateSelector.m
+--- sogo.orig/files/patch-UI_Scheduler_UIxCalDateSelector.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_Scheduler_UIxCalDateSelector.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,20 +0,0 @@
+---- UI/Scheduler/UIxCalDateSelector.m.orig	2015-09-16 18:41:32 UTC
+-+++ UI/Scheduler/UIxCalDateSelector.m
+-@@ -117,7 +117,7 @@
+- 
+-   date = [self startDate];
+- 
+--  return [NSString stringWithFormat: @"%.2d", [date monthOfYear]];
+-+  return [NSString stringWithFormat: @"%.2d", (int)[date monthOfYear]];
+- }
+- 
+- - (NSString *) headerMonthString
+-@@ -136,7 +136,7 @@
+- 
+-   date = [self startDate];
+- 
+--  return [NSString stringWithFormat: @"%d", [date yearOfCommonEra]];
+-+  return [NSString stringWithFormat: @"%d", (int)[date yearOfCommonEra]];
+- }
+- 
+- - (NSString *) localizedDayOfWeekName
+diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalDayTable.h sogo/files/patch-UI_Scheduler_UIxCalDayTable.h
+--- sogo.orig/files/patch-UI_Scheduler_UIxCalDayTable.h	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_Scheduler_UIxCalDayTable.h	1970-01-01 07:30:00.000000000 +0730
+@@ -1,21 +0,0 @@
+---- UI/Scheduler/UIxCalDayTable.h.orig	2015-09-16 18:41:32 UTC
+-+++ UI/Scheduler/UIxCalDayTable.h
+-@@ -39,7 +39,8 @@
+-   NSArray *weekDays;
+-   NSString *currentView, *timeFormat, *currentTableHour;
+-   NSCalendarDate *startDate, *currentTableDay;
+--  NSMutableArray *daysToDisplay, *calendarsToDisplay,  *currentCalendar, *hoursToDisplay;
+-+  NSMutableArray *daysToDisplay, *calendarsToDisplay, *hoursToDisplay;
+-+  NSMutableDictionary *currentCalendar;
+-   unsigned int numberOfDays;
+- }
+- 
+-@@ -55,7 +56,7 @@
+- - (NSArray *) calendarsToDisplay;
+- - (void) setCurrentTableDay: (NSCalendarDate *) aTableDay;
+- - (NSCalendarDate *) currentTableDay;
+--- (NSMutableArray *) currentCalendar;
+-+- (NSMutableDictionary *) currentCalendar;
+- 
+- @end
+- 
+diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalDayTable.m sogo/files/patch-UI_Scheduler_UIxCalDayTable.m
+--- sogo.orig/files/patch-UI_Scheduler_UIxCalDayTable.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_Scheduler_UIxCalDayTable.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,56 +0,0 @@
+---- UI/Scheduler/UIxCalDayTable.m.orig	2015-09-16 18:41:36 UTC
+-+++ UI/Scheduler/UIxCalDayTable.m
+-@@ -37,6 +37,9 @@
+- #import <SOGo/SOGoUserDefaults.h>
+- #import <SOGo/WOResourceManager+SOGo.h>
+- 
+-+#import <Appointments/SOGoAppointmentFolder.h>
+-+#import <Appointments/SOGoAppointmentFolders.h>
+-+
+- #import "UIxCalDayTable.h"
+- 
+- @class SOGoAppointment;
+-@@ -191,7 +194,7 @@
+-     NSMutableDictionary *calendar;
+-     unsigned int count, foldersCount;
+-     NSString *folderName, *fDisplayName;
+--    BOOL *isActive;
+-+    BOOL isActive;
+-     
+-     co = [self clientObject];
+-     folders = [co subFolders];
+-@@ -200,8 +203,8 @@
+-     for (count = 0; count < foldersCount; count++)
+-     {
+-       folder = [folders objectAtIndex: count];
+--      isActive = [NSNumber numberWithBool: [folder isActive]];
+--      if ([isActive intValue] != 0) {
+-+      isActive = [folder isActive];
+-+      if (isActive != NO) {
+-         calendar = [NSMutableDictionary dictionary];
+-         folderName = [folder nameInContainer];
+-         fDisplayName = [folder displayName];
+-@@ -214,7 +217,7 @@
+-         [calendar setObject: fDisplayName forKey: @"displayName"];
+-         [calendar setObject: folderName forKey: @"folder"];
+-         [calendar setObject: [folder calendarColor] forKey: @"color"];
+--        [calendar setObject: isActive forKey: @"active"];
+-+        [calendar setObject: [NSNumber numberWithBool:isActive] forKey: @"active"];
+-         [calendar setObject: [folder ownerInContext: context]
+-                      forKey: @"owner"];
+-         [calendarsToDisplay addObject: calendar];
+-@@ -235,12 +238,12 @@
+-   return currentTableDay;
+- }
+- 
+--- (void) setCurrentCalendar: (NSMutableArray *) aCalendar
+-+- (void) setCurrentCalendar: (NSMutableDictionary *) aCalendar
+- {
+-   ASSIGN(currentCalendar, aCalendar);
+- }
+- 
+--- (NSMutableArray *) currentCalendar
+-+- (NSMutableDictionary *) currentCalendar
+- {
+-   return currentCalendar;
+- }
+diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalDayView.m sogo/files/patch-UI_Scheduler_UIxCalDayView.m
+--- sogo.orig/files/patch-UI_Scheduler_UIxCalDayView.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_Scheduler_UIxCalDayView.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- UI/Scheduler/UIxCalDayView.m.orig	2015-09-16 18:41:32 UTC
+-+++ UI/Scheduler/UIxCalDayView.m
+-@@ -164,7 +164,7 @@
+-     
+-   date = [self selectedDate];
+-   hmString = [NSString stringWithFormat:@"%.2d%.2d",
+--                       [date hourOfDay], [date minuteOfHour]];
+-+                       (int)[date hourOfDay], (int)[date minuteOfHour]];
+-   qp = [[self queryParameters] mutableCopy];
+-   [self setSelectedDateQueryParameter:date inDictionary:qp];
+-   [qp setObject: hmString forKey:@"hm"];
+diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalListingActions.m sogo/files/patch-UI_Scheduler_UIxCalListingActions.m
+--- sogo.orig/files/patch-UI_Scheduler_UIxCalListingActions.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_Scheduler_UIxCalListingActions.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,56 +0,0 @@
+---- UI/Scheduler/UIxCalListingActions.m.orig	2015-09-16 18:41:36 UTC
+-+++ UI/Scheduler/UIxCalListingActions.m
+-@@ -316,7 +316,7 @@ static NSArray *tasksFields = nil;
+-   NSString *owner, *role, *calendarName, *filters, *iCalString;
+-   NSRange match;
+-   iCalCalendar *calendar;
+--  iCalObject *master;
+-+  iCalEntityObject *master;
+-   SOGoAppointmentFolder *currentFolder;
+-   SOGoAppointmentFolders *clientObject;
+-   SOGoUser *ownerUser;
+-@@ -350,11 +350,11 @@ static NSArray *tasksFields = nil;
+-           else if ([criteria isEqualToString:@"entireContent"])
+-             {
+-               // First search : Through the quick table inside the location, category and title columns
+--              quickInfos = [currentFolder fetchCoreInfosFrom: startDate
+-+              quickInfos = [[currentFolder fetchCoreInfosFrom: startDate
+-                                                           to: endDate
+-                                                        title: value
+-                                                    component: component
+--                                           additionalFilters: criteria];
+-+                                           additionalFilters: criteria] mutableCopy];
+-         
+-               // Save the c_name in another array to compare with
+-               if ([quickInfos count] > 0)
+-@@ -366,10 +366,10 @@ static NSArray *tasksFields = nil;
+-                 }
+-         
+-               // Second research : Every objects except for those already in the quickInfos array
+--              allInfos = [currentFolder fetchCoreInfosFrom: startDate
+-+              allInfos = [[currentFolder fetchCoreInfosFrom: startDate
+-                                                         to: endDate
+-                                                      title: nil
+--                                                 component: component];
+-+                                                 component: component] mutableCopy];
+-               if (quickInfosFlag == YES)
+-                 {
+-                   for (i = ([allInfos count] - 1); i >= 0 ; i--) {
+-@@ -383,7 +383,7 @@ static NSArray *tasksFields = nil;
+-                 {
+-                   iCalString = [[allInfos objectAtIndex:i] objectForKey:@"c_content"];
+-                   calendar = [iCalCalendar parseSingleFromSource: iCalString];
+--                  master = [calendar firstChildWithTag:component];
+-+                  master = (iCalEntityObject *)[calendar firstChildWithTag:component];
+-                   if (master) {
+-                     if ([[master comment] length] > 0)
+-                       {
+-@@ -1089,7 +1089,7 @@ _computeBlocksPosition (NSArray *blocks)
+-   
+-   if ([currentView isEqualToString: @"multicolumndayview"])
+-   {
+--    calendars = [self _selectedCalendars];
+-+    calendars = [[self _selectedCalendars] mutableCopy];
+-     eventsByCalendars = [NSMutableArray arrayWithCapacity:[calendars count]];
+-     for (i = 0; i < [calendars count]; i++) // For each calendar
+-     {
+diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalMonthView.m sogo/files/patch-UI_Scheduler_UIxCalMonthView.m
+--- sogo.orig/files/patch-UI_Scheduler_UIxCalMonthView.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_Scheduler_UIxCalMonthView.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- UI/Scheduler/UIxCalMonthView.m.orig	2015-09-16 18:41:32 UTC
+-+++ UI/Scheduler/UIxCalMonthView.m
+-@@ -299,7 +299,7 @@
+- 
+-   [classes appendFormat: @"day weekOf%d week%dof%d day%d",
+-            numberOfWeeks,
+--           [weeksToDisplay indexOfObject: currentWeek],
+-+           (int)[weeksToDisplay indexOfObject: currentWeek],
+-            numberOfWeeks, dayOfWeek];
+-   if (realDayOfWeek == 0 || realDayOfWeek == 6)
+-     [classes appendString: @" weekEndDay"];
+diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxCalViewPrint.m sogo/files/patch-UI_Scheduler_UIxCalViewPrint.m
+--- sogo.orig/files/patch-UI_Scheduler_UIxCalViewPrint.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_Scheduler_UIxCalViewPrint.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,19 +0,0 @@
+---- UI/Scheduler/UIxCalViewPrint.m.orig	2015-09-16 18:41:32 UTC
+-+++ UI/Scheduler/UIxCalViewPrint.m
+-@@ -49,6 +49,7 @@ static NSArray *layoutItems = nil;
+- - (void) dealloc
+- {
+-   [item release];
+-+  [super dealloc];
+- }
+- 
+- - (void) setItem: (NSString *) newItem
+-@@ -68,7 +69,7 @@ static NSArray *layoutItems = nil;
+- 
+- - (NSString *) itemPrintLayoutText
+- {
+--  return [self labelForKey: [NSString stringWithFormat: item]];
+-+  return [self labelForKey: [NSString stringWithFormat: @"%@", item]];
+- }
+- 
+- //
+diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxComponentEditor.m sogo/files/patch-UI_Scheduler_UIxComponentEditor.m
+--- sogo.orig/files/patch-UI_Scheduler_UIxComponentEditor.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_Scheduler_UIxComponentEditor.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- UI/Scheduler/UIxComponentEditor.m.orig	2015-09-16 18:41:36 UTC
+-+++ UI/Scheduler/UIxComponentEditor.m
+-@@ -2472,7 +2472,7 @@ RANGE(2);
+-   content = [NSMutableString string];
+-   response = [context response];
+- 
+--  [content appendFormat: [[self clientObject] contentAsString]];
+-+  [content appendFormat: @"%@", [[self clientObject] contentAsString]];
+-   [response setHeader: @"text/plain; charset=utf-8" 
+-             forKey: @"content-type"];
+-   [response appendContentString: content];
+diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxRecurrenceEditor.m sogo/files/patch-UI_Scheduler_UIxRecurrenceEditor.m
+--- sogo.orig/files/patch-UI_Scheduler_UIxRecurrenceEditor.m	2015-10-25 14:49:11.000000000 +0800
++++ sogo/files/patch-UI_Scheduler_UIxRecurrenceEditor.m	1970-01-01 07:30:00.000000000 +0730
+@@ -1,11 +0,0 @@
+---- UI/Scheduler/UIxRecurrenceEditor.m.orig	2015-09-16 18:41:36 UTC
+-+++ UI/Scheduler/UIxRecurrenceEditor.m
+-@@ -148,7 +148,7 @@
+-       [shortWeekDaysList retain];
+-     }
+- 
+--  id = [NSString stringWithFormat: @"weekDay%i", [shortWeekDaysList indexOfObject: item]];
+-+  id = [NSString stringWithFormat: @"weekDay%i", (int)[shortWeekDaysList indexOfObject: item]];
+- 
+-   return id;
+- }
+diff -ruN sogo.orig/pkg-plist sogo/pkg-plist
+--- sogo.orig/pkg-plist	2015-10-25 14:49:11.000000000 +0800
++++ sogo/pkg-plist	2015-11-17 08:54:46.000000000 +0800
+@@ -584,9 +584,11 @@
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Hungarian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Info-gnustep.plist
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Italian.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Macedonian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/NorwegianBokmal.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/NorwegianNynorsk.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Polish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Portuguese.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Russian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Slovak.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Slovenian.lproj/Localizable.strings
+@@ -615,12 +617,14 @@
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/Icelandic.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/Info-gnustep.plist
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/Italian.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/Macedonian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/MSExchangeFreeBusySOAPRequest.wo/MSExchangeFreeBusySOAPRequest.html
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/MSExchangeFreeBusySOAPRequest.wo/MSExchangeFreeBusySOAPRequest.wod
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/MSExchangeFreeBusySOAPResponseMap.plist
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/NorwegianBokmal.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/NorwegianNynorsk.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/Polish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/Portuguese.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/Russian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/Slovak.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/Slovenian.lproj/Localizable.strings
+@@ -648,9 +652,11 @@
+ GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/Icelandic.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/Info-gnustep.plist
+ GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/Italian.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/Macedonian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/NorwegianBokmal.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/NorwegianNynorsk.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/Polish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/Portuguese.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/Russian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/Slovak.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/Slovenian.lproj/Localizable.strings
+@@ -679,9 +685,11 @@
+ GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/Icelandic.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/Info-gnustep.plist
+ GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/Italian.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/Macedonian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/NorwegianBokmal.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/NorwegianNynorsk.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/Polish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/Portuguese.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/Russian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/Slovak.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/Slovenian.lproj/Localizable.strings
+@@ -709,9 +717,11 @@
+ GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/Icelandic.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/Info-gnustep.plist
+ GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/Italian.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/Macedonian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/NorwegianBokmal.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/NorwegianNynorsk.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/Polish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/Portuguese.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/Russian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/SOGoContactFolder.toolbar
+ GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/Slovak.lproj/Localizable.strings
+@@ -741,9 +751,11 @@
+ GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/Icelandic.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/Info-gnustep.plist
+ GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/Italian.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/Macedonian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/NorwegianBokmal.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/NorwegianNynorsk.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/Polish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/Portuguese.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/Russian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/Slovak.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/Slovenian.lproj/Localizable.strings
+@@ -770,9 +782,11 @@
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Icelandic.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Info-gnustep.plist
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Italian.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Macedonian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/NorwegianBokmal.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/NorwegianNynorsk.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Polish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Portuguese.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Russian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Slovenian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailArabicForward.wo/SOGoMailArabicForward.html
+@@ -831,6 +845,10 @@
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailItalianForward.wo/SOGoMailItalianForward.wod
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailItalianReply.wo/SOGoMailItalianReply.html
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailItalianReply.wo/SOGoMailItalianReply.wod
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailMacedonianForward.wo/SOGoMailMacedonianForward.html
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailMacedonianForward.wo/SOGoMailMacedonianForward.wod
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailMacedonianReply.wo/SOGoMailMacedonianReply.html
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailMacedonianReply.wo/SOGoMailMacedonianReply.wod
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailNorwegianBokmalForward.wo/SOGoMailNorwegianBokmalForward.html
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailNorwegianBokmalForward.wo/SOGoMailNorwegianBokmalForward.wod
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailNorwegianBokmalReply.wo/SOGoMailNorwegianBokmalReply.html
+@@ -843,6 +861,10 @@
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailPolishForward.wo/SOGoMailPolishForward.wod
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailPolishReply.wo/SOGoMailPolishReply.html
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailPolishReply.wo/SOGoMailPolishReply.wod
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailPortugueseForward.wo/SOGoMailPortugueseForward.html
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailPortugueseForward.wo/SOGoMailPortugueseForward.wod
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailPortugueseReply.wo/SOGoMailPortugueseReply.html
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailPortugueseReply.wo/SOGoMailPortugueseReply.wod
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailRussianForward.wo/SOGoMailRussianForward.html
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailRussianForward.wo/SOGoMailRussianForward.wod
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailRussianReply.wo/SOGoMailRussianReply.html
+@@ -899,9 +921,11 @@
+ GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/Icelandic.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/Info-gnustep.plist
+ GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/Italian.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/Macedonian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/NorwegianBokmal.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/NorwegianNynorsk.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/Polish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/Portuguese.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/Russian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/SOGoDraftObject.toolbar
+ GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/SOGoMailFolder.toolbar
+@@ -948,6 +972,8 @@
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/Info-gnustep.plist
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/Italian.lproj/Locale
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/Italian.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/Macedonian.lproj/Locale
++GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/Macedonian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/NorwegianBokmal.lproj/Locale
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/NorwegianBokmal.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/NorwegianNynorsk.lproj/Locale
+@@ -956,6 +982,8 @@
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/OCSFolderInfo.sql
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/Polish.lproj/Locale
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/Polish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/Portuguese.lproj/Locale
++GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/Portuguese.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/Russian.lproj/Locale
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/Russian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/SOGoProfile-oracle.sql
+@@ -993,9 +1021,11 @@
+ GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/Icelandic.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/Info-gnustep.plist
+ GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/Italian.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/Macedonian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/NorwegianBokmal.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/NorwegianNynorsk.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/Polish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/Portuguese.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/Russian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/Slovak.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/Slovenian.lproj/Localizable.strings
+@@ -1023,9 +1053,11 @@
+ GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/Icelandic.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/Info-gnustep.plist
+ GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/Italian.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/Macedonian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/NorwegianBokmal.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/NorwegianNynorsk.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/Polish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/Portuguese.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/Russian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/SOGoAppointmentFolders.toolbar
+ GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/SOGoAppointmentObject.toolbar
+@@ -1136,6 +1168,9 @@
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLItalianAdditionAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLItalianModificationAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLItalianRemovalAdvisory.wox
++GNUstep/Local/Library/SOGo/Templates/SOGoACLMacedonianAdditionAdvisory.wox
++GNUstep/Local/Library/SOGo/Templates/SOGoACLMacedonianModificationAdvisory.wox
++GNUstep/Local/Library/SOGo/Templates/SOGoACLMacedonianRemovalAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLNorwegianBokmalAdditionAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLNorwegianBokmalModificationAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLNorwegianBokmalRemovalAdvisory.wox
+@@ -1145,6 +1180,9 @@
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLPolishAdditionAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLPolishModificationAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLPolishRemovalAdvisory.wox
++GNUstep/Local/Library/SOGo/Templates/SOGoACLPortugueseAdditionAdvisory.wox
++GNUstep/Local/Library/SOGo/Templates/SOGoACLPortugueseModificationAdvisory.wox
++GNUstep/Local/Library/SOGo/Templates/SOGoACLPortugueseRemovalAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLRussianAdditionAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLRussianModificationAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLRussianRemovalAdvisory.wox
+@@ -1153,7 +1191,7 @@
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLSlovakRemovalAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLSlovenianAdditionAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLSlovenianRemovalAdvisory.wox
+-GNUstep/Local/Library/SOGo/Templates/SOGoACLSolvenianModificationAdvisory.wox
++GNUstep/Local/Library/SOGo/Templates/SOGoACLSlovenianModificationAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLSpanishArgentinaAdditionAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLSpanishArgentinaModificationAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLSpanishArgentinaRemovalAdvisory.wox
+@@ -1196,12 +1234,16 @@
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderIcelandicRemovalAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderItalianAdditionAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderItalianRemovalAdvisory.wox
++GNUstep/Local/Library/SOGo/Templates/SOGoFolderMacedonianAdditionAdvisory.wox
++GNUstep/Local/Library/SOGo/Templates/SOGoFolderMacedonianRemovalAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderNorwegianBokmalAdditionAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderNorwegianBokmalRemovalAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderNorwegianNynorskAdditionAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderNorwegianNynorskRemovalAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderPolishAdditionAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderPolishRemovalAdvisory.wox
++GNUstep/Local/Library/SOGo/Templates/SOGoFolderPortugueseAdditionAdvisory.wox
++GNUstep/Local/Library/SOGo/Templates/SOGoFolderPortugueseRemovalAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderRussianAdditionAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderRussianRemovalAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderSlovakAdditionAdvisory.wox
+@@ -1380,10 +1422,12 @@
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/hu.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/is.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/it.js
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/mk.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/nb.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/nl.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/no.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/pl.js
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/pt.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/pt-br.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/ru.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/sk.js
+@@ -1769,6 +1813,11 @@
+ @mode 0600
+ @sample %%ETCDIR%%/expire-autoreply.creds.sample
+ @sample %%ETCDIR%%/ealarms-notify.creds.sample
++@owner
++@group
+ @mode 0755
+ @sample GNUstep/Local/Tools/Admin/cron-ealarms-notify.sample
+ @sample GNUstep/Local/Tools/Admin/cron-expire-autoreply.sample
++@mode 0644
++@sample %%ETCDIR%%/SOGo-Apache.conf.sample
++@sample %%ETCDIR%%/SOGo-apple-ab.Apache.conf.sample

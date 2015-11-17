@@ -1,0 +1,41 @@
+# This is a shell archive.  Save it in a file, remove anything before
+# this line, and then unpack it by entering "sh file".  Note, it may
+# create directories; files and directories will be owned by you and
+# have default permissions.
+#
+# This archive contains:
+#
+#	sogo-activesync
+#	sogo-activesync/Makefile
+#	sogo-activesync/pkg-descr
+#
+echo c - sogo-activesync
+mkdir -p sogo-activesync > /dev/null 2>&1
+echo x - sogo-activesync/Makefile
+sed 's/^X//' >sogo-activesync/Makefile << 'd684597493dc5e76cffd36f45f14a3da'
+X# $FreeBSD$
+X
+XPKGNAMESUFFIX=		-activesync
+X
+XMAINTAINER=		euan@potensol.com
+X
+XLICENSE=		GPLv2
+X
+XMASTERDIR=		${.CURDIR}/../sogo
+X
+XDESCR=			${.CURDIR}/pkg-descr
+X
+XOPTIONS_DEFAULT+=	ACTIVESYNC
+X
+X.include "${MASTERDIR}/Makefile"
+d684597493dc5e76cffd36f45f14a3da
+echo x - sogo-activesync/pkg-descr
+sed 's/^X//' >sogo-activesync/pkg-descr << '48a5b4e79cde5fd30bd06ca190fb4585'
+XActiveSync is an extension to SOGo that provides support
+Xfor the ActiveSync protocol to clients that supports
+Xit.
+X
+XWWW: http://www.sogo.nu/
+48a5b4e79cde5fd30bd06ca190fb4585
+exit
+

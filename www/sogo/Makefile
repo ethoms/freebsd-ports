@@ -1,9 +1,8 @@
 # Created by: Euan Thoms <euan@potensol.com>
-# $FreeBSD: head/www/sogo/Makefile 398160 2015-09-29 06:17:27Z bapt $
+# $FreeBSD: head/www/sogo/Makefile 400146 2015-10-25 06:49:11Z pi $
 
 PORTNAME=		sogo
-PORTVERSION=		2.3.2
-PORTREVISION=		2
+PORTVERSION=		2.3.3
 CATEGORIES=		www gnustep
 MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
 DISTNAME=		SOGo-${PORTVERSION}
@@ -20,7 +19,7 @@ LIB_DEPENDS=		libmemcached.so:${PORTSDIR}/databases/libmemcached \
 OPTIONS_DEFINE=		ACTIVESYNC
 OPTIONS_SUB=		yes
 
-ACTIVESYNC_DESC=	Enable support for ActiveSync protocol (Experimental)
+ACTIVESYNC_DESC=	Enable support for ActiveSync protocol
 
 ACTIVESYNC_LIB_DEPENDS=	libwbxml2.so:${PORTSDIR}/textproc/wbxml2
 
@@ -38,13 +37,16 @@ SUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
 
 CONFIGURE_ARGS=		--disable-debug --enable-strip
 
-# For checking compiler warnings (Makefile):
-CFLAGS+=               -Werror
-CFLAGS+=               -Wno-unused-function
-CFLAGS+=               -Wno-unused-variable
-CFLAGS+=               -Wno-objc-protocol-method-implementation
-
 .include <bsd.port.options.mk>
+
+.if !${PORT_OPTIONS:MACTIVESYNC}
+CONFLICTS+=		sogo-activesync-[0.9]*
+.endif
+
+.if ${PORT_OPTIONS:MACTIVESYNC}
+PKGNAMESUFFIX=		-activesync
+CONFLICTS+=		sogo-[0.9]*
+.endif
 
 post-patch:
 	${GREP} -rlF '/etc/sogo' ${WRKSRC} \
@@ -61,6 +63,8 @@ post-stage:
 	${MKDIR} ${STAGEDIR}/var/spool/sogo
 	${MKDIR} ${STAGEDIR}${ETCDIR}
 	(cp ${WRKSRC}/Scripts/sogo.conf ${STAGEDIR}${ETCDIR}/sogo.conf.sample)
+	(cp ${WRKSRC}/Apache/SOGo.conf ${STAGEDIR}${ETCDIR}/SOGo-Apache.conf.sample)
+	(cp ${WRKSRC}/Apache/SOGo-apple-ab.conf ${STAGEDIR}${ETCDIR}/SOGo-apple-ab.Apache.conf.sample)
 	(cp ${FILESDIR}/expire-autoreply.creds.sample ${STAGEDIR}${ETCDIR}/)
 	(cp ${FILESDIR}/ealarms-notify.creds.sample ${STAGEDIR}${ETCDIR}/)
 	(cp ${FILESDIR}/cron-ealarms-notify.sample ${STAGEDIR}${PREFIX}/GNUstep/Local/Tools/Admin/)

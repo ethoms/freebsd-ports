@@ -1,9 +1,8 @@
 # Created by: Euan Thoms <euan@potensol.com>
-# $FreeBSD: head/devel/sope/Makefile 397533 2015-09-22 10:32:08Z pi $
+# $FreeBSD: head/devel/sope/Makefile 400145 2015-10-25 06:47:26Z pi $
 
 PORTNAME=		sope
-PORTVERSION=		2.3.2
-PORTREVISION=		1
+PORTVERSION=		2.3.3
 CATEGORIES=		devel gnustep
 MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
 DISTNAME=		SOPE-${PORTVERSION}

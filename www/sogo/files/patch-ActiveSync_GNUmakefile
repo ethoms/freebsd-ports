@@ -1,6 +1,6 @@
---- ActiveSync/GNUmakefile.orig	2015-09-17 02:41:28.000000000 +0800
-+++ ActiveSync/GNUmakefile	2015-10-16 16:55:31.932724851 +0800
-@@ -34,7 +34,7 @@
+--- ActiveSync/GNUmakefile.orig	2015-11-11 19:25:43 UTC
++++ ActiveSync/GNUmakefile
+@@ -34,7 +34,7 @@ ActiveSync_RESOURCE_FILES +=		\
  ADDITIONAL_OBJCFLAGS += -Wno-deprecated-declarations
  ADDITIONAL_INCLUDE_DIRS += -I../SOPE/ -I../SoObjects/
  ADDITIONAL_LIB_DIRS += -L../SOPE/GDLContentStore/obj/ -L../SOPE/NGCards/obj/
