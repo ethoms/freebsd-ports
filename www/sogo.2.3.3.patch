@@ -1,6 +1,6 @@
 diff -ruN sogo.orig/Makefile sogo/Makefile
 --- sogo.orig/Makefile	2015-10-25 14:49:11.000000000 +0800
-+++ sogo/Makefile	2015-11-17 09:46:14.000000000 +0800
++++ sogo/Makefile	2015-11-18 12:43:01.006468657 +0800
 @@ -2,8 +2,7 @@
  # $FreeBSD: head/www/sogo/Makefile 400146 2015-10-25 06:49:11Z pi $
  
@@ -20,23 +20,16 @@ diff -ruN sogo.orig/Makefile sogo/Makefile
  
  ACTIVESYNC_LIB_DEPENDS=	libwbxml2.so:${PORTSDIR}/textproc/wbxml2
  
-@@ -40,6 +39,15 @@
+@@ -31,6 +30,8 @@
+ USE_GNUSTEP=		base build
+ USE_LDCONFIG=		${GNUSTEP_LOCAL_LIBRARIES}/sogo
  
- .include <bsd.port.options.mk>
++CONFLICTS?=		sogo-activesync-[0-9]*
++
+ USE_RC_SUBR=		sogod
  
-+.if !${PORT_OPTIONS:MACTIVESYNC}
-+CONFLICTS+=		sogo-activesync-[0.9]*
-+.endif
-+
-+.if ${PORT_OPTIONS:MACTIVESYNC}
-+PKGNAMESUFFIX=		-activesync
-+CONFLICTS+=		sogo-[0.9]*
-+.endif
-+
- post-patch:
- 	${GREP} -rlF '/etc/sogo' ${WRKSRC} \
- 		| ${XARGS} ${REINPLACE_CMD} 's#/etc/sogo#${PREFIX}/etc/sogo#g'
-@@ -55,6 +63,8 @@
+ SUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
+@@ -55,6 +56,8 @@
  	${MKDIR} ${STAGEDIR}/var/spool/sogo
  	${MKDIR} ${STAGEDIR}${ETCDIR}
  	(cp ${WRKSRC}/Scripts/sogo.conf ${STAGEDIR}${ETCDIR}/sogo.conf.sample)

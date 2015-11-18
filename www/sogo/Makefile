@@ -30,6 +30,8 @@ USES=			gnustep objc
 USE_GNUSTEP=		base build
 USE_LDCONFIG=		${GNUSTEP_LOCAL_LIBRARIES}/sogo
 
+CONFLICTS?=		sogo-activesync-[0-9]*
+
 USE_RC_SUBR=		sogod
 
 SUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
@@ -38,15 +40,6 @@ SUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
 CONFIGURE_ARGS=		--disable-debug --enable-strip
 
 .include <bsd.port.options.mk>
-
-.if !${PORT_OPTIONS:MACTIVESYNC}
-CONFLICTS+=		sogo-activesync-[0.9]*
-.endif
-
-.if ${PORT_OPTIONS:MACTIVESYNC}
-PKGNAMESUFFIX=		-activesync
-CONFLICTS+=		sogo-[0.9]*
-.endif
 
 post-patch:
 	${GREP} -rlF '/etc/sogo' ${WRKSRC} \

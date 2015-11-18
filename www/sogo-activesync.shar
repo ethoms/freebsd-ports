@@ -7,7 +7,6 @@
 #
 #	sogo-activesync
 #	sogo-activesync/Makefile
-#	sogo-activesync/pkg-descr
 #
 echo c - sogo-activesync
 mkdir -p sogo-activesync > /dev/null 2>&1
@@ -19,23 +18,13 @@ XPKGNAMESUFFIX=		-activesync
 X
 XMAINTAINER=		euan@potensol.com
 X
-XLICENSE=		GPLv2
+XCONFLICTS=		sogo-[0-9]*
+X
+XOPTIONS_SLAVE=		ACTIVESYNC
 X
 XMASTERDIR=		${.CURDIR}/../sogo
 X
-XDESCR=			${.CURDIR}/pkg-descr
-X
-XOPTIONS_DEFAULT+=	ACTIVESYNC
-X
 X.include "${MASTERDIR}/Makefile"
 d684597493dc5e76cffd36f45f14a3da
-echo x - sogo-activesync/pkg-descr
-sed 's/^X//' >sogo-activesync/pkg-descr << '48a5b4e79cde5fd30bd06ca190fb4585'
-XActiveSync is an extension to SOGo that provides support
-Xfor the ActiveSync protocol to clients that supports
-Xit.
-X
-XWWW: http://www.sogo.nu/
-48a5b4e79cde5fd30bd06ca190fb4585
 exit
 

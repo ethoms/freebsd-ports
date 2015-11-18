@@ -4,12 +4,10 @@ PKGNAMESUFFIX=		-activesync
 
 MAINTAINER=		euan@potensol.com
 
-LICENSE=		GPLv2
+CONFLICTS=		sogo-[0-9]*
+
+OPTIONS_SLAVE=		ACTIVESYNC
 
 MASTERDIR=		${.CURDIR}/../sogo
-
-DESCR=			${.CURDIR}/pkg-descr
-
-OPTIONS_DEFAULT+=	ACTIVESYNC
 
 .include "${MASTERDIR}/Makefile"
