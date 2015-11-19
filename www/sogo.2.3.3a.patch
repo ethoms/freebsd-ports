@@ -1,13 +1,13 @@
 diff -ruN sogo.orig/Makefile sogo/Makefile
 --- sogo.orig/Makefile	2015-10-25 14:49:11.000000000 +0800
-+++ sogo/Makefile	2015-11-18 12:43:01.006468657 +0800
++++ sogo/Makefile	2015-11-19 18:06:22.490983048 +0800
 @@ -2,8 +2,7 @@
  # $FreeBSD: head/www/sogo/Makefile 400146 2015-10-25 06:49:11Z pi $
  
  PORTNAME=		sogo
 -PORTVERSION=		2.3.2
 -PORTREVISION=		2
-+PORTVERSION=		2.3.3
++PORTVERSION=		2.3.3a
  CATEGORIES=		www gnustep
  MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
  DISTNAME=		SOGo-${PORTVERSION}
@@ -40,12 +40,12 @@ diff -ruN sogo.orig/Makefile sogo/Makefile
  	(cp ${FILESDIR}/cron-ealarms-notify.sample ${STAGEDIR}${PREFIX}/GNUstep/Local/Tools/Admin/)
 diff -ruN sogo.orig/distinfo sogo/distinfo
 --- sogo.orig/distinfo	2015-09-23 13:30:12.000000000 +0800
-+++ sogo/distinfo	2015-11-17 06:34:48.000000000 +0800
++++ sogo/distinfo	2015-11-19 18:03:36.242991374 +0800
 @@ -1,2 +1,2 @@
 -SHA256 (SOGo-2.3.2.tar.gz) = 7830e2ad684b54c89a4720edf7e73250a076885a3e25052c093e7894227939ac
 -SIZE (SOGo-2.3.2.tar.gz) = 11781695
-+SHA256 (SOGo-2.3.3.tar.gz) = 9c369f07799d4adfd9981664f342339f487f3873063c981e5c8e057e006f2d96
-+SIZE (SOGo-2.3.3.tar.gz) = 11847195
++SHA256 (SOGo-2.3.3a.tar.gz) = cc0ed55f30ef889d8d7f2d55b48066a501e9285317e0dfc63e0a12235a68382c
++SIZE (SOGo-2.3.3a.tar.gz) = 11846747
 diff -ruN sogo.orig/files/patch-ActiveSync_GNUmakefile sogo/files/patch-ActiveSync_GNUmakefile
 --- sogo.orig/files/patch-ActiveSync_GNUmakefile	2015-10-25 14:49:11.000000000 +0800
 +++ sogo/files/patch-ActiveSync_GNUmakefile	2015-11-17 09:10:46.000000000 +0800

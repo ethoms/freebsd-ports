@@ -2,7 +2,7 @@
 # $FreeBSD: head/devel/sope/Makefile 400145 2015-10-25 06:47:26Z pi $
 
 PORTNAME=		sope
-PORTVERSION=		2.3.3
+PORTVERSION=		2.3.3a
 CATEGORIES=		devel gnustep
 MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
 DISTNAME=		SOPE-${PORTVERSION}
