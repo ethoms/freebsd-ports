@@ -1821,3 +1821,4 @@ GNUstep/Local/Tools/Admin/sogod
 @mode 0644
 @sample %%ETCDIR%%/SOGo-Apache.conf.sample
 @sample %%ETCDIR%%/SOGo-apple-ab.Apache.conf.sample
+@mode
