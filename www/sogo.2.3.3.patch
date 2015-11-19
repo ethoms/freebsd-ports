@@ -2108,7 +2108,7 @@ diff -ruN sogo.orig/files/patch-UI_Scheduler_UIxRecurrenceEditor.m sogo/files/pa
 - }
 diff -ruN sogo.orig/pkg-plist sogo/pkg-plist
 --- sogo.orig/pkg-plist	2015-10-25 14:49:11.000000000 +0800
-+++ sogo/pkg-plist	2015-11-17 08:54:46.000000000 +0800
++++ sogo/pkg-plist	2015-11-19 16:25:22.217407518 +0800
 @@ -584,9 +584,11 @@
  GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Hungarian.lproj/Localizable.strings
  GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Info-gnustep.plist
@@ -2331,7 +2331,7 @@ diff -ruN sogo.orig/pkg-plist sogo/pkg-plist
  GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/pt-br.js
  GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/ru.js
  GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/sk.js
-@@ -1769,6 +1813,11 @@
+@@ -1769,6 +1813,12 @@
  @mode 0600
  @sample %%ETCDIR%%/expire-autoreply.creds.sample
  @sample %%ETCDIR%%/ealarms-notify.creds.sample
@@ -2343,3 +2343,4 @@ diff -ruN sogo.orig/pkg-plist sogo/pkg-plist
 +@mode 0644
 +@sample %%ETCDIR%%/SOGo-Apache.conf.sample
 +@sample %%ETCDIR%%/SOGo-apple-ab.Apache.conf.sample
++@mode
