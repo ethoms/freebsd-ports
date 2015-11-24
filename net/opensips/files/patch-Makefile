@@ -1,6 +1,6 @@
---- Makefile.orig	2015-11-23 01:43:09.236230162 +0800
-+++ Makefile	2015-11-23 01:42:48.605228541 +0800
-@@ -46,7 +46,7 @@
+--- Makefile.orig	2015-08-27 15:06:47 UTC
++++ Makefile
+@@ -46,7 +46,7 @@ auto_gen=lex.yy.c cfg.tab.c   #lexx, yac
  # whether or not to install opensips.cfg or just opensips.cfg.default
  # (opensips.cfg will never be overwritten by make install, this is useful
  #  when creating packages)
@@ -9,7 +9,7 @@
  
  #extra modules to exclude
  skip_modules?=
-@@ -509,27 +509,14 @@
+@@ -509,27 +509,14 @@ install-cfg: $(cfg-prefix)/$(cfg-dir)
  		rm -fr $(cfg-prefix)/$(cfg-dir)$(NAME).cfg.sample0
  		chmod 600 $(cfg-prefix)/$(cfg-dir)$(NAME).cfg.sample
  		chmod 700 $(cfg-prefix)/$(cfg-dir)
