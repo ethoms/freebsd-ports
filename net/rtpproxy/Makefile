@@ -1,10 +1,10 @@
 # Created by: sobomax
-# $FreeBSD$
+# $FreeBSD: head/net/rtpproxy/Makefile 400687 2015-11-03 08:14:02Z farrokhi $
 
 PORTNAME=	rtpproxy
 PORTVERSION=	2.0.0
-PORTREVISION=	1
 DISTVERSIONPREFIX=	v
+PORTREVISION=	1
 CATEGORIES=	net
 
 MAINTAINER=	farrokhi@FreeBSD.org

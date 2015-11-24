@@ -1,0 +1,356 @@
+diff -ruN opensips.orig/Makefile opensips/Makefile
+--- opensips.orig/Makefile	2015-11-24 06:56:18.247977526 +0800
++++ opensips/Makefile	2015-11-24 12:06:30.923694499 +0800
+@@ -2,10 +2,9 @@
+ # $FreeBSD: head/net/opensips/Makefile 398368 2015-10-01 16:34:41Z pi $
+ 
+ PORTNAME=		opensips
+-PORTVERSION=		2.1.0
++PORTVERSION=		2.1.1
+ CATEGORIES=		net
+ MASTER_SITES=		http://opensips.org/pub/opensips/${PORTVERSION}/src/
+-# DISTNAME=		opensips-${PORTVERSION}
+ 
+ MAINTAINER=		euan@potensol.com
+ COMMENT=		Open SIP Server
+@@ -31,9 +30,6 @@
+ 			${LOCALBASE}/bin/python2:${PORTSDIR}/lang/python2 \
+ 			${LOCALBASE}/bin/grep:${PORTSDIR}/textproc/gnugrep
+ 
+-#CFLAGS+=		-I${LOCALBASE}/include/json-c
+-#CPPFLAGS+=		-I${LOCALBASE}/include/json-c
+-
+ GINSTALL=		ginstall
+ 
+ WRKSRC=			${WRKDIR}/opensips-${PORTVERSION}
+@@ -146,10 +142,14 @@
+ EXTRA_MODULES+=		db_unixodbc
+ .endif
+ 
++.if ${PORT_OPTIONS:MTLS}
++EXTRA_MODULES+=		proto_tls
++.endif
++
+ OPENSIPS_MAKE_ENV=	CC="${CC}" CXX="${CXX}" CPP="${CPP}" _GCC_RUNTIME="${_GCC_RUNTIME}" CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}"
+ 
+ do-configure:
+-	(cp files/Makefile.conf ${WRKSRC})
++	@(cp files/Makefile.conf ${WRKSRC})
+ 
+ 	@${REINPLACE_CMD} -e "s|_PREFIX_|${PREFIX}|" ${WRKSRC}/Makefile.conf
+ 	@${REINPLACE_CMD} -e "s|_STAGE_DIR_|${STAGEDIR}|" ${WRKSRC}/Makefile.conf
+@@ -158,20 +158,15 @@
+ 	@${REINPLACE_CMD} -e "s/\(^include_modules=.*\)/\1 ${i}/" ${WRKSRC}/Makefile.conf
+ .endfor
+ 
+-.if ${PORT_OPTIONS:MTLS}
+-	@${REINPLACE_CMD} -e "s/^#DEFS+= -DUSE_TLS/DEFS+= -DUSE_TLS/" ${WRKSRC}/Makefile.conf
+-	@${ECHO_CMD} "TLS=1" >> ${WRKSRC}/Makefile.conf
+-.endif
+-
+ .if ! ${PORT_OPTIONS:MDEBUG}
+ 	@${REINPLACE_CMD} -e "s/^#DEFS+= -DNO_DEBUG/DEFS+= -DNO_DEBUG/" ${WRKSRC}/Makefile.conf
+ .endif
+ 
+ do-build:
+-	cd ${WRKSRC} && ${OPENSIPS_MAKE_ENV} ${GMAKE} ${_MAKE_JOBS} ${ALL_TARGET}
++	cd ${WRKSRC} && unset MAKEFLAGS && ${OPENSIPS_MAKE_ENV} ${GMAKE} ${_MAKE_JOBS} ${ALL_TARGET}
+ 
+ do-install:
+-	cd ${WRKSRC} && ${OPENSIPS_MAKE_ENV} ${GMAKE} ${INSTALL_TARGET}
++	cd ${WRKSRC} && unset MAKEFLAGS && ${OPENSIPS_MAKE_ENV} ${GMAKE} ${INSTALL_TARGET}
+ 
+ .if ${PORT_OPTIONS:MTESTS}
+ 	(cp -r ${WRKSRC}/test ${STAGEDIR}${PREFIX}/tests/opensips)
+@@ -187,6 +182,9 @@
+ 	@${REINPLACE_CMD} -e "s|^# MD5=.*|MD5=\"md5\"|" ${STAGEDIR}${PREFIX}/etc/opensips/osipsconsolerc.sample
+ 	@${REINPLACE_CMD} -e "s|^# GREP=.*|GREP=\"${LOCALBASE}/bin/egrep\"|" ${STAGEDIR}${PREFIX}/etc/opensips/osipsconsolerc.sample
+ 	(cp ${FILESDIR}/opensips.cfg.sample ${STAGEDIR}${ETCDIR}/opensips.cfg.sample)
++.if ${PORT_OPTIONS:MRADIUS}
++	(mv ${STAGEDIR}${ETCDIR}/dictionary.opensips ${STAGEDIR}${ETCDIR}/dictionary.opensips.sample)
++.endif
+ 
+ # Strip binaries in sbin
+ 	@${ECHO_CMD} "Stripping binaries in ${STAGEDIR}${PREFIX}/sbin/"
+@@ -219,7 +217,7 @@
+ 		sms.so speeddial.so sst.so statistics.so stun.so textops.so tlsops.so tm.so uac.so \
+ 		uac_auth.so uac_redirect.so uac_registrant.so uri.so userblacklist.so usrloc.so \
+ 		xcap.so xcap_client.so xmpp.so topology_hiding.so fraud_detection.so rtpengine.so \
+-		proto_ws.so
++		proto_ws.so proto_tls.so cachedb_redis.so
+ 		@if [ -e ${STAGEDIR}${PREFIX}/lib/opensips/modules/${i} ]; then \
+ 			${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/opensips/modules/${i}; \
+ 		fi
+diff -ruN opensips.orig/distinfo opensips/distinfo
+--- opensips.orig/distinfo	2015-10-02 00:34:41.000000000 +0800
++++ opensips/distinfo	2015-11-23 01:31:08.677275861 +0800
+@@ -1,2 +1,2 @@
+-SHA256 (opensips-2.1.0.tar.gz) = 9dffa61bcf91e17bc6d6d700f669516448875c61accf9c46a67731e260ad958c
+-SIZE (opensips-2.1.0.tar.gz) = 8470358
++SHA256 (opensips-2.1.1.tar.gz) = cf6604550a259adcf5a8fa292285aa7bc9f75def7c5b24d920fe5dc7692ce3f0
++SIZE (opensips-2.1.1.tar.gz) = 4734597
+diff -ruN opensips.orig/files/Makefile.conf opensips/files/Makefile.conf
+--- opensips.orig/files/Makefile.conf	2015-10-02 00:34:41.000000000 +0800
++++ opensips/files/Makefile.conf	2015-11-24 11:46:54.485776851 +0800
+@@ -54,7 +54,7 @@
+ 
+ exclude_modules= aaa_radius b2b_logic cachedb_cassandra cachedb_couchbase cachedb_memcached cachedb_mongodb cachedb_redis carrierroute compression cpl-c db_berkeley db_http db_mysql db_oracle db_perlvdb db_postgres db_unixodbc dialplan emergency event_rabbitmq h350 regex identity jabber json ldap lua httpd mi_xmlrpc_ng mmgeoip osp perl pi_http presence presence_dialoginfo presence_mwi presence_xml proto_sctp proto_tls pua pua_bla pua_dialoginfo pua_mi pua_usrloc pua_xmpp python rest_client rls sngtc snmpstats xcap xcap_client xmpp 
+ 
+-include_modules= b2b_logic carrierroute cpl-c dialplan event_rabbitmq regex identity jabber json mi_xmlrpc_ng perl pi_http presence presence_dialoginfo presence_mwi presence_xml pua pua_bla pua_dialoginfo pua_mi pua_usrloc pua_xmpp python rest_client rls xcap xcap_client xmpp
++include_modules= b2b_logic cachedb_redis carrierroute cpl-c dialplan event_rabbitmq regex identity jabber json mi_xmlrpc_ng perl pi_http presence presence_dialoginfo presence_mwi presence_xml pua pua_bla pua_dialoginfo pua_mi pua_usrloc pua_xmpp python rest_client rls xcap xcap_client xmpp
+ 
+ DEFS+= -DPKG_MALLOC #Uses a faster malloc (exclusive w/ USE_SHM_MEM)
+ DEFS+= -DSHM_MMAP #Use mmap instead of SYSV shared memory
+diff -ruN opensips.orig/files/patch-Makefile opensips/files/patch-Makefile
+--- opensips.orig/files/patch-Makefile	2015-10-02 00:34:41.000000000 +0800
++++ opensips/files/patch-Makefile	2015-11-23 01:44:13.646238531 +0800
+@@ -1,15 +1,15 @@
+---- Makefile.orig	2015-04-22 08:20:03 UTC
+-+++ Makefile
+-@@ -39,7 +39,7 @@ auto_gen=lex.yy.c cfg.tab.c   #lexx, yac
++--- Makefile.orig	2015-11-23 01:43:09.236230162 +0800
+++++ Makefile	2015-11-23 01:42:48.605228541 +0800
++@@ -46,7 +46,7 @@
+  # whether or not to install opensips.cfg or just opensips.cfg.default
+- # (opensips.cfg will never be overwritten by make install, this is usefull
++ # (opensips.cfg will never be overwritten by make install, this is useful
+  #  when creating packages)
+ -skip_cfg_install?=
+ +skip_cfg_install=yes
+  
+  #extra modules to exclude
+  skip_modules?=
+-@@ -540,38 +540,21 @@ install-cfg: $(cfg-prefix)/$(cfg-dir)
++@@ -509,27 +509,14 @@
+  		rm -fr $(cfg-prefix)/$(cfg-dir)$(NAME).cfg.sample0
+  		chmod 600 $(cfg-prefix)/$(cfg-dir)$(NAME).cfg.sample
+  		chmod 700 $(cfg-prefix)/$(cfg-dir)
+@@ -18,17 +18,6 @@
+ -			mv -f $(cfg-prefix)/$(cfg-dir)$(NAME).cfg.sample \
+ -				$(cfg-prefix)/$(cfg-dir)$(NAME).cfg; \
+ -		fi
+- 		# radius dictionary
+- 		if [ "$(RADIUSDEPON)" = "yes" ]; then \
+- 			$(INSTALL_TOUCH) \
+- 				$(cfg-prefix)/$(cfg-dir)/dictionary.opensips.sample ; \
+- 			$(INSTALL_CFG) etc/dictionary.opensips \
+- 				$(cfg-prefix)/$(cfg-dir)/dictionary.opensips.sample ; \
+--			if [ ! -f $(cfg-prefix)/$(cfg-dir)/dictionary.opensips ]; then \
+--				mv -f $(cfg-prefix)/$(cfg-dir)/dictionary.opensips.sample \
+--					$(cfg-prefix)/$(cfg-dir)/dictionary.opensips; \
+--			fi; \
+- 		fi
+  		# opensipsctl config
+  		$(INSTALL_TOUCH)   $(cfg-prefix)/$(cfg-dir)/opensipsctlrc.sample
+  		$(INSTALL_CFG) scripts/opensipsctlrc \
+@@ -45,6 +34,6 @@
+ -			mv -f $(cfg-prefix)/$(cfg-dir)/osipsconsolerc.sample \
+ -				$(cfg-prefix)/$(cfg-dir)/osipsconsolerc; \
+ -		fi
+- 		#$(INSTALL_CFG) etc/$(NAME).cfg $(cfg-prefix)/$(cfg-dir)
+- 		mkdir -p $(cfg-prefix)/$(cfg-dir)/tls ; \
+- 		mkdir -p $(cfg-prefix)/$(cfg-dir)/tls/rootCA ; \
++ 
++ install-console: $(bin-prefix)/$(bin-dir)
++ 		# install osipsconsole
+diff -ruN opensips.orig/files/patch-io_wait.h opensips/files/patch-io_wait.h
+--- opensips.orig/files/patch-io_wait.h	2015-10-02 00:34:41.000000000 +0800
++++ opensips/files/patch-io_wait.h	2015-11-23 06:38:41.924167363 +0800
+@@ -1,34 +1,12 @@
+---- io_wait.h.orig	2015-05-07 14:13:54 UTC
+-+++ io_wait.h
+-@@ -56,6 +56,7 @@
++--- io_wait.h.orig	2015-11-23 01:45:15.316221735 +0800
+++++ io_wait.h	2015-11-23 01:50:17.419199577 +0800
++@@ -56,6 +56,9 @@
+  
+  #include <errno.h>
+  #include <string.h>
+++#if defined(__FreeBSD__)
+ +#include "ip_addr.h"
+++#endif
+  #ifdef HAVE_SIGIO_RT
+  #define __USE_GNU /* or else F_SETSIG won't be included */
+  #define _GNU_SOURCE /* define this as well */
+-@@ -348,19 +349,21 @@ inline static int io_watch_add(	io_wait_
+- 		goto error;
+- 	}
+- 	if (prio > h->max_prio) {
+--		LM_BUG("[%s] priority %d requested (max is %d)\n",
+-+		LM_DBG("[%s] priority %d requested (max is %d)\n",
+- 			h->name, prio, h->max_prio);
+- 		goto error;
+- 	}
+-+#ifdef HAVE_EPOLL
+- 	LM_DBG("[%s] io_watch_add op (%d on %d) (%p, %d, %d, %p,%d), fd_no=%d/%d\n",
+- 			h->name,fd,h->epfd, h,fd,type,data,flags,h->fd_no,h->max_fd_no);
+-+#endif
+- 	//fd_array_print;
+- 	/*  hash sanity check */
+- 	e=get_fd_map(h, fd);
+- 
+- 	if (e->flags & flags){
+- 		if (e->data != data) {
+--			LM_BUG("[%s] BUG trying to overwrite entry %d"
+-+			LM_DBG("[%s] BUG trying to overwrite entry %d"
+- 					" in the hash(%d, %d, %p,%d) with (%d, %d, %p,%d)\n",
+- 					h->name,fd, e->fd, e->type, e->data,e->flags, fd, type, data,flags);
+- 			goto error;
+diff -ruN opensips.orig/files/patch-mem__shm_mem.h opensips/files/patch-mem__shm_mem.h
+--- opensips.orig/files/patch-mem__shm_mem.h	1970-01-01 07:30:00.000000000 +0730
++++ opensips/files/patch-mem__shm_mem.h	2015-11-23 07:31:10.333790352 +0800
+@@ -0,0 +1,10 @@
++--- mem/shm_mem.h.orig	2015-11-23 07:30:08.841794842 +0800
+++++ mem/shm_mem.h	2015-11-23 07:30:19.719794495 +0800
++@@ -62,6 +62,7 @@
++ 	#endif
++ #endif
++ 
+++#include "../error.h"
++ #include "../dprint.h"
++ #include "../lock_ops.h" /* we don't include locking.h on purpose */
++ #include "common.h"
+diff -ruN opensips.orig/files/patch-modules__proto_tls__proto_tls.c opensips/files/patch-modules__proto_tls__proto_tls.c
+--- opensips.orig/files/patch-modules__proto_tls__proto_tls.c	1970-01-01 07:30:00.000000000 +0730
++++ opensips/files/patch-modules__proto_tls__proto_tls.c	2015-11-24 05:02:42.070450456 +0800
+@@ -0,0 +1,10 @@
++--- modules/proto_tls/proto_tls.c.orig	2015-08-27 23:06:47.000000000 +0800
+++++ modules/proto_tls/proto_tls.c	2015-11-24 04:59:44.764931027 +0800
++@@ -42,6 +42,7 @@
++ #include <openssl/opensslv.h>
++ #include <openssl/err.h>
++ 
+++#include <netinet/in.h>
++ #include <netinet/in_systm.h>
++ #include <netinet/tcp.h>
++ #include <netinet/ip.h>
+diff -ruN opensips.orig/files/patch-net__net_tcp.c opensips/files/patch-net__net_tcp.c
+--- opensips.orig/files/patch-net__net_tcp.c	2015-10-02 00:34:41.000000000 +0800
++++ opensips/files/patch-net__net_tcp.c	1970-01-01 07:30:00.000000000 +0730
+@@ -1,10 +0,0 @@
+---- net/net_tcp.c.orig	2015-04-22 08:20:03 UTC
+-+++ net/net_tcp.c
+-@@ -26,6 +26,7 @@
+- 
+- #include <sys/types.h>
+- #include <sys/socket.h>
+-+#include <netinet/in.h>
+- #include <netinet/in_systm.h>
+- #include <netinet/ip.h>
+- #include <netinet/tcp.h>
+diff -ruN opensips.orig/files/patch-net__net_tcp_proc.c opensips/files/patch-net__net_tcp_proc.c
+--- opensips.orig/files/patch-net__net_tcp_proc.c	2015-10-02 00:34:41.000000000 +0800
++++ opensips/files/patch-net__net_tcp_proc.c	1970-01-01 07:30:00.000000000 +0730
+@@ -1,10 +0,0 @@
+---- net/net_tcp_proc.c.orig	2015-04-22 08:20:03 UTC
+-+++ net/net_tcp_proc.c
+-@@ -26,6 +26,7 @@
+- 
+- #include "../timer.h"
+- #include "../reactor.h"
+-+#include "../pt.h"
+- #include "tcp_conn.h"
+- #include "tcp_passfd.h"
+- 
+diff -ruN opensips.orig/pkg-plist opensips/pkg-plist
+--- opensips.orig/pkg-plist	2015-10-02 00:34:41.000000000 +0800
++++ opensips/pkg-plist	2015-11-24 11:50:48.354769256 +0800
+@@ -1,7 +1,7 @@
+-@sample etc/opensips/opensips.cfg.sample
+-@sample etc/opensips/opensipsctlrc.sample
+-@sample etc/opensips/osipsconsolerc.sample
+-%%RADIUS%%@sample etc/opensips/dictionary.opensips.sample
++@sample %%ETCDIR%%/opensips.cfg.sample
++@sample %%ETCDIR%%/opensipsctlrc.sample
++@sample %%ETCDIR%%/osipsconsolerc.sample
++%%RADIUS%%@sample %%ETCDIR%%/dictionary.opensips.sample
+ lib/opensips/modules/acc.so
+ lib/opensips/modules/alias_db.so
+ lib/opensips/modules/auth.so
+@@ -14,6 +14,7 @@
+ lib/opensips/modules/benchmark.so
+ lib/opensips/modules/cachedb_local.so
+ lib/opensips/modules/cachedb_sql.so
++lib/opensips/modules/cachedb_redis.so
+ lib/opensips/modules/call_center.so
+ lib/opensips/modules/call_control.so
+ lib/opensips/modules/carrierroute.so
+@@ -126,6 +127,7 @@
+ %%PGSQL%%lib/opensips/opensipsctl/opensipsdbctl.pgsql
+ %%RADIUS%%lib/opensips/modules/aaa_radius.so
+ %%UNIXODBC%%lib/opensips/modules/db_unixodbc.so
++%%TLS%%lib/opensips/modules/proto_tls.so
+ lib/opensips/opensipsctl/dbtextdb/dbtextdb.py
+ lib/opensips/opensipsctl/opensipsctl.base
+ lib/opensips/opensipsctl/opensipsctl.ctlbase
+@@ -182,6 +184,7 @@
+ %%PORTDOCS%%%%DOCSDIR%%/README.benchmark
+ %%PORTDOCS%%%%DOCSDIR%%/README.cachedb_local
+ %%PORTDOCS%%%%DOCSDIR%%/README.cachedb_sql
++%%PORTDOCS%%%%DOCSDIR%%/README.cachedb_redis
+ %%PORTDOCS%%%%DOCSDIR%%/README.call_center
+ %%PORTDOCS%%%%DOCSDIR%%/README.call_control
+ %%PORTDOCS%%%%DOCSDIR%%/README.carrierroute
+@@ -281,15 +284,16 @@
+ %%PORTDOCS%%%%DOCSDIR%%/README.xcap
+ %%PORTDOCS%%%%DOCSDIR%%/README.xcap_client
+ %%PORTDOCS%%%%DOCSDIR%%/README.xmpp
+-%%PORTDOCS%%%%GEOIP%%%%DOCSDIR%%/README.mmgeoip
+-%%PORTDOCS%%%%HTTP%%%%DOCSDIR%%/README.httpd
+-%%PORTDOCS%%%%LDAP%%%%DOCSDIR%%/README.h350
+-%%PORTDOCS%%%%LDAP%%%%DOCSDIR%%/README.ldap
+-%%PORTDOCS%%%%MEMCACHED%%%%DOCSDIR%%/README.cachedb_memcached
+-%%PORTDOCS%%%%MYSQL%%%%DOCSDIR%%/README.db_mysql
+-%%PORTDOCS%%%%PGSQL%%%%DOCSDIR%%/README.db_postgres
+-%%PORTDOCS%%%%RADIUS%%%%DOCSDIR%%/README.aaa_radius
+-%%PORTDOCS%%%%UNIXODBC%%%%DOCSDIR%%/README.db_unixodbc
++%%GEOIP%%%%PORTDOCS%%%%DOCSDIR%%/README.mmgeoip
++%%HTTP%%%%PORTDOCS%%%%DOCSDIR%%/README.httpd
++%%LDAP%%%%PORTDOCS%%%%DOCSDIR%%/README.h350
++%%LDAP%%%%PORTDOCS%%%%DOCSDIR%%/README.ldap
++%%MEMCACHED%%%%PORTDOCS%%%%DOCSDIR%%/README.cachedb_memcached
++%%MYSQL%%%%PORTDOCS%%%%DOCSDIR%%/README.db_mysql
++%%PGSQL%%%%PORTDOCS%%%%DOCSDIR%%/README.db_postgres
++%%RADIUS%%%%PORTDOCS%%%%DOCSDIR%%/README.aaa_radius
++%%UNIXODBC%%%%PORTDOCS%%%%%DOCSDIR%%/README.db_unixodbc
++%%TLS%%%%PORTDOCS%%%%DOCSDIR%%/README.proto_tls
+ %%DATADIR%%/dbtext/opensips/acc
+ %%DATADIR%%/dbtext/opensips/active_watchers
+ %%DATADIR%%/dbtext/opensips/address
+@@ -427,6 +431,7 @@
+ %%DATADIR%%/pi_http/userblacklist-table
+ %%DATADIR%%/pi_http/usrloc-mod
+ %%DATADIR%%/pi_http/usrloc-table
++%%MYSQL%%%%DATADIR%%/mysql/emergency-create.sql
+ %%MYSQL%%share/opensips/mysql/acc-create.sql
+ %%MYSQL%%share/opensips/mysql/alias_db-create.sql
+ %%MYSQL%%share/opensips/mysql/auth_db-create.sql
+@@ -589,10 +594,25 @@
+ %%EXAMPLES%%share/examples/opensips/web_im/send_im.php
+ %%DATADIR%%/dbtext/opensips/dr_partitions
+ %%DATADIR%%/dbtext/opensips/fraud_detection
++%%DATADIR%%/dbtext/opensips/emergency_report
++%%DATADIR%%/dbtext/opensips/emergency_routing
+ %%DATADIR%%/pi_http/fraud_detection-mod
+ %%DATADIR%%/pi_http/fraud_detection-table
++%%DATADIR%%/pi_http/emergency-mod
++%%DATADIR%%/pi_http/emergency-table
+ %%PGSQL%%%%DATADIR%%/postgres/fraud_detection-create.sql
++%%PGSQL%%%%DATADIR%%/postgres/emergency-create.sql
+ %%MYSQL%%%%DATADIR%%/mysql/fraud_detection-create.sql
+-@dir %%ETCDIR%%/tls/rootCA/certs
+-@dir %%ETCDIR%%/tls/rootCA/private
+-@dir %%ETCDIR%%/tls/user
++%%TLS%%%%ETCDIR%%/tls/README
++%%TLS%%%%ETCDIR%%/tls/ca.conf
++%%TLS%%%%ETCDIR%%/tls/request.conf
++%%TLS%%%%ETCDIR%%/tls/rootCA/cacert.pem
++%%TLS%%%%ETCDIR%%/tls/rootCA/certs/01.pem
++%%TLS%%%%ETCDIR%%/tls/rootCA/index.txt
++%%TLS%%%%ETCDIR%%/tls/rootCA/private/cakey.pem
++%%TLS%%%%ETCDIR%%/tls/rootCA/serial
++%%TLS%%%%ETCDIR%%/tls/user.conf
++%%TLS%%%%ETCDIR%%/tls/user/user-calist.pem
++%%TLS%%%%ETCDIR%%/tls/user/user-cert.pem
++%%TLS%%%%ETCDIR%%/tls/user/user-cert_req.pem
++%%TLS%%%%ETCDIR%%/tls/user/user-privkey.pem
