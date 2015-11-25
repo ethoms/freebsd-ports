@@ -1,4 +1,4 @@
-build started at Tue Nov 24 06:11:36 UTC 2015
+build started at Wed Nov 25 08:57:11 UTC 2015
 port directory: /usr/ports/net/opensips
 building for: FreeBSD 101amd64-standard 10.1-RELEASE-p24 FreeBSD 10.1-RELEASE-p24 amd64
 maintained by: euan@potensol.com
@@ -22,8 +22,8 @@ MASTERMNT=/poudriere/data/.m/101amd64-standard/ref
 FORCE_PACKAGE=yes
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/games:/usr/local/sbin:/usr/local/bin:/root/bin
 POUDRIERE_BUILD_TYPE=bulk
-OLDPWD=/
-PWD=/poudriere/data/.m/101amd64-standard/ref/.p/pool
+OLDPWD=/freebsd-ports
+PWD=/
 MASTERNAME=101amd64-standard
 SCRIPTPREFIX=/usr/local/share/poudriere
 USER=root
@@ -203,9 +203,6 @@ If you are upgrading from the old package format, first run:
 =======================<phase: fetch          >============================
 ===>  License GPLv2 accepted by the user
 ===>   opensips-2.1.1 depends on file: /usr/local/sbin/pkg - found
-=> opensips-2.1.1.tar.gz doesn't seem to exist in /portdistfiles/.
-=> Attempting to fetch http://opensips.org/pub/opensips/2.1.1/src/opensips-2.1.1.tar.gz
-opensips-2.1.1.tar.gz                                    0  B    0  Bps
 ===> Fetching all distfiles required by opensips-2.1.1 for building
 ===========================================================================
 =======================<phase: checksum       >============================
@@ -373,8 +370,8 @@ etc...
 ===>   opensips-2.1.1 depends on executable: pkgconf - found
 ===>   Returning to build of opensips-2.1.1
 ===>   opensips-2.1.1 depends on executable: gcc48 - not found
-===>   Installing existing package /packages/All/gcc-4.8.5_1.txz
-[101amd64-standard] Installing gcc-4.8.5_1...
+===>   Installing existing package /packages/All/gcc-4.8.5_2.txz
+[101amd64-standard] Installing gcc-4.8.5_2...
 [101amd64-standard] `-- Installing mpc-1.0.3...
 [101amd64-standard] |   `-- Installing gmp-5.1.3_2...
 [101amd64-standard] |   `-- Extracting gmp-5.1.3_2: .......... done
@@ -385,8 +382,8 @@ etc...
 [101amd64-standard] `-- Extracting binutils-2.25.1: .......... done
 [101amd64-standard] `-- Installing gcc-ecj-4.5...
 [101amd64-standard] `-- Extracting gcc-ecj-4.5: . done
-[101amd64-standard] Extracting gcc-4.8.5_1: .......... done
-Message from gcc-4.8.5_1:
+[101amd64-standard] Extracting gcc-4.8.5_2: .......... done
+Message from gcc-4.8.5_2:
 To ensure binaries built with this toolchain find appropriate versions
 of the necessary run-time libraries, you may want to link using
 
@@ -581,7 +578,7 @@ for more information.
 ===========================================================================
 =======================<phase: build          >============================
 ===>  Building for opensips-2.1.1
-cd /wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1 && unset MAKEFLAGS && CC="gcc48" CXX="g++48" CPP="cpp48" _GCC_RUNTIME="/usr/local/lib/gcc48" CFLAGS="-O2 -pipe  -fstack-protector -Wl,-rpath=/usr/local/lib/gcc48 -DLDAP_DEPRECATED -fno-strict-aliasing" CXXFLAGS="-O2 -pipe -fstack-protector -Wl,-rpath=/usr/local/lib/gcc48 -DLDAP_DEPRECATED -fno-strict-aliasing  -Wl,-rpath=/usr/local/lib/gcc48" LDFLAGS=" -L/usr/local/lib -fstack-protector -Wl,-rpath=/usr/local/lib/gcc48 -L/usr/local/lib/gcc48" gmake -j8 all
+cd /wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1 && CC="gcc48" CXX="g++48" CPP="cpp48" _GCC_RUNTIME="/usr/local/lib/gcc48" CFLAGS="-O2 -pipe  -fstack-protector -Wl,-rpath=/usr/local/lib/gcc48 -DLDAP_DEPRECATED -fno-strict-aliasing" CXXFLAGS="-O2 -pipe -fstack-protector -Wl,-rpath=/usr/local/lib/gcc48 -DLDAP_DEPRECATED -fno-strict-aliasing  -Wl,-rpath=/usr/local/lib/gcc48" LDFLAGS=" -L/usr/local/lib -fstack-protector -Wl,-rpath=/usr/local/lib/gcc48 -L/usr/local/lib/gcc48" gmake -j8 all
 gmake[1]: Entering directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1'
 yacc -d -b cfg cfg.y
 yacc -d -b cfg cfg.y
@@ -1159,8 +1156,8 @@ gmake[2]: Leaving directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1
 
 gmake[2]: Entering directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1/modules/mi_datagram'
 Compiling mi_datagram_writer.c
-Compiling mi_datagram.c
 Compiling datagram_fnc.c
+Compiling mi_datagram.c
 Compiling mi_datagram_parser.c
 Linking mi_datagram.so
 gmake[2]: Leaving directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1/modules/mi_datagram'
@@ -1173,8 +1170,8 @@ gmake[2]: Leaving directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1
 
 
 gmake[2]: Entering directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1/modules/path'
-Compiling path_mod.c
 Compiling path.c
+Compiling path_mod.c
 Linking path.so
 gmake[2]: Leaving directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1/modules/path'
 
@@ -1187,8 +1184,8 @@ gmake[2]: Leaving directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1
 
 
 gmake[2]: Entering directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1/modules/userblacklist'
-Compiling dt.c
 Compiling userblacklist.c
+Compiling dt.c
 Compiling db.c
 Linking userblacklist.so
 gmake[2]: Leaving directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1/modules/userblacklist'
@@ -1391,8 +1388,8 @@ Compiling timer.c
 Compiling sip_msg.c
 Compiling dlg.c
 Compiling callid.c
-Compiling t_hooks.c
 Compiling h_table.c
+Compiling t_hooks.c
 Compiling t_fifo.c
 Compiling t_funcs.c
 Compiling t_dlg.c
@@ -1470,8 +1467,8 @@ gmake[2]: Leaving directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1
 
 
 gmake[2]: Entering directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1/modules/acc'
-Compiling diam_tcp.c
 Compiling acc_extra.c
+Compiling diam_tcp.c
 Compiling diam_avp.c
 Compiling acc_logic.c
 Compiling diam_message.c
@@ -1596,8 +1593,8 @@ gmake[2]: Leaving directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1
 
 gmake[2]: Entering directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1/modules/rtpengine'
 Compiling rtpengine.c
-Compiling rtpengine_funcs.c
 Compiling bencode.c
+Compiling rtpengine_funcs.c
 Linking rtpengine.so
 gmake[2]: Leaving directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1/modules/rtpengine'
 
@@ -1731,8 +1728,8 @@ Compiling regtime.c
 Compiling sip_msg.c
 Compiling lookup.c
 Compiling save.c
-Compiling common.c
 Compiling path.c
+Compiling common.c
 Compiling rerrno.c
 Compiling reply.c
 Linking registrar.so
@@ -1764,24 +1761,24 @@ gmake[2]: Leaving directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1
 
 
 gmake[2]: Entering directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1/modules/permissions'
-Compiling rule.c
 Compiling parse_config.c
+Compiling rule.c
 Compiling hash.c
 Compiling address.c
-Compiling permissions.c
 Compiling mi.c
+Compiling permissions.c
 Linking permissions.so
 gmake[2]: Leaving directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1/modules/permissions'
 
 
 gmake[2]: Entering directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1/modules/seas'
 Compiling utils.c
-Compiling encode_expires.c
 Compiling seas.c
+Compiling encode_expires.c
 Compiling encode_content_length.c
 Compiling encode_msg.c
-Compiling cluster.c
 Compiling encode_content_disposition.c
+Compiling cluster.c
 Compiling encode_header.c
 Compiling ha.c
 Compiling encode_via.c
@@ -1815,8 +1812,8 @@ gmake[2]: Entering directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.
 Compiling dbt_file.c
 Compiling dbtext.c
 Compiling dbt_api.c
-Compiling dbt_base.c
 Compiling dbt_lib.c
+Compiling dbt_base.c
 Compiling dbt_util.c
 Compiling dbt_tb.c
 Compiling dbt_res.c
@@ -1896,7 +1893,7 @@ To make it permanent, you need the following lines in /etc/fstab:
 ===>   opensips-2.1.1 depends on shared library: libpq.so.5 - found (/usr/local/lib/libpq.so.5)
 ===>   opensips-2.1.1 depends on shared library: libldap-2.4.so.2 - found (/usr/local/lib/libldap-2.4.so.2)
 ===>   Generating temporary packing list
-cd /wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1 && unset MAKEFLAGS && CC="gcc48" CXX="g++48" CPP="cpp48" _GCC_RUNTIME="/usr/local/lib/gcc48" CFLAGS="-O2 -pipe  -fstack-protector -Wl,-rpath=/usr/local/lib/gcc48 -DLDAP_DEPRECATED -fno-strict-aliasing" CXXFLAGS="-O2 -pipe -fstack-protector -Wl,-rpath=/usr/local/lib/gcc48 -DLDAP_DEPRECATED -fno-strict-aliasing  -Wl,-rpath=/usr/local/lib/gcc48" LDFLAGS=" -L/usr/local/lib -fstack-protector -Wl,-rpath=/usr/local/lib/gcc48 -L/usr/local/lib/gcc48" gmake install 
+cd /wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1 && CC="gcc48" CXX="g++48" CPP="cpp48" _GCC_RUNTIME="/usr/local/lib/gcc48" CFLAGS="-O2 -pipe  -fstack-protector -Wl,-rpath=/usr/local/lib/gcc48 -DLDAP_DEPRECATED -fno-strict-aliasing" CXXFLAGS="-O2 -pipe -fstack-protector -Wl,-rpath=/usr/local/lib/gcc48 -DLDAP_DEPRECATED -fno-strict-aliasing  -Wl,-rpath=/usr/local/lib/gcc48" LDFLAGS=" -L/usr/local/lib -fstack-protector -Wl,-rpath=/usr/local/lib/gcc48 -L/usr/local/lib/gcc48" gmake install 
 gmake[1]: Entering directory '/wrkdirs/usr/ports/net/opensips/work/opensips-2.1.1'
 mkdir -p /wrkdirs/usr/ports/net/opensips/work/stage/usr/local/etc/opensips/
 mkdir -p /wrkdirs/usr/ports/net/opensips/work/stage/usr/local/lib/opensips/modules/
@@ -4127,12 +4124,12 @@ The operation will free 11 MiB.
 [101amd64-standard] [1/1] Deleting files for opensips-2.1.1: .......... done
 ===========================================================================
 ====>> Checking for extra files and directories
-[01:03:04] ====>> Installing from package
+[00:03:49] ====>> Installing from package
 [101amd64-standard] Installing opensips-2.1.1...
 [101amd64-standard] Extracting opensips-2.1.1: .......... done
-[01:03:04] ====>> Cleaning up
+[00:03:50] ====>> Cleaning up
 ===>  Cleaning for opensips-2.1.1
-[01:03:06] ====>> Deinstalling package
+[00:03:51] ====>> Deinstalling package
 Updating database digests format: . done
 Checking integrity... done (0 conflicting)
 Deinstallation has been requested for the following 1 packages (of 0 packages in the universe):
@@ -4143,5 +4140,5 @@ Installed packages to be REMOVED:
 The operation will free 11 MiB.
 [101amd64-standard] [1/1] Deinstalling opensips-2.1.1...
 [101amd64-standard] [1/1] Deleting files for opensips-2.1.1: .......... done
-build of net/opensips ended at Tue Nov 24 06:15:27 UTC 2015
-build time: 00:03:51
+build of net/opensips ended at Wed Nov 25 09:00:53 UTC 2015
+build time: 00:03:42
