@@ -1,6 +1,6 @@
 diff -ruN opensips.orig/Makefile opensips/Makefile
 --- opensips.orig/Makefile	2015-11-24 06:56:18.247977526 +0800
-+++ opensips/Makefile	2015-11-24 12:06:30.923694499 +0800
++++ opensips/Makefile	2015-11-25 13:46:10.155328842 +0800
 @@ -2,10 +2,9 @@
  # $FreeBSD: head/net/opensips/Makefile 398368 2015-10-01 16:34:41Z pi $
  
@@ -23,14 +23,63 @@ diff -ruN opensips.orig/Makefile opensips/Makefile
  GINSTALL=		ginstall
  
  WRKSRC=			${WRKDIR}/opensips-${PORTVERSION}
-@@ -146,10 +142,14 @@
- EXTRA_MODULES+=		db_unixodbc
- .endif
+@@ -44,6 +40,8 @@
+ USES=			gmake perl5 pkgconfig shebangfix
+ USE_GCC=		yes
  
-+.if ${PORT_OPTIONS:MTLS}
-+EXTRA_MODULES+=		proto_tls
-+.endif
++NOPRECIOUSMAKEVARS=	yes
 +
+ OPTIONS_DEFINE=		DEBUG DOCS EXAMPLES GEOIP HTTP LDAP MEMCACHED MYSQL PGSQL RADIUS TESTS TLS UNIXODBC
+ OPTIONS_DEFAULT=	DOCS EXAMPLES GEOIP HTTP LDAP MEMCACHED PGSQL RADIUS TLS
+ OPTIONS_SUB=		yes
+@@ -113,43 +111,37 @@
+ 
+ .include <bsd.port.options.mk>
+ 
+-.if ${PORT_OPTIONS:MGEOIP}
++GEOIP-on:
+ EXTRA_MODULES+=		mmgeoip
+-.endif
+ 
+-.if ${PORT_OPTIONS:MHTTP}
++HTTP-on:
+ EXTRA_MODULES+=		httpd
+-.endif
+ 
+-.if ${PORT_OPTIONS:MLDAP}
++LDAP-on:
+ EXTRA_MODULES+=		ldap h350
+-.endif
+ 
+-.if ${PORT_OPTIONS:MMEMCACHED}
++MEMCACHED-on:
+ EXTRA_MODULES+=		cachedb_memcached
+-.endif
+ 
+-.if ${PORT_OPTIONS:MMYSQL}
++MYSQL-on:
+ EXTRA_MODULES+=		db_mysql
+-.endif
+ 
+-.if ${PORT_OPTIONS:MPGSQL}
+-#USES+=			pgsql
++PGSQL-on:
+ EXTRA_MODULES+=		db_postgres
+-.endif
+ 
+-.if ${PORT_OPTIONS:MRADIUS}
++RADIUS-on:
+ EXTRA_MODULES+=		aaa_radius
+-.endif
+ 
+-.if ${PORT_OPTIONS:MUNIXODBC}
++UNIXODBC-on:
+ EXTRA_MODULES+=		db_unixodbc
+-.endif
++
++TLS-on:
++EXTRA_MODULES+=		proto_tls
+ 
  OPENSIPS_MAKE_ENV=	CC="${CC}" CXX="${CXX}" CPP="${CPP}" _GCC_RUNTIME="${_GCC_RUNTIME}" CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}"
  
  do-configure:
@@ -39,7 +88,7 @@ diff -ruN opensips.orig/Makefile opensips/Makefile
  
  	@${REINPLACE_CMD} -e "s|_PREFIX_|${PREFIX}|" ${WRKSRC}/Makefile.conf
  	@${REINPLACE_CMD} -e "s|_STAGE_DIR_|${STAGEDIR}|" ${WRKSRC}/Makefile.conf
-@@ -158,20 +158,15 @@
+@@ -158,14 +150,8 @@
  	@${REINPLACE_CMD} -e "s/\(^include_modules=.*\)/\1 ${i}/" ${WRKSRC}/Makefile.conf
  .endfor
  
@@ -48,31 +97,39 @@ diff -ruN opensips.orig/Makefile opensips/Makefile
 -	@${ECHO_CMD} "TLS=1" >> ${WRKSRC}/Makefile.conf
 -.endif
 -
- .if ! ${PORT_OPTIONS:MDEBUG}
+-.if ! ${PORT_OPTIONS:MDEBUG}
++do-configure-DEBUG-off:
  	@${REINPLACE_CMD} -e "s/^#DEFS+= -DNO_DEBUG/DEFS+= -DNO_DEBUG/" ${WRKSRC}/Makefile.conf
- .endif
+-.endif
  
  do-build:
--	cd ${WRKSRC} && ${OPENSIPS_MAKE_ENV} ${GMAKE} ${_MAKE_JOBS} ${ALL_TARGET}
-+	cd ${WRKSRC} && unset MAKEFLAGS && ${OPENSIPS_MAKE_ENV} ${GMAKE} ${_MAKE_JOBS} ${ALL_TARGET}
- 
+ 	cd ${WRKSRC} && ${OPENSIPS_MAKE_ENV} ${GMAKE} ${_MAKE_JOBS} ${ALL_TARGET}
+@@ -173,13 +159,11 @@
  do-install:
--	cd ${WRKSRC} && ${OPENSIPS_MAKE_ENV} ${GMAKE} ${INSTALL_TARGET}
-+	cd ${WRKSRC} && unset MAKEFLAGS && ${OPENSIPS_MAKE_ENV} ${GMAKE} ${INSTALL_TARGET}
+ 	cd ${WRKSRC} && ${OPENSIPS_MAKE_ENV} ${GMAKE} ${INSTALL_TARGET}
  
- .if ${PORT_OPTIONS:MTESTS}
+-.if ${PORT_OPTIONS:MTESTS}
++do-install-TESTS-on:
  	(cp -r ${WRKSRC}/test ${STAGEDIR}${PREFIX}/tests/opensips)
-@@ -187,6 +182,9 @@
+-.endif
+ 
+-.if ${PORT_OPTIONS:MEXAMPLES}
++do-install-EXAMPLES-on:
+ 	(cp -r ${WRKSRC}/examples ${STAGEDIR}${PREFIX}/share/examples/opensips)
+-.endif
+ 
+ post-stage:
+ 	@${REINPLACE_CMD} -e "s|^# MD5=.*|MD5=\"md5\"|" ${STAGEDIR}${PREFIX}/etc/opensips/opensipsctlrc.sample
+@@ -187,6 +171,8 @@
  	@${REINPLACE_CMD} -e "s|^# MD5=.*|MD5=\"md5\"|" ${STAGEDIR}${PREFIX}/etc/opensips/osipsconsolerc.sample
  	@${REINPLACE_CMD} -e "s|^# GREP=.*|GREP=\"${LOCALBASE}/bin/egrep\"|" ${STAGEDIR}${PREFIX}/etc/opensips/osipsconsolerc.sample
  	(cp ${FILESDIR}/opensips.cfg.sample ${STAGEDIR}${ETCDIR}/opensips.cfg.sample)
-+.if ${PORT_OPTIONS:MRADIUS}
++post-stage-RADIUS-on:
 +	(mv ${STAGEDIR}${ETCDIR}/dictionary.opensips ${STAGEDIR}${ETCDIR}/dictionary.opensips.sample)
-+.endif
  
  # Strip binaries in sbin
  	@${ECHO_CMD} "Stripping binaries in ${STAGEDIR}${PREFIX}/sbin/"
-@@ -219,7 +217,7 @@
+@@ -219,7 +205,7 @@
  		sms.so speeddial.so sst.so statistics.so stun.so textops.so tlsops.so tm.so uac.so \
  		uac_auth.so uac_redirect.so uac_registrant.so uri.so userblacklist.so usrloc.so \
  		xcap.so xcap_client.so xmpp.so topology_hiding.so fraud_detection.so rtpengine.so \
@@ -83,7 +140,7 @@ diff -ruN opensips.orig/Makefile opensips/Makefile
  		fi
 diff -ruN opensips.orig/distinfo opensips/distinfo
 --- opensips.orig/distinfo	2015-10-02 00:34:41.000000000 +0800
-+++ opensips/distinfo	2015-11-23 01:31:08.677275861 +0800
++++ opensips/distinfo	2015-11-23 01:31:08.000000000 +0800
 @@ -1,2 +1,2 @@
 -SHA256 (opensips-2.1.0.tar.gz) = 9dffa61bcf91e17bc6d6d700f669516448875c61accf9c46a67731e260ad958c
 -SIZE (opensips-2.1.0.tar.gz) = 8470358
@@ -91,7 +148,7 @@ diff -ruN opensips.orig/distinfo opensips/distinfo
 +SIZE (opensips-2.1.1.tar.gz) = 4734597
 diff -ruN opensips.orig/files/Makefile.conf opensips/files/Makefile.conf
 --- opensips.orig/files/Makefile.conf	2015-10-02 00:34:41.000000000 +0800
-+++ opensips/files/Makefile.conf	2015-11-24 11:46:54.485776851 +0800
++++ opensips/files/Makefile.conf	2015-11-24 11:46:54.000000000 +0800
 @@ -54,7 +54,7 @@
  
  exclude_modules= aaa_radius b2b_logic cachedb_cassandra cachedb_couchbase cachedb_memcached cachedb_mongodb cachedb_redis carrierroute compression cpl-c db_berkeley db_http db_mysql db_oracle db_perlvdb db_postgres db_unixodbc dialplan emergency event_rabbitmq h350 regex identity jabber json ldap lua httpd mi_xmlrpc_ng mmgeoip osp perl pi_http presence presence_dialoginfo presence_mwi presence_xml proto_sctp proto_tls pua pua_bla pua_dialoginfo pua_mi pua_usrloc pua_xmpp python rest_client rls sngtc snmpstats xcap xcap_client xmpp 
@@ -103,7 +160,7 @@ diff -ruN opensips.orig/files/Makefile.conf opensips/files/Makefile.conf
  DEFS+= -DSHM_MMAP #Use mmap instead of SYSV shared memory
 diff -ruN opensips.orig/files/patch-Makefile opensips/files/patch-Makefile
 --- opensips.orig/files/patch-Makefile	2015-10-02 00:34:41.000000000 +0800
-+++ opensips/files/patch-Makefile	2015-11-24 13:03:19.816460147 +0800
++++ opensips/files/patch-Makefile	2015-11-24 13:03:19.000000000 +0800
 @@ -1,15 +1,15 @@
 ---- Makefile.orig	2015-04-22 08:20:03 UTC
 +--- Makefile.orig	2015-08-27 15:06:47 UTC
@@ -154,7 +211,7 @@ diff -ruN opensips.orig/files/patch-Makefile opensips/files/patch-Makefile
 + 		# install osipsconsole
 diff -ruN opensips.orig/files/patch-Makefile.defs opensips/files/patch-Makefile.defs
 --- opensips.orig/files/patch-Makefile.defs	2015-10-02 00:34:41.000000000 +0800
-+++ opensips/files/patch-Makefile.defs	2015-11-24 13:03:19.822459868 +0800
++++ opensips/files/patch-Makefile.defs	2015-11-24 13:03:19.000000000 +0800
 @@ -1,4 +1,4 @@
 ---- Makefile.defs.orig	2015-05-07 16:45:43 UTC
 +--- Makefile.defs.orig	2015-08-27 15:06:47 UTC
@@ -163,7 +220,7 @@ diff -ruN opensips.orig/files/patch-Makefile.defs opensips/files/patch-Makefile.
   		ISSMP ?= yes
 diff -ruN opensips.orig/files/patch-io_wait.h opensips/files/patch-io_wait.h
 --- opensips.orig/files/patch-io_wait.h	2015-10-02 00:34:41.000000000 +0800
-+++ opensips/files/patch-io_wait.h	2015-11-24 13:03:19.829459449 +0800
++++ opensips/files/patch-io_wait.h	2015-11-24 13:03:19.000000000 +0800
 @@ -1,34 +1,12 @@
 ---- io_wait.h.orig	2015-05-07 14:13:54 UTC
 +--- io_wait.h.orig	2015-08-27 15:06:47 UTC
@@ -205,7 +262,7 @@ diff -ruN opensips.orig/files/patch-io_wait.h opensips/files/patch-io_wait.h
 - 			goto error;
 diff -ruN opensips.orig/files/patch-mem__shm_mem.h opensips/files/patch-mem__shm_mem.h
 --- opensips.orig/files/patch-mem__shm_mem.h	1970-01-01 07:30:00.000000000 +0730
-+++ opensips/files/patch-mem__shm_mem.h	2015-11-24 13:03:19.835459729 +0800
++++ opensips/files/patch-mem__shm_mem.h	2015-11-24 13:03:19.000000000 +0800
 @@ -0,0 +1,10 @@
 +--- mem/shm_mem.h.orig	2015-08-27 15:06:47 UTC
 ++++ mem/shm_mem.h
@@ -219,7 +276,7 @@ diff -ruN opensips.orig/files/patch-mem__shm_mem.h opensips/files/patch-mem__shm
 + #include "common.h"
 diff -ruN opensips.orig/files/patch-modules__proto_tls__proto_tls.c opensips/files/patch-modules__proto_tls__proto_tls.c
 --- opensips.orig/files/patch-modules__proto_tls__proto_tls.c	1970-01-01 07:30:00.000000000 +0730
-+++ opensips/files/patch-modules__proto_tls__proto_tls.c	2015-11-24 13:03:19.842462663 +0800
++++ opensips/files/patch-modules__proto_tls__proto_tls.c	2015-11-24 13:03:19.000000000 +0800
 @@ -0,0 +1,10 @@
 +--- modules/proto_tls/proto_tls.c.orig	2015-08-27 15:06:47 UTC
 ++++ modules/proto_tls/proto_tls.c
@@ -261,7 +318,7 @@ diff -ruN opensips.orig/files/patch-net__net_tcp_proc.c opensips/files/patch-net
 - 
 diff -ruN opensips.orig/pkg-plist opensips/pkg-plist
 --- opensips.orig/pkg-plist	2015-10-02 00:34:41.000000000 +0800
-+++ opensips/pkg-plist	2015-11-24 11:50:48.354769256 +0800
++++ opensips/pkg-plist	2015-11-24 11:50:48.000000000 +0800
 @@ -1,7 +1,7 @@
 -@sample etc/opensips/opensips.cfg.sample
 -@sample etc/opensips/opensipsctlrc.sample

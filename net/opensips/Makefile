@@ -40,6 +40,8 @@ USE_RC_SUBR=		opensips
 USES=			gmake perl5 pkgconfig shebangfix
 USE_GCC=		yes
 
+NOPRECIOUSMAKEVARS=	yes
+
 OPTIONS_DEFINE=		DEBUG DOCS EXAMPLES GEOIP HTTP LDAP MEMCACHED MYSQL PGSQL RADIUS TESTS TLS UNIXODBC
 OPTIONS_DEFAULT=	DOCS EXAMPLES GEOIP HTTP LDAP MEMCACHED PGSQL RADIUS TLS
 OPTIONS_SUB=		yes
@@ -109,42 +111,32 @@ SHEBANG_FILES=		scripts/osipsconsole \
 
 .include <bsd.port.options.mk>
 
-.if ${PORT_OPTIONS:MGEOIP}
+GEOIP-on:
 EXTRA_MODULES+=		mmgeoip
-.endif
 
-.if ${PORT_OPTIONS:MHTTP}
+HTTP-on:
 EXTRA_MODULES+=		httpd
-.endif
 
-.if ${PORT_OPTIONS:MLDAP}
+LDAP-on:
 EXTRA_MODULES+=		ldap h350
-.endif
 
-.if ${PORT_OPTIONS:MMEMCACHED}
+MEMCACHED-on:
 EXTRA_MODULES+=		cachedb_memcached
-.endif
 
-.if ${PORT_OPTIONS:MMYSQL}
+MYSQL-on:
 EXTRA_MODULES+=		db_mysql
-.endif
 
-.if ${PORT_OPTIONS:MPGSQL}
-#USES+=			pgsql
+PGSQL-on:
 EXTRA_MODULES+=		db_postgres
-.endif
 
-.if ${PORT_OPTIONS:MRADIUS}
+RADIUS-on:
 EXTRA_MODULES+=		aaa_radius
-.endif
 
-.if ${PORT_OPTIONS:MUNIXODBC}
+UNIXODBC-on:
 EXTRA_MODULES+=		db_unixodbc
-.endif
 
-.if ${PORT_OPTIONS:MTLS}
+TLS-on:
 EXTRA_MODULES+=		proto_tls
-.endif
 
 OPENSIPS_MAKE_ENV=	CC="${CC}" CXX="${CXX}" CPP="${CPP}" _GCC_RUNTIME="${_GCC_RUNTIME}" CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}"
 
@@ -158,23 +150,20 @@ do-configure:
 	@${REINPLACE_CMD} -e "s/\(^include_modules=.*\)/\1 ${i}/" ${WRKSRC}/Makefile.conf
 .endfor
 
-.if ! ${PORT_OPTIONS:MDEBUG}
+do-configure-DEBUG-off:
 	@${REINPLACE_CMD} -e "s/^#DEFS+= -DNO_DEBUG/DEFS+= -DNO_DEBUG/" ${WRKSRC}/Makefile.conf
-.endif
 
 do-build:
-	cd ${WRKSRC} && unset MAKEFLAGS && ${OPENSIPS_MAKE_ENV} ${GMAKE} ${_MAKE_JOBS} ${ALL_TARGET}
+	cd ${WRKSRC} && ${OPENSIPS_MAKE_ENV} ${GMAKE} ${_MAKE_JOBS} ${ALL_TARGET}
 
 do-install:
-	cd ${WRKSRC} && unset MAKEFLAGS && ${OPENSIPS_MAKE_ENV} ${GMAKE} ${INSTALL_TARGET}
+	cd ${WRKSRC} && ${OPENSIPS_MAKE_ENV} ${GMAKE} ${INSTALL_TARGET}
 
-.if ${PORT_OPTIONS:MTESTS}
+do-install-TESTS-on:
 	(cp -r ${WRKSRC}/test ${STAGEDIR}${PREFIX}/tests/opensips)
-.endif
 
-.if ${PORT_OPTIONS:MEXAMPLES}
+do-install-EXAMPLES-on:
 	(cp -r ${WRKSRC}/examples ${STAGEDIR}${PREFIX}/share/examples/opensips)
-.endif
 
 post-stage:
 	@${REINPLACE_CMD} -e "s|^# MD5=.*|MD5=\"md5\"|" ${STAGEDIR}${PREFIX}/etc/opensips/opensipsctlrc.sample
@@ -182,9 +171,8 @@ post-stage:
 	@${REINPLACE_CMD} -e "s|^# MD5=.*|MD5=\"md5\"|" ${STAGEDIR}${PREFIX}/etc/opensips/osipsconsolerc.sample
 	@${REINPLACE_CMD} -e "s|^# GREP=.*|GREP=\"${LOCALBASE}/bin/egrep\"|" ${STAGEDIR}${PREFIX}/etc/opensips/osipsconsolerc.sample
 	(cp ${FILESDIR}/opensips.cfg.sample ${STAGEDIR}${ETCDIR}/opensips.cfg.sample)
-.if ${PORT_OPTIONS:MRADIUS}
+post-stage-RADIUS-on:
 	(mv ${STAGEDIR}${ETCDIR}/dictionary.opensips ${STAGEDIR}${ETCDIR}/dictionary.opensips.sample)
-.endif
 
 # Strip binaries in sbin
 	@${ECHO_CMD} "Stripping binaries in ${STAGEDIR}${PREFIX}/sbin/"
