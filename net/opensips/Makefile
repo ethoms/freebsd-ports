@@ -1,5 +1,5 @@
 # Created by: Euan Thoms <euan@potensol.com>
-# $FreeBSD: head/net/opensips/Makefile 398368 2015-10-01 16:34:41Z pi $
+# $FreeBSD: head/net/opensips/Makefile 402407 2015-11-25 19:28:00Z pi $
 
 PORTNAME=		opensips
 PORTVERSION=		2.1.1
