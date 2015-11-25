@@ -1,5 +1,5 @@
 # Created by: Euan Thoms <euan@potensol.com>
-# $FreeBSD: head/devel/sope/Makefile 400145 2015-10-25 06:47:26Z pi $
+# $FreeBSD: head/devel/sope/Makefile 402359 2015-11-24 13:33:41Z amdmi3 $
 
 PORTNAME=		sope
 PORTVERSION=		2.3.3a
@@ -35,34 +35,19 @@ SUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
 
 CONFIGURE_ARGS=		--with-gnustep --disable-debug --enable-strip
 
-.include <bsd.port.options.mk>
+LDAP_USE=	OPENLDAP=client
+PGSQL_USES=	pgsql
+MYSQL_USE=	MYSQL=client
+MEMCACHED_RUN_DEPENDS=	${LOCALBASE}/bin/memcached:${PORTSDIR}/databases/memcached
 
-.if ${PORT_OPTIONS:MLDAP}
-USE_OPENLDAP=	client
-.endif
-
-.if ${PORT_OPTIONS:MPGSQL}
-USES+=		pgsql
-.endif
-
-.if ${PORT_OPTIONS:MMYSQL}
-USE_MYSQL=	client
-.endif
-
-.if ${PORT_OPTIONS:MMEMCACHED}
-RUN_DEPENDS+=	${LOCALBASE}/bin/memcached:${PORTSDIR}/databases/memcached
-.endif
-
-post-patch:
-.if ! ${PORT_OPTIONS:MLDAP}
+post-patch-LDAP-off:
 	@${REINPLACE_CMD} -e '/checkLinking "ldap"/d' ${WRKSRC}/configure
-.endif
-.if ! ${PORT_OPTIONS:MPGSQL}
+
+post-patch-PGSQL-off:
 	@${REINPLACE_CMD} -e '/checkLinking "pq"/d' ${WRKSRC}/configure
-.endif
-.if ! ${PORT_OPTIONS:MMYSQL}
+
+post-patch-MYSQL-off:
 	@${REINPLACE_CMD} -e '/checkLinking "mysqlclient"/d' ${WRKSRC}/configure
-.endif
 
 do-configure:
 	cd ${WRKSRC} ; . ${GNUSTEP_MAKEFILES}/GNUstep.sh ; ./configure ${CONFIGURE_ARGS}

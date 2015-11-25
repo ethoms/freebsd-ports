@@ -1,4 +1,4 @@
-# $FreeBSD$
+# $FreeBSD: head/www/sogo-activesync/Makefile 402361 2015-11-24 13:33:56Z amdmi3 $
 
 PKGNAMESUFFIX=		-activesync
 

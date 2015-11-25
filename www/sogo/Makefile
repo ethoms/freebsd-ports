@@ -1,5 +1,5 @@
 # Created by: Euan Thoms <euan@potensol.com>
-# $FreeBSD: head/www/sogo/Makefile 400146 2015-10-25 06:49:11Z pi $
+# $FreeBSD: head/www/sogo/Makefile 402360 2015-11-24 13:33:48Z amdmi3 $
 
 PORTNAME=		sogo
 PORTVERSION=		2.3.3a
@@ -39,28 +39,25 @@ SUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
 
 CONFIGURE_ARGS=		--disable-debug --enable-strip
 
-.include <bsd.port.options.mk>
-
 post-patch:
-	${GREP} -rlF '/etc/sogo' ${WRKSRC} \
+	@${GREP} -rlF '/etc/sogo' ${WRKSRC} \
 		| ${XARGS} ${REINPLACE_CMD} 's#/etc/sogo#${PREFIX}/etc/sogo#g'
 
-.if ${PORT_OPTIONS:MACTIVESYNC}
+post-patch-ACTIVESYNC-on:
 	@${REINPLACE_CMD} -e 's/Tools/Tools ActiveSync/' ${WRKSRC}/GNUmakefile
-.endif
 
 do-configure:
 	cd ${WRKSRC} ; . ${GNUSTEP_MAKEFILES}/GNUstep.sh ; ./configure ${CONFIGURE_ARGS}
 
-post-stage:
+post-install:
 	${MKDIR} ${STAGEDIR}/var/spool/sogo
 	${MKDIR} ${STAGEDIR}${ETCDIR}
-	(cp ${WRKSRC}/Scripts/sogo.conf ${STAGEDIR}${ETCDIR}/sogo.conf.sample)
-	(cp ${WRKSRC}/Apache/SOGo.conf ${STAGEDIR}${ETCDIR}/SOGo-Apache.conf.sample)
-	(cp ${WRKSRC}/Apache/SOGo-apple-ab.conf ${STAGEDIR}${ETCDIR}/SOGo-apple-ab.Apache.conf.sample)
-	(cp ${FILESDIR}/expire-autoreply.creds.sample ${STAGEDIR}${ETCDIR}/)
-	(cp ${FILESDIR}/ealarms-notify.creds.sample ${STAGEDIR}${ETCDIR}/)
-	(cp ${FILESDIR}/cron-ealarms-notify.sample ${STAGEDIR}${PREFIX}/GNUstep/Local/Tools/Admin/)
-	(cp ${FILESDIR}/cron-expire-autoreply.sample ${STAGEDIR}${PREFIX}/GNUstep/Local/Tools/Admin/)
+	${INSTALL_DATA} ${WRKSRC}/Scripts/sogo.conf ${STAGEDIR}${ETCDIR}/sogo.conf.sample
+	${INSTALL_DATA} ${WRKSRC}/Apache/SOGo.conf ${STAGEDIR}${ETCDIR}/SOGo-Apache.conf.sample
+	${INSTALL_DATA} ${WRKSRC}/Apache/SOGo-apple-ab.conf ${STAGEDIR}${ETCDIR}/SOGo-apple-ab.Apache.conf.sample
+	${INSTALL_DATA} ${FILESDIR}/expire-autoreply.creds.sample ${STAGEDIR}${ETCDIR}/
+	${INSTALL_DATA} ${FILESDIR}/ealarms-notify.creds.sample ${STAGEDIR}${ETCDIR}/
+	${INSTALL_DATA} ${FILESDIR}/cron-ealarms-notify.sample ${STAGEDIR}${PREFIX}/GNUstep/Local/Tools/Admin/
+	${INSTALL_DATA} ${FILESDIR}/cron-expire-autoreply.sample ${STAGEDIR}${PREFIX}/GNUstep/Local/Tools/Admin/
 
 .include <bsd.port.mk>
