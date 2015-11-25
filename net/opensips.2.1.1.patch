@@ -1,6 +1,6 @@
 diff -ruN opensips.orig/Makefile opensips/Makefile
 --- opensips.orig/Makefile	2015-11-24 06:56:18.247977526 +0800
-+++ opensips/Makefile	2015-11-25 13:46:10.155328842 +0800
++++ opensips/Makefile	2015-11-25 16:48:42.933572960 +0800
 @@ -2,10 +2,9 @@
  # $FreeBSD: head/net/opensips/Makefile 398368 2015-10-01 16:34:41Z pi $
  
@@ -32,54 +32,22 @@ diff -ruN opensips.orig/Makefile opensips/Makefile
  OPTIONS_DEFINE=		DEBUG DOCS EXAMPLES GEOIP HTTP LDAP MEMCACHED MYSQL PGSQL RADIUS TESTS TLS UNIXODBC
  OPTIONS_DEFAULT=	DOCS EXAMPLES GEOIP HTTP LDAP MEMCACHED PGSQL RADIUS TLS
  OPTIONS_SUB=		yes
-@@ -113,43 +111,37 @@
+@@ -134,7 +132,6 @@
+ .endif
  
- .include <bsd.port.options.mk>
- 
--.if ${PORT_OPTIONS:MGEOIP}
-+GEOIP-on:
- EXTRA_MODULES+=		mmgeoip
--.endif
- 
--.if ${PORT_OPTIONS:MHTTP}
-+HTTP-on:
- EXTRA_MODULES+=		httpd
--.endif
- 
--.if ${PORT_OPTIONS:MLDAP}
-+LDAP-on:
- EXTRA_MODULES+=		ldap h350
--.endif
- 
--.if ${PORT_OPTIONS:MMEMCACHED}
-+MEMCACHED-on:
- EXTRA_MODULES+=		cachedb_memcached
--.endif
- 
--.if ${PORT_OPTIONS:MMYSQL}
-+MYSQL-on:
- EXTRA_MODULES+=		db_mysql
--.endif
- 
--.if ${PORT_OPTIONS:MPGSQL}
+ .if ${PORT_OPTIONS:MPGSQL}
 -#USES+=			pgsql
-+PGSQL-on:
  EXTRA_MODULES+=		db_postgres
--.endif
+ .endif
  
--.if ${PORT_OPTIONS:MRADIUS}
-+RADIUS-on:
- EXTRA_MODULES+=		aaa_radius
--.endif
- 
--.if ${PORT_OPTIONS:MUNIXODBC}
-+UNIXODBC-on:
+@@ -146,10 +143,14 @@
  EXTRA_MODULES+=		db_unixodbc
--.endif
-+
-+TLS-on:
-+EXTRA_MODULES+=		proto_tls
+ .endif
  
++.if ${PORT_OPTIONS:MTLS}
++EXTRA_MODULES+=		proto_tls
++.endif
++
  OPENSIPS_MAKE_ENV=	CC="${CC}" CXX="${CXX}" CPP="${CPP}" _GCC_RUNTIME="${_GCC_RUNTIME}" CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}"
  
  do-configure:
@@ -88,7 +56,7 @@ diff -ruN opensips.orig/Makefile opensips/Makefile
  
  	@${REINPLACE_CMD} -e "s|_PREFIX_|${PREFIX}|" ${WRKSRC}/Makefile.conf
  	@${REINPLACE_CMD} -e "s|_STAGE_DIR_|${STAGEDIR}|" ${WRKSRC}/Makefile.conf
-@@ -158,14 +150,8 @@
+@@ -158,14 +159,8 @@
  	@${REINPLACE_CMD} -e "s/\(^include_modules=.*\)/\1 ${i}/" ${WRKSRC}/Makefile.conf
  .endfor
  
@@ -104,7 +72,7 @@ diff -ruN opensips.orig/Makefile opensips/Makefile
  
  do-build:
  	cd ${WRKSRC} && ${OPENSIPS_MAKE_ENV} ${GMAKE} ${_MAKE_JOBS} ${ALL_TARGET}
-@@ -173,13 +159,11 @@
+@@ -173,13 +168,11 @@
  do-install:
  	cd ${WRKSRC} && ${OPENSIPS_MAKE_ENV} ${GMAKE} ${INSTALL_TARGET}
  
@@ -120,16 +88,17 @@ diff -ruN opensips.orig/Makefile opensips/Makefile
  
  post-stage:
  	@${REINPLACE_CMD} -e "s|^# MD5=.*|MD5=\"md5\"|" ${STAGEDIR}${PREFIX}/etc/opensips/opensipsctlrc.sample
-@@ -187,6 +171,8 @@
- 	@${REINPLACE_CMD} -e "s|^# MD5=.*|MD5=\"md5\"|" ${STAGEDIR}${PREFIX}/etc/opensips/osipsconsolerc.sample
+@@ -188,6 +181,9 @@
  	@${REINPLACE_CMD} -e "s|^# GREP=.*|GREP=\"${LOCALBASE}/bin/egrep\"|" ${STAGEDIR}${PREFIX}/etc/opensips/osipsconsolerc.sample
  	(cp ${FILESDIR}/opensips.cfg.sample ${STAGEDIR}${ETCDIR}/opensips.cfg.sample)
+ 
 +post-stage-RADIUS-on:
 +	(mv ${STAGEDIR}${ETCDIR}/dictionary.opensips ${STAGEDIR}${ETCDIR}/dictionary.opensips.sample)
- 
++
  # Strip binaries in sbin
  	@${ECHO_CMD} "Stripping binaries in ${STAGEDIR}${PREFIX}/sbin/"
-@@ -219,7 +205,7 @@
+ 
+@@ -219,7 +215,7 @@
  		sms.so speeddial.so sst.so statistics.so stun.so textops.so tlsops.so tm.so uac.so \
  		uac_auth.so uac_redirect.so uac_registrant.so uri.so userblacklist.so usrloc.so \
  		xcap.so xcap_client.so xmpp.so topology_hiding.so fraud_detection.so rtpengine.so \

@@ -111,32 +111,41 @@ SHEBANG_FILES=		scripts/osipsconsole \
 
 .include <bsd.port.options.mk>
 
-GEOIP-on:
-	EXTRA_MODULES+=	mmgeoip
+.if ${PORT_OPTIONS:MGEOIP}
+EXTRA_MODULES+=		mmgeoip
+.endif
 
-HTTP-on:
-	EXTRA_MODULES+=	httpd
+.if ${PORT_OPTIONS:MHTTP}
+EXTRA_MODULES+=		httpd
+.endif
 
-LDAP-on:
-	EXTRA_MODULES+=	ldap h350
+.if ${PORT_OPTIONS:MLDAP}
+EXTRA_MODULES+=		ldap h350
+.endif
 
-MEMCACHED-on:
-	EXTRA_MODULES+=	cachedb_memcached
+.if ${PORT_OPTIONS:MMEMCACHED}
+EXTRA_MODULES+=		cachedb_memcached
+.endif
 
-MYSQL-on:
-	EXTRA_MODULES+=	db_mysql
+.if ${PORT_OPTIONS:MMYSQL}
+EXTRA_MODULES+=		db_mysql
+.endif
 
-PGSQL-on:
-	EXTRA_MODULES+=	db_postgres
+.if ${PORT_OPTIONS:MPGSQL}
+EXTRA_MODULES+=		db_postgres
+.endif
 
-RADIUS-on:
-	EXTRA_MODULES+=	aaa_radius
+.if ${PORT_OPTIONS:MRADIUS}
+EXTRA_MODULES+=		aaa_radius
+.endif
 
-UNIXODBC-on:
-	EXTRA_MODULES+=	db_unixodbc
+.if ${PORT_OPTIONS:MUNIXODBC}
+EXTRA_MODULES+=		db_unixodbc
+.endif
 
-TLS-on:
-	EXTRA_MODULES+=	proto_tls
+.if ${PORT_OPTIONS:MTLS}
+EXTRA_MODULES+=		proto_tls
+.endif
 
 OPENSIPS_MAKE_ENV=	CC="${CC}" CXX="${CXX}" CPP="${CPP}" _GCC_RUNTIME="${_GCC_RUNTIME}" CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}"
 
@@ -171,6 +180,7 @@ post-stage:
 	@${REINPLACE_CMD} -e "s|^# MD5=.*|MD5=\"md5\"|" ${STAGEDIR}${PREFIX}/etc/opensips/osipsconsolerc.sample
 	@${REINPLACE_CMD} -e "s|^# GREP=.*|GREP=\"${LOCALBASE}/bin/egrep\"|" ${STAGEDIR}${PREFIX}/etc/opensips/osipsconsolerc.sample
 	(cp ${FILESDIR}/opensips.cfg.sample ${STAGEDIR}${ETCDIR}/opensips.cfg.sample)
+
 post-stage-RADIUS-on:
 	(mv ${STAGEDIR}${ETCDIR}/dictionary.opensips ${STAGEDIR}${ETCDIR}/dictionary.opensips.sample)
 
