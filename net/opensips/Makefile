@@ -112,31 +112,31 @@ SHEBANG_FILES=		scripts/osipsconsole \
 .include <bsd.port.options.mk>
 
 GEOIP-on:
-EXTRA_MODULES+=		mmgeoip
+	EXTRA_MODULES+=	mmgeoip
 
 HTTP-on:
-EXTRA_MODULES+=		httpd
+	EXTRA_MODULES+=	httpd
 
 LDAP-on:
-EXTRA_MODULES+=		ldap h350
+	EXTRA_MODULES+=	ldap h350
 
 MEMCACHED-on:
-EXTRA_MODULES+=		cachedb_memcached
+	EXTRA_MODULES+=	cachedb_memcached
 
 MYSQL-on:
-EXTRA_MODULES+=		db_mysql
+	EXTRA_MODULES+=	db_mysql
 
 PGSQL-on:
-EXTRA_MODULES+=		db_postgres
+	EXTRA_MODULES+=	db_postgres
 
 RADIUS-on:
-EXTRA_MODULES+=		aaa_radius
+	EXTRA_MODULES+=	aaa_radius
 
 UNIXODBC-on:
-EXTRA_MODULES+=		db_unixodbc
+	EXTRA_MODULES+=	db_unixodbc
 
 TLS-on:
-EXTRA_MODULES+=		proto_tls
+	EXTRA_MODULES+=	proto_tls
 
 OPENSIPS_MAKE_ENV=	CC="${CC}" CXX="${CXX}" CPP="${CPP}" _GCC_RUNTIME="${_GCC_RUNTIME}" CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}"
 
