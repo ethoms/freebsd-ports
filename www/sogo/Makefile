@@ -2,7 +2,7 @@
 # $FreeBSD: head/www/sogo/Makefile 402360 2015-11-24 13:33:48Z amdmi3 $
 
 PORTNAME=		sogo
-PORTVERSION=		2.3.3a
+PORTVERSION=		2.3.4
 CATEGORIES=		www gnustep
 MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
 DISTNAME=		SOGo-${PORTVERSION}
