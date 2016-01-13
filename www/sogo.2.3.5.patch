@@ -1,0 +1,49 @@
+diff -ruN sogo.orig/Makefile sogo/Makefile
+--- sogo.orig/Makefile	2015-12-28 23:48:47.000000000 +0800
++++ sogo/Makefile	2016-01-13 17:50:08.762548430 +0800
+@@ -2,7 +2,7 @@
+ # $FreeBSD: head/www/sogo/Makefile 404668 2015-12-28 15:48:47Z miwi $
+ 
+ PORTNAME=		sogo
+-PORTVERSION=		2.3.4
++PORTVERSION=		2.3.5
+ CATEGORIES=		www gnustep
+ MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
+ DISTNAME=		SOGo-${PORTVERSION}
+diff -ruN sogo.orig/distinfo sogo/distinfo
+--- sogo.orig/distinfo	2015-12-28 23:48:47.000000000 +0800
++++ sogo/distinfo	2016-01-13 17:47:25.056559315 +0800
+@@ -1,2 +1,2 @@
+-SHA256 (SOGo-2.3.4.tar.gz) = 0a411a7585783430b49b6186d928e3b0f96e498dfef03cf993b914741b01eb4f
+-SIZE (SOGo-2.3.4.tar.gz) = 11875672
++SHA256 (SOGo-2.3.5.tar.gz) = df2dff032b62a4ee0761cbab8cee8c923ec665d3529c3f8ac10717518d658930
++SIZE (SOGo-2.3.5.tar.gz) = 11895750
+diff -ruN sogo.orig/pkg-plist sogo/pkg-plist
+--- sogo.orig/pkg-plist	2015-11-24 21:33:48.000000000 +0800
++++ sogo/pkg-plist	2016-01-13 17:58:14.996519513 +0800
+@@ -34,9 +34,12 @@
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoCredentialsFile.h
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoDAVAuthenticator.h
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoDateFormatter.h
++GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoDefaultsSource.h
++GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoDomainDefaults.h
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoFolder.h
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoGCSFolder.h
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoGroup.h
++GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoLDAPDefaults.h
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoMailer.h
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoObject.h
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoParentFolder.h
+@@ -45,9 +48,12 @@
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoProxyAuthenticator.h
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoSession.h
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoSieveManager.h
++GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoSource.h
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoStartupLogger.h
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoStaticAuthenticator.h
++GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoSystemDefaults.h
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoUser.h
++GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoUserDefaults.h
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoUserFolder.h
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoUserManager.h
+ GNUstep/Local/Library/Frameworks/SOGo.framework/Versions/2/Headers/SOGoUserProfile.h
