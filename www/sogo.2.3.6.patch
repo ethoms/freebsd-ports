@@ -1,0 +1,20 @@
+diff -ruN sogo.orig/Makefile sogo/Makefile
+--- sogo.orig/Makefile	2016-01-14 16:04:22.000000000 +0800
++++ sogo/Makefile	2016-01-20 19:05:59.190553643 +0800
+@@ -2,7 +2,7 @@
+ # $FreeBSD: head/www/sogo/Makefile 406098 2016-01-14 08:04:22Z miwi $
+ 
+ PORTNAME=		sogo
+-PORTVERSION=		2.3.5
++PORTVERSION=		2.3.6
+ CATEGORIES=		www gnustep
+ MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
+ DISTNAME=		SOGo-${PORTVERSION}
+diff -ruN sogo.orig/distinfo sogo/distinfo
+--- sogo.orig/distinfo	2016-01-14 16:04:22.000000000 +0800
++++ sogo/distinfo	2016-01-20 19:05:24.895561675 +0800
+@@ -1,2 +1,2 @@
+-SHA256 (SOGo-2.3.5.tar.gz) = df2dff032b62a4ee0761cbab8cee8c923ec665d3529c3f8ac10717518d658930
+-SIZE (SOGo-2.3.5.tar.gz) = 11895750
++SHA256 (SOGo-2.3.6.tar.gz) = c74b63ae59febaf552860bfe818870fb0732a7c1fff8998fed0659d084854b31
++SIZE (SOGo-2.3.6.tar.gz) = 12160426
