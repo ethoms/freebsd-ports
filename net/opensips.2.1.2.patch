@@ -1,0 +1,35 @@
+diff -ruN opensips.orig/Makefile opensips/Makefile
+--- opensips.orig/Makefile	2015-11-26 03:28:00.000000000 +0800
++++ opensips/Makefile	2016-01-20 19:51:20.460366322 +0800
+@@ -2,9 +2,9 @@
+ # $FreeBSD: head/net/opensips/Makefile 402407 2015-11-25 19:28:00Z pi $
+ 
+ PORTNAME=		opensips
+-PORTVERSION=		2.1.1
++PORTVERSION=		2.1.2
+ CATEGORIES=		net
+-MASTER_SITES=		http://opensips.org/pub/opensips/${PORTVERSION}/src/
++MASTER_SITES=		http://opensips.org/pub/opensips/${PORTVERSION}/
+ 
+ MAINTAINER=		euan@potensol.com
+ COMMENT=		Open SIP Server
+diff -ruN opensips.orig/distinfo opensips/distinfo
+--- opensips.orig/distinfo	2015-11-26 03:28:00.000000000 +0800
++++ opensips/distinfo	2016-01-20 19:52:31.161360526 +0800
+@@ -1,2 +1,2 @@
+-SHA256 (opensips-2.1.1.tar.gz) = cf6604550a259adcf5a8fa292285aa7bc9f75def7c5b24d920fe5dc7692ce3f0
+-SIZE (opensips-2.1.1.tar.gz) = 4734597
++SHA256 (opensips-2.1.2.tar.gz) = 0206af5c6ee3b33856a9c51cf982cecdd26334c3c32fac8e33eb88e9a62ad6e9
++SIZE (opensips-2.1.2.tar.gz) = 4935839
+diff -ruN opensips.orig/pkg-plist opensips/pkg-plist
+--- opensips.orig/pkg-plist	2015-11-26 03:28:00.000000000 +0800
++++ opensips/pkg-plist	2016-01-20 20:10:29.148289446 +0800
+@@ -292,7 +292,7 @@
+ %%MYSQL%%%%PORTDOCS%%%%DOCSDIR%%/README.db_mysql
+ %%PGSQL%%%%PORTDOCS%%%%DOCSDIR%%/README.db_postgres
+ %%RADIUS%%%%PORTDOCS%%%%DOCSDIR%%/README.aaa_radius
+-%%UNIXODBC%%%%PORTDOCS%%%%%DOCSDIR%%/README.db_unixodbc
++%%UNIXODBC%%%%PORTDOCS%%%%DOCSDIR%%/README.db_unixodbc
+ %%TLS%%%%PORTDOCS%%%%DOCSDIR%%/README.proto_tls
+ %%DATADIR%%/dbtext/opensips/acc
+ %%DATADIR%%/dbtext/opensips/active_watchers

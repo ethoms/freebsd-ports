@@ -2,9 +2,9 @@
 # $FreeBSD: head/net/opensips/Makefile 402407 2015-11-25 19:28:00Z pi $
 
 PORTNAME=		opensips
-PORTVERSION=		2.1.1
+PORTVERSION=		2.1.2
 CATEGORIES=		net
-MASTER_SITES=		http://opensips.org/pub/opensips/${PORTVERSION}/src/
+MASTER_SITES=		http://opensips.org/pub/opensips/${PORTVERSION}/
 
 MAINTAINER=		euan@potensol.com
 COMMENT=		Open SIP Server
