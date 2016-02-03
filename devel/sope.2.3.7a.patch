@@ -1,0 +1,20 @@
+diff -ruN sope.orig/Makefile sope/Makefile
+--- sope.orig/Makefile	2016-01-20 21:18:59.000000000 +0800
++++ sope/Makefile	2016-02-04 02:14:11.552474958 +0800
+@@ -2,7 +2,7 @@
+ # $FreeBSD: head/devel/sope/Makefile 406749 2016-01-20 13:18:59Z matthew $
+ 
+ PORTNAME=		sope
+-PORTVERSION=		2.3.6
++PORTVERSION=		2.3.7a
+ CATEGORIES=		devel gnustep
+ MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
+ DISTNAME=		SOPE-${PORTVERSION}
+diff -ruN sope.orig/distinfo sope/distinfo
+--- sope.orig/distinfo	2016-01-20 21:18:59.000000000 +0800
++++ sope/distinfo	2016-02-04 02:13:24.761478392 +0800
+@@ -1,2 +1,2 @@
+-SHA256 (SOPE-2.3.6.tar.gz) = e8fa039b3b42bbebefc707732aac8fd62478c068c7bc2bd7051d788dea966618
+-SIZE (SOPE-2.3.6.tar.gz) = 2275009
++SHA256 (SOPE-2.3.7a.tar.gz) = f485b7ac375fb21c096382ff525528c5d53a8bb2313cad653e0e0330c8385e76
++SIZE (SOPE-2.3.7a.tar.gz) = 2275140
