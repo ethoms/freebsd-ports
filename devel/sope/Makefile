@@ -1,8 +1,8 @@
 # Created by: Euan Thoms <euan@potensol.com>
-# $FreeBSD: head/devel/sope/Makefile 406749 2016-01-20 13:18:59Z matthew $
+# $FreeBSD: head/devel/sope/Makefile 412346 2016-04-01 14:00:51Z mat $
 
 PORTNAME=		sope
-PORTVERSION=		2.3.8
+PORTVERSION=		2.3.10
 CATEGORIES=		devel gnustep
 MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
 DISTNAME=		SOPE-${PORTVERSION}
@@ -12,8 +12,8 @@ COMMENT=		Extensive set of GNUstep web application frameworks
 
 LICENSE=		LGPL20
 
-LIB_DEPENDS=		libxml2.so:${PORTSDIR}/textproc/libxml2 \
-			libmemcached.so:${PORTSDIR}/databases/libmemcached
+LIB_DEPENDS=		libxml2.so:textproc/libxml2 \
+			libmemcached.so:databases/libmemcached
 
 WRKSRC=			${WRKDIR}/SOPE
 
@@ -38,7 +38,7 @@ CONFIGURE_ARGS=		--with-gnustep --disable-debug --enable-strip
 LDAP_USE=	OPENLDAP=client
 PGSQL_USES=	pgsql
 MYSQL_USE=	MYSQL=client
-MEMCACHED_RUN_DEPENDS=	${LOCALBASE}/bin/memcached:${PORTSDIR}/databases/memcached
+MEMCACHED_RUN_DEPENDS=	${LOCALBASE}/bin/memcached:databases/memcached
 
 post-patch-LDAP-off:
 	@${REINPLACE_CMD} -e '/checkLinking "ldap"/d' ${WRKSRC}/configure
