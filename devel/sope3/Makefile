@@ -1,8 +1,8 @@
 # Created by: Euan Thoms <euan@potensol.com>
-# $FreeBSD: head/devel/sope/Makefile 412346 2016-04-01 14:00:51Z mat $
+# $FreeBSD: head/devel/sope3/Makefile 416688 2016-06-10 19:37:17Z acm $
 
-PORTNAME=		sope
-PORTVERSION=		2.3.10
+PORTNAME=		sope3
+PORTVERSION=		3.1.2
 CATEGORIES=		devel gnustep
 MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
 DISTNAME=		SOPE-${PORTVERSION}
@@ -30,15 +30,21 @@ USES=			gmake gnustep
 USE_GNUSTEP=		base build
 USE_LDCONFIG=		${GNUSTEP_LOCAL_LIBRARIES}
 
+CONFLICTS=		sope2-[0-9]*
+
 SUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
 			GNUSTEP_MAKEFILES=${GNUSTEP_MAKEFILES}
 
 CONFIGURE_ARGS=		--with-gnustep --disable-debug --enable-strip
+CONFIGURE_ENV+=		CC="${CC}"
 
 LDAP_USE=	OPENLDAP=client
 PGSQL_USES=	pgsql
 MYSQL_USE=	MYSQL=client
 MEMCACHED_RUN_DEPENDS=	${LOCALBASE}/bin/memcached:databases/memcached
+
+post-patch:
+	@${REINPLACE_CMD} -e 's|%%LOCALBASE%%|${LOCALBASE}|g' ${WRKSRC}/configure
 
 post-patch-LDAP-off:
 	@${REINPLACE_CMD} -e '/checkLinking "ldap"/d' ${WRKSRC}/configure

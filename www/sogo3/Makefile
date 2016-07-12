@@ -1,8 +1,8 @@
 # Created by: Euan Thoms <euan@potensol.com>
-# $FreeBSD: head/www/sogo/Makefile 412351 2016-04-01 14:33:55Z mat $
+# $FreeBSD: head/www/sogo3/Makefile 416690 2016-06-10 19:38:08Z acm $
 
-PORTNAME=		sogo
-PORTVERSION=		2.3.10
+PORTNAME=		sogo3
+PORTVERSION=		3.1.2
 CATEGORIES=		www gnustep
 MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
 DISTNAME=		SOGo-${PORTVERSION}
@@ -14,7 +14,8 @@ LICENSE=		GPLv2
 
 LIB_DEPENDS=		libmemcached.so:databases/libmemcached \
 			libcurl.so:ftp/curl \
-			libDOM.so:devel/sope
+			libDOM.so:devel/sope3
+RUN_DEPENDS=		zip:archivers/zip
 
 OPTIONS_DEFINE=		ACTIVESYNC
 OPTIONS_SUB=		yes
@@ -30,19 +31,19 @@ USES=			gnustep objc
 USE_GNUSTEP=		base build
 USE_LDCONFIG=		${GNUSTEP_LOCAL_LIBRARIES}/sogo
 
-CONFLICTS?=		sogo-activesync-[0-9]*
+CONFLICTS?=		sogo[2-3]-activesync-[0-9]* sogo2-[0-9]*
 
 USE_RC_SUBR=		sogod
 
 SUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
 			GNUSTEP_MAKEFILES=${GNUSTEP_MAKEFILES}
-
+ETCDIR=			${PREFIX}/etc/${PORTNAME:S/3//}
 CONFIGURE_ARGS=		--disable-debug --enable-strip
 
 post-patch:
 	@${GREP} -rlF '/etc/sogo' ${WRKSRC} \
 		| ${XARGS} ${REINPLACE_CMD} 's#/etc/sogo#${PREFIX}/etc/sogo#g'
-	@${REINPLACE_CMD} -e 's|/usr/lib/GNUstep|${GNUSTEP_LOCAL_ROOT}/Library|' ${WRKSRC}/Apache/SOGo.conf
+	@${REINPLACE_CMD} -e 's|/usr/|/usr/local/|g' ${WRKSRC}/Apache/SOGo.conf
 
 post-patch-ACTIVESYNC-on:
 	@${REINPLACE_CMD} -e 's/Tools/Tools ActiveSync/' ${WRKSRC}/GNUmakefile
