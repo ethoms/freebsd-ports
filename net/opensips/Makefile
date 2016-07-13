@@ -1,6 +1,5 @@
 # Created by: Euan Thoms <euan@potensol.com>
 # $FreeBSD: head/net/opensips/Makefile 416748 2016-06-11 19:48:27Z garga $
-# RADIUS_BUILD_DEPENDS+=	radiusclient:net/radiusclient
 
 PORTNAME=		opensips
 PORTVERSION=		2.1.3
