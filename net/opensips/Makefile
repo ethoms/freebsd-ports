@@ -1,5 +1,6 @@
 # Created by: Euan Thoms <euan@potensol.com>
 # $FreeBSD: head/net/opensips/Makefile 416748 2016-06-11 19:48:27Z garga $
+# RADIUS_BUILD_DEPENDS+=	radiusclient:net/radiusclient
 
 PORTNAME=		opensips
 PORTVERSION=		2.1.3
@@ -19,6 +20,8 @@ LIB_DEPENDS=		libxml2.so:textproc/libxml2 \
 			librabbitmq.so:net/rabbitmq-c-devel \
 			libhiredis.so:databases/hiredis \
 			libexpat.so:textproc/expat2 \
+			libpython2.7.so:lang/python27 \
+			libcurl.so:ftp/curl \
 			libjson-c.so:devel/json-c
 BUILD_DEPENDS=		ginstall:sysutils/coreutils \
 			gtar:archivers/gtar \
@@ -39,7 +42,7 @@ DOCSDIR=		share/doc/opensips
 
 USE_RC_SUBR=		opensips
 
-USES=			gmake perl5 pkgconfig shebangfix
+USES=			gmake perl5 pkgconfig shebangfix ssl
 USE_GCC=		yes
 
 NOPRECIOUSMAKEVARS=	yes
@@ -58,7 +61,7 @@ MYSQL_USE=		MYSQL=client
 PGSQL_USES+=		pgsql
 
 PGSQL_BUILD_DEPENDS+=	p5-DBD-Pg>=3.4:databases/p5-DBD-Pg
-RADIUS_BUILD_DEPENDS+=	radiusclient:net/radiusclient
+RADIUS_LIB_DEPENDS+=	libradiusclient-ng.so:net/radiusclient
 HTTP_LIB_DEPENDS+=	libmicrohttpd.so:www/libmicrohttpd
 GEOIP_LIB_DEPENDS+=	libGeoIP.so:net/GeoIP
 MEMCACHED_LIB_DEPENDS+=	libmemcached.so:databases/libmemcached
