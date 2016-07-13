@@ -1,0 +1,317 @@
+diff -ruN sogo2.orig/Makefile sogo2/Makefile
+--- sogo2.orig/Makefile	2016-06-11 03:46:51.000000000 +0800
++++ sogo2/Makefile	2016-07-12 23:49:06.866354587 +0800
+@@ -2,7 +2,7 @@
+ # $FreeBSD: head/www/sogo2/Makefile 416692 2016-06-10 19:46:51Z acm $
+ 
+ PORTNAME=		sogo2
+-PORTVERSION=		2.3.11
++PORTVERSION=		2.3.13
+ CATEGORIES=		www gnustep
+ MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
+ DISTNAME=		SOGo-${PORTVERSION}
+diff -ruN sogo2.orig/distinfo sogo2/distinfo
+--- sogo2.orig/distinfo	2016-06-11 03:46:51.000000000 +0800
++++ sogo2/distinfo	2016-07-12 23:53:40.499338368 +0800
+@@ -1,3 +1,3 @@
+-TIMESTAMP = 1464621653
+-SHA256 (SOGo-2.3.11.tar.gz) = 14943336cd56a4b472da97230285390a24ad2975d85c36fcc033d629e2dddbd9
+-SIZE (SOGo-2.3.11.tar.gz) = 12249924
++TIMESTAMP = 1468338820
++SHA256 (SOGo-2.3.13.tar.gz) = eedda075bc39e6a4225b6b95afffddc483bc93c6bd80da24ad44fe248293fad1
++SIZE (SOGo-2.3.13.tar.gz) = 12362301
+diff -ruN sogo2.orig/files/patch-ActiveSync_GNUmakefile sogo2/files/patch-ActiveSync_GNUmakefile
+--- sogo2.orig/files/patch-ActiveSync_GNUmakefile	2016-05-03 07:04:58.000000000 +0800
++++ sogo2/files/patch-ActiveSync_GNUmakefile	2016-07-13 05:37:02.317916477 +0800
+@@ -1,4 +1,4 @@
+---- ActiveSync/GNUmakefile.orig	2015-11-11 19:25:43 UTC
++--- ActiveSync/GNUmakefile.orig	2016-07-06 11:37:42 UTC
+ +++ ActiveSync/GNUmakefile
+ @@ -34,7 +34,7 @@ ActiveSync_RESOURCE_FILES +=		\
+  ADDITIONAL_OBJCFLAGS += -Wno-deprecated-declarations
+diff -ruN sogo2.orig/files/patch-Main_GNUmakefile.preamble sogo2/files/patch-Main_GNUmakefile.preamble
+--- sogo2.orig/files/patch-Main_GNUmakefile.preamble	2015-09-23 13:30:12.000000000 +0800
++++ sogo2/files/patch-Main_GNUmakefile.preamble	2016-07-13 05:37:02.324919134 +0800
+@@ -1,4 +1,4 @@
+---- Main/GNUmakefile.preamble.orig	2015-09-16 18:41:29 UTC
++--- Main/GNUmakefile.preamble.orig	2016-07-06 11:37:43 UTC
+ +++ Main/GNUmakefile.preamble
+ @@ -22,4 +22,4 @@ $(SOGOD)_TOOL_LIBS += \
+  	-lNGObjWeb		\
+diff -ruN sogo2.orig/files/patch-Tests_Unit_GNUmakefile sogo2/files/patch-Tests_Unit_GNUmakefile
+--- sogo2.orig/files/patch-Tests_Unit_GNUmakefile	2015-09-23 13:30:12.000000000 +0800
++++ sogo2/files/patch-Tests_Unit_GNUmakefile	2016-07-13 05:37:02.331916482 +0800
+@@ -1,7 +1,7 @@
+---- Tests/Unit/GNUmakefile.orig	2015-09-16 18:41:31 UTC
++--- Tests/Unit/GNUmakefile.orig	2016-07-06 11:37:47 UTC
+ +++ Tests/Unit/GNUmakefile
+-@@ -35,7 +35,10 @@ $(TEST_TOOL)_CPPFLAGS += \
+- 	-Wall -D_GNU_SOURCE -I../../SOPE/ -I../../SoObjects/ -I../../UI/
++@@ -43,7 +43,10 @@ $(TEST_TOOL)_CPPFLAGS += \
++ 	-Wall -D_GNU_SOURCE -I../../SOPE/ -I../../SoObjects/ -I../../UI/ -I../../OpenChange
+  
+  ADDITIONAL_LIB_DIRS += \
+ -	-L../../SoObjects/SOGo/SOGo.framework/Versions/Current/sogo -L../../SOPE/NGCards/obj -L../../SOPE/GDLContentStore/obj -lSOGo -lNGMime -lNGCards -lGDLContentStore -lNGExtensions -lSBJson -lobjc \
+diff -ruN sogo2.orig/files/patch-Tools_GNUmakefile.preamble sogo2/files/patch-Tools_GNUmakefile.preamble
+--- sogo2.orig/files/patch-Tools_GNUmakefile.preamble	2015-09-23 13:30:12.000000000 +0800
++++ sogo2/files/patch-Tools_GNUmakefile.preamble	2016-07-13 05:37:02.338919977 +0800
+@@ -1,4 +1,4 @@
+---- Tools/GNUmakefile.preamble.orig	2015-09-16 18:41:31 UTC
++--- Tools/GNUmakefile.preamble.orig	2016-07-06 11:37:47 UTC
+ +++ Tools/GNUmakefile.preamble
+ @@ -13,4 +13,5 @@ ADDITIONAL_LIB_DIRS += \
+  	-L../SoObjects/SOGo/SOGo.framework/sogo -lSOGo \
+diff -ruN sogo2.orig/files/patch-configure sogo2/files/patch-configure
+--- sogo2.orig/files/patch-configure	1970-01-01 07:30:00.000000000 +0730
++++ sogo2/files/patch-configure	2016-07-13 05:37:02.345917046 +0800
+@@ -0,0 +1,18 @@
++--- configure.orig	2016-07-06 11:37:52 UTC
+++++ configure
++@@ -1,4 +1,4 @@
++-#!/bin/bash
+++#!/bin/sh
++ 
++ #
++ # Note: When adding make options to this script, ensure that the source still
++@@ -235,7 +235,8 @@ genConfigMake() {
++   cfgwrite "#         $MAKE debug=yes"
++   cfgwrite ""
++ 
++-  cfgwrite "TOPDIR:=$( sed 's/ /\\\ /g' <<< ${TOPDIR} )"
+++  TOPDIR_CFGWRITE=`echo ${TOPDIR} | sed 's/ /\\\ /g'`
+++  cfgwrite "TOPDIR:=${TOPDIR_CFGWRITE}"
++   cfgwrite ""
++ 
++   cfgwrite "NEEDS_GUI=no"
+diff -ruN sogo2.orig/pkg-plist sogo2/pkg-plist
+--- sogo2.orig/pkg-plist	2016-05-03 07:04:58.000000000 +0800
++++ sogo2/pkg-plist	2016-07-13 05:06:32.488043117 +0800
+@@ -589,6 +589,7 @@
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/French.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/German.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Hungarian.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Icelandic.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Info-gnustep.plist
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Italian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Lithuanian.lproj/Localizable.strings
+@@ -603,6 +604,7 @@
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/SpanishArgentina.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/SpanishSpain.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Swedish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/TurkishTurkey.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/UIxAdministration.toolbar
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Ukrainian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/AdministrationUI.SOGo/Resources/Welsh.lproj/Localizable.strings
+@@ -641,6 +643,7 @@
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/SpanishArgentina.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/SpanishSpain.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/Swedish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/TurkishTurkey.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/Ukrainian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/Welsh.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Appointments.SOGo/Resources/product.plist
+@@ -675,6 +678,7 @@
+ GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/SpanishArgentina.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/SpanishSpain.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/Swedish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/TurkishTurkey.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/Ukrainian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/Welsh.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/CommonUI.SOGo/Resources/product.plist
+@@ -710,6 +714,7 @@
+ GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/SpanishArgentina.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/SpanishSpain.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/Swedish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/TurkishTurkey.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/Ukrainian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/Welsh.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Contacts.SOGo/Resources/product.plist
+@@ -745,6 +750,7 @@
+ GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/SpanishArgentina.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/SpanishSpain.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/Swedish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/TurkishTurkey.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/Ukrainian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/Welsh.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/ContactsUI.SOGo/Resources/product.plist
+@@ -780,6 +786,7 @@
+ GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/SpanishArgentina.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/SpanishSpain.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/Swedish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/TurkishTurkey.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/Ukrainian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/Welsh.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailPartViewers.SOGo/Resources/product.plist
+@@ -788,6 +795,7 @@
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Arabic.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Basque.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/BrazilianPortuguese.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Catalan.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/ChineseTaiwan.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Croatian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Czech.lproj/Localizable.strings
+@@ -916,6 +924,10 @@
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailSwedishForward.wo/SOGoMailSwedishForward.wod
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailSwedishReply.wo/SOGoMailSwedishReply.html
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailSwedishReply.wo/SOGoMailSwedishReply.wod
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailTurkishTurkeyForward.wo/SOGoMailTurkishTurkeyForward.html
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailTurkishTurkeyForward.wo/SOGoMailTurkishTurkeyForward.wod
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailTurkishTurkeyReply.wo/SOGoMailTurkishTurkeyReply.html
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailTurkishTurkeyReply.wo/SOGoMailTurkishTurkeyReply.wod
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailUkrainianForward.wo/SOGoMailUkrainianForward.html
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailUkrainianForward.wo/SOGoMailUkrainianForward.wod
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailUkrainianReply.wo/SOGoMailUkrainianReply.html
+@@ -924,10 +936,12 @@
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailWelshForward.wo/SOGoMailWelshForward.wod
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailWelshReply.wo/SOGoMailWelshReply.html
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SOGoMailWelshReply.wo/SOGoMailWelshReply.wod
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Slovak.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Slovenian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SpanishArgentina.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/SpanishSpain.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Swedish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/TurkishTurkey.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Ukrainian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/Welsh.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/Mailer.SOGo/Resources/product.plist
+@@ -965,6 +979,7 @@
+ GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/SpanishArgentina.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/SpanishSpain.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/Swedish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/TurkishTurkey.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/Ukrainian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/Welsh.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MailerUI.SOGo/Resources/product.plist
+@@ -1032,6 +1047,8 @@
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/SpanishSpain.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/Swedish.lproj/Locale
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/Swedish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/TurkishTurkey.lproj/Locale
++GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/TurkishTurkey.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/Ukrainian.lproj/Locale
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/Ukrainian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/MainUI.SOGo/Resources/Welsh.lproj/Locale
+@@ -1068,6 +1085,7 @@
+ GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/SpanishArgentina.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/SpanishSpain.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/Swedish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/TurkishTurkey.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/UIxPreferences.toolbar
+ GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/Ukrainian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/PreferencesUI.SOGo/Resources/Welsh.lproj/Localizable.strings
+@@ -1107,6 +1125,7 @@
+ GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/SpanishArgentina.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/SpanishSpain.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/Swedish.lproj/Localizable.strings
++GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/TurkishTurkey.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/Ukrainian.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/Welsh.lproj/Localizable.strings
+ GNUstep/Local/Library/SOGo/SchedulerUI.SOGo/Resources/cycles.plist
+@@ -1245,6 +1264,9 @@
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLSwedishAdditionAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLSwedishModificationAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLSwedishRemovalAdvisory.wox
++GNUstep/Local/Library/SOGo/Templates/SOGoACLTurkishTurkeyAdditionAdvisory.wox
++GNUstep/Local/Library/SOGo/Templates/SOGoACLTurkishTurkeyModificationAdvisory.wox
++GNUstep/Local/Library/SOGo/Templates/SOGoACLTurkishTurkeyRemovalAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLUkrainianAdditionAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLUkrainianModificationAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoACLUkrainianRemovalAdvisory.wox
+@@ -1304,6 +1326,8 @@
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderSpanishSpainRemovalAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderSwedishAdditionAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderSwedishRemovalAdvisory.wox
++GNUstep/Local/Library/SOGo/Templates/SOGoFolderTurkishTurkeyAdditionAdvisory.wox
++GNUstep/Local/Library/SOGo/Templates/SOGoFolderTurkishTurkeyRemovalAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderUkrainianAdditionAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SOGoFolderUkrainianRemovalAdvisory.wox
+ GNUstep/Local/Library/SOGo/Templates/SchedulerUI/UIxAppointmentEditor.wox
+@@ -1472,6 +1496,7 @@
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/hu.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/is.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/it.js
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/lt.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/mk.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/nb.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/nl.js
+@@ -1483,13 +1508,18 @@
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/sk.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/sl.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/sv.js
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/tr.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/uk.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/zh-cn.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/lang/zh.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/about/dialogs/about.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/about/dialogs/hidpi/logo_ckeditor.png
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/about/dialogs/logo_ckeditor.png
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/base64image/LICENSE.md
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/base64image/README.md
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/base64image/dialogs/base64image.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/clipboard/dialogs/paste.js
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/colordialog/dialogs/colordialog.css
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/colordialog/dialogs/colordialog.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/dialog/dialogDefinition.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/div/dialogs/div.js
+@@ -1501,6 +1531,7 @@
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/link/dialogs/link.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/link/images/anchor.png
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/link/images/hidpi/anchor.png
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/pastefromword/filter/default.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/scayt/LICENSE.md
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/scayt/dialogs/options.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/scayt/dialogs/toolbar.css
+@@ -1512,30 +1543,29 @@
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/wsc/dialogs/wsc.css
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/wsc/dialogs/wsc.js
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/plugins/wsc/dialogs/wsc_ie.js
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/dialog.css
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/dialog_ie.css
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/dialog_ie7.css
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/dialog_ie8.css
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/dialog_iequirks.css
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/editor.css
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/editor_gecko.css
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/editor_ie.css
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/editor_ie7.css
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/editor_ie8.css
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/editor_iequirks.css
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/icons.png
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/icons_hidpi.png
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/images/arrow.png
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/images/close.png
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/images/hidpi/close.png
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/images/hidpi/lock-open.png
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/images/hidpi/lock.png
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/images/hidpi/refresh.png
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/images/lock-open.png
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/images/lock.png
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/images/refresh.png
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/images/spinner.gif
+-GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/moono/readme.md
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/dialog.css
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/dialog_ie.css
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/dialog_ie7.css
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/dialog_ie8.css
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/dialog_iequirks.css
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/editor.css
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/editor_gecko.css
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/editor_ie.css
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/editor_ie7.css
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/editor_ie8.css
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/editor_iequirks.css
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/icons.png
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/icons_hidpi.png
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/images/arrow.png
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/images/close.png
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/images/hidpi/close.png
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/images/hidpi/lock-open.png
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/images/hidpi/lock.png
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/images/hidpi/refresh.png
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/images/lock-open.png
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/images/lock.png
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/images/refresh.png
++GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/skins/minimalist/readme.md
+ GNUstep/Local/Library/SOGo/WebServerResources/ckeditor/styles.js
+ GNUstep/Local/Library/SOGo/WebServerResources/collapse.png
+ GNUstep/Local/Library/SOGo/WebServerResources/confidential.png
