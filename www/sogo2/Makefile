@@ -1,5 +1,5 @@
 # Created by: Euan Thoms <euan@potensol.com>
-# $FreeBSD: head/www/sogo2/Makefile 416692 2016-06-10 19:46:51Z acm $
+# $FreeBSD: head/www/sogo2/Makefile 418482 2016-07-13 13:54:13Z amdmi3 $
 
 PORTNAME=		sogo2
 PORTVERSION=		2.3.13
