@@ -1,6 +1,6 @@
 diff -ruN sope3.orig/Makefile sope3/Makefile
 --- sope3.orig/Makefile	2016-07-13 21:54:19.000000000 +0800
-+++ sope3/Makefile	2016-07-15 00:56:50.033165071 +0800
++++ sope3/Makefile	2016-07-16 10:33:13.994983267 +0800
 @@ -2,7 +2,7 @@
  # $FreeBSD: head/devel/sope3/Makefile 418483 2016-07-13 13:54:19Z amdmi3 $
  
@@ -10,6 +10,27 @@ diff -ruN sope3.orig/Makefile sope3/Makefile
  CATEGORIES=		devel gnustep
  MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
  DISTNAME=		SOPE-${PORTVERSION}
+@@ -13,6 +13,7 @@
+ LICENSE=		LGPL20
+ 
+ LIB_DEPENDS=		libxml2.so:textproc/libxml2 \
++			libiconv.so:converters/libiconv \
+ 			libmemcached.so:databases/libmemcached
+ 
+ WRKSRC=			${WRKDIR}/SOPE
+@@ -38,9 +39,9 @@
+ CONFIGURE_ARGS=		--with-gnustep --disable-debug --enable-strip
+ CONFIGURE_ENV+=		CC="${CC}"
+ 
+-LDAP_USE=	OPENLDAP=client
+-PGSQL_USES=	pgsql
+-MYSQL_USE=	MYSQL=client
++LDAP_USE=		OPENLDAP=client
++PGSQL_USES=		pgsql
++MYSQL_USE=		MYSQL=client
+ MEMCACHED_RUN_DEPENDS=	${LOCALBASE}/bin/memcached:databases/memcached
+ 
+ post-patch:
 diff -ruN sope3.orig/distinfo sope3/distinfo
 --- sope3.orig/distinfo	2016-07-13 21:54:19.000000000 +0800
 +++ sope3/distinfo	2016-07-15 00:57:20.872164215 +0800

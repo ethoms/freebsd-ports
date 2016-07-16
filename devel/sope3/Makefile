@@ -13,6 +13,7 @@ COMMENT=		Extensive set of GNUstep web application frameworks
 LICENSE=		LGPL20
 
 LIB_DEPENDS=		libxml2.so:textproc/libxml2 \
+			libiconv.so:converters/libiconv \
 			libmemcached.so:databases/libmemcached
 
 WRKSRC=			${WRKDIR}/SOPE
@@ -38,9 +39,9 @@ SUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
 CONFIGURE_ARGS=		--with-gnustep --disable-debug --enable-strip
 CONFIGURE_ENV+=		CC="${CC}"
 
-LDAP_USE=	OPENLDAP=client
-PGSQL_USES=	pgsql
-MYSQL_USE=	MYSQL=client
+LDAP_USE=		OPENLDAP=client
+PGSQL_USES=		pgsql
+MYSQL_USE=		MYSQL=client
 MEMCACHED_RUN_DEPENDS=	${LOCALBASE}/bin/memcached:databases/memcached
 
 post-patch:
