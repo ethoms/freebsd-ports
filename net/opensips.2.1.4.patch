@@ -1,0 +1,22 @@
+diff -ruN opensips.orig/Makefile opensips/Makefile
+--- opensips.orig/Makefile	2016-07-21 17:49:03.598253151 +0800
++++ opensips/Makefile	2016-07-21 17:34:17.308313726 +0800
+@@ -2,7 +2,7 @@
+ # $FreeBSD: head/net/opensips/Makefile 418670 2016-07-17 15:41:55Z pi $
+ 
+ PORTNAME=		opensips
+-PORTVERSION=		2.1.3
++PORTVERSION=		2.1.4
+ CATEGORIES=		net
+ MASTER_SITES=		http://opensips.org/pub/opensips/${PORTVERSION}/
+ 
+diff -ruN opensips.orig/distinfo opensips/distinfo
+--- opensips.orig/distinfo	2016-07-21 17:35:05.000000000 +0800
++++ opensips/distinfo	2016-07-21 17:51:09.384244104 +0800
+@@ -1,3 +1,3 @@
+-TIMESTAMP = 1469093705
+-SHA256 (opensips-2.1.4.tar.gz) = cb5d4615754a9bffd91c0f5f1fb25f0a18db1fff0a8110042d244ae6cdd6f935
+-SIZE (opensips-2.1.4.tar.gz) = 4784463
++TIMESTAMP = 1468420407
++SHA256 (opensips-2.1.3.tar.gz) = 43ad82f67c5a62a0978cabfd6d0eba05c9be29307e548fdae1731200d79a9229
++SIZE (opensips-2.1.3.tar.gz) = 4777142
