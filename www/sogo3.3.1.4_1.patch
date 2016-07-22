@@ -1,0 +1,166 @@
+diff -ruN sogo3.orig/Makefile sogo3/Makefile
+--- sogo3.orig/Makefile	2016-07-19 15:58:40.000000000 +0200
++++ sogo3/Makefile	2016-07-21 09:23:04.997628000 +0200
+@@ -3,6 +3,7 @@
+ 
+ PORTNAME=		sogo3
+ PORTVERSION=		3.1.4
++PORTREVISION=		1
+ CATEGORIES=		www gnustep
+ MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
+ DISTNAME=		SOGo-${PORTVERSION}
+diff -ruN sogo3.orig/files/patch-ActiveSync_GNUmakefile sogo3/files/patch-ActiveSync_GNUmakefile
+--- sogo3.orig/files/patch-ActiveSync_GNUmakefile	2016-03-30 20:27:28.000000000 +0200
++++ sogo3/files/patch-ActiveSync_GNUmakefile	2016-07-20 06:34:23.006615000 +0200
+@@ -1,4 +1,4 @@
+---- ActiveSync/GNUmakefile.orig	2015-11-11 19:25:43 UTC
++--- ActiveSync/GNUmakefile.orig	2016-07-12 16:56:33 UTC
+ +++ ActiveSync/GNUmakefile
+ @@ -34,7 +34,7 @@ ActiveSync_RESOURCE_FILES +=		\
+  ADDITIONAL_OBJCFLAGS += -Wno-deprecated-declarations
+diff -ruN sogo3.orig/files/patch-ActiveSync_SOGoMailObject+ActiveSync.m sogo3/files/patch-ActiveSync_SOGoMailObject+ActiveSync.m
+--- sogo3.orig/files/patch-ActiveSync_SOGoMailObject+ActiveSync.m	1970-01-01 01:00:00.000000000 +0100
++++ sogo3/files/patch-ActiveSync_SOGoMailObject+ActiveSync.m	2016-07-20 06:34:23.024286000 +0200
+@@ -0,0 +1,53 @@
++--- ActiveSync/SOGoMailObject+ActiveSync.m.orig	2016-07-20 04:33:03 UTC
+++++ ActiveSync/SOGoMailObject+ActiveSync.m
++@@ -1003,7 +1003,7 @@ struct GlobalObjectId {
++       [s appendFormat: @"<GlobalObjId xmlns=\"Email:\">%@</GlobalObjId>", [globalObjId activeSyncRepresentationInContext: context]];
++ 
++       // We set the right message type - we must set AS version to 14.1 for this
++-      if ([[context valueForKey: @"ASProtocolVersion"] floatValue] >= 14.1)
+++      if ([[context objectForKey: @"ASProtocolVersion"] floatValue] >= 14.1)
++         [s appendFormat: @"<MeetingMessageType xmlns=\"Email2:\">%d</MeetingMessageType>", 1];
++ 
++       [s appendString: @"</MeetingRequest>"];
++@@ -1169,7 +1169,7 @@ struct GlobalObjectId {
++           truncated = 0;
++         }
++ 
++-      if ([[context valueForKey: @"ASProtocolVersion"] isEqualToString: @"2.5"])
+++      if ([[context objectForKey: @"ASProtocolVersion"] isEqualToString: @"2.5"])
++         {
++           [s appendFormat: @"<Body xmlns=\"Email:\">%@</Body>", content];
++           [s appendFormat: @"<BodyTruncated xmlns=\"Email:\">%d</BodyTruncated>", truncated];
++@@ -1204,7 +1204,7 @@ struct GlobalObjectId {
++     {
++       int i;
++ 
++-      if ([[context valueForKey: @"ASProtocolVersion"] isEqualToString: @"2.5"])
+++      if ([[context objectForKey: @"ASProtocolVersion"] isEqualToString: @"2.5"])
++         [s appendString: @"<Attachments xmlns=\"Email:\">"];
++       else
++         [s appendString: @"<Attachments xmlns=\"AirSyncBase:\">"];
++@@ -1219,12 +1219,12 @@ struct GlobalObjectId {
++           // FileReference must be a unique identifier across the whole store. We use the following structure:
++           // mail/<foldername>/<message UID/<pathofpart>
++           // mail/INBOX/2          
++-          if ([[context valueForKey: @"ASProtocolVersion"] isEqualToString: @"2.5"])
+++          if ([[context objectForKey: @"ASProtocolVersion"] isEqualToString: @"2.5"])
++             [s appendFormat: @"<AttName>mail/%@/%@/%@</AttName>", [[[self container] relativeImap4Name] stringByEscapingURL], [self nameInContainer], [value objectForKey: @"path"]];
++           else
++             [s appendFormat: @"<FileReference>mail/%@/%@/%@</FileReference>", [[[self container] relativeImap4Name] stringByEscapingURL], [self nameInContainer], [value objectForKey: @"path"]];
++ 
++-          if ([[context valueForKey: @"ASProtocolVersion"] isEqualToString: @"2.5"])
+++          if ([[context objectForKey: @"ASProtocolVersion"] isEqualToString: @"2.5"])
++             {
++               [s appendFormat: @"<AttMethod>%d</AttMethod>", 1];
++               [s appendFormat: @"<AttSize>%d</AttSize>", [[value objectForKey: @"size"] intValue]];
++@@ -1273,7 +1273,7 @@ struct GlobalObjectId {
++       [s appendFormat: @"</Categories>"];
++     }
++   
++-    if ([[context valueForKey: @"ASProtocolVersion"] floatValue] >= 14.0)
+++    if ([[context objectForKey: @"ASProtocolVersion"] floatValue] >= 14.0)
++     {
++       id value;
++       NSString *reference;
+diff -ruN sogo3.orig/files/patch-ActiveSync_iCalEvent+ActiveSync.m sogo3/files/patch-ActiveSync_iCalEvent+ActiveSync.m
+--- sogo3.orig/files/patch-ActiveSync_iCalEvent+ActiveSync.m	1970-01-01 01:00:00.000000000 +0100
++++ sogo3/files/patch-ActiveSync_iCalEvent+ActiveSync.m	2016-07-20 06:34:23.042887000 +0200
+@@ -0,0 +1,20 @@
++--- ActiveSync/iCalEvent+ActiveSync.m.orig	2016-07-20 04:33:18 UTC
+++++ ActiveSync/iCalEvent+ActiveSync.m
++@@ -244,7 +244,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBI
++       // otherwise it'll prevent WP8 phones from sync'ing. See #3028 for details.
++       o = [o activeSyncRepresentationInContext: context];
++ 
++-      if ([[context valueForKey: @"ASProtocolVersion"] isEqualToString: @"2.5"])
+++      if ([[context objectForKey: @"ASProtocolVersion"] isEqualToString: @"2.5"])
++         {
++           [s appendFormat: @"<Body xmlns=\"Calendar:\">%@</Body>", o];
++           [s appendString: @"<BodyTruncated xmlns=\"Calendar:\">0</BodyTruncated>"];
++@@ -487,7 +487,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBI
++     }
++   
++   // FIXME: merge with iCalToDo
++-  if ([[context valueForKey: @"ASProtocolVersion"] isEqualToString: @"2.5"])
+++  if ([[context objectForKey: @"ASProtocolVersion"] isEqualToString: @"2.5"])
++     {
++       if ((o = [theValues objectForKey: @"Body"]))
++         [self setComment: o];
+diff -ruN sogo3.orig/files/patch-ActiveSync_iCalToDo+ActiveSync.m sogo3/files/patch-ActiveSync_iCalToDo+ActiveSync.m
+--- sogo3.orig/files/patch-ActiveSync_iCalToDo+ActiveSync.m	1970-01-01 01:00:00.000000000 +0100
++++ sogo3/files/patch-ActiveSync_iCalToDo+ActiveSync.m	2016-07-20 06:34:23.062006000 +0200
+@@ -0,0 +1,20 @@
++--- ActiveSync/iCalToDo+ActiveSync.m.orig	2016-07-20 04:33:29 UTC
+++++ ActiveSync/iCalToDo+ActiveSync.m
++@@ -127,7 +127,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBI
++       // otherwise it'll prevent WP8 phones from sync'ing. See #3028 for details.
++       o = [o activeSyncRepresentationInContext: context];
++ 
++-      if ([[context valueForKey: @"ASProtocolVersion"] isEqualToString: @"2.5"])
+++      if ([[context objectForKey: @"ASProtocolVersion"] isEqualToString: @"2.5"])
++         {
++           [s appendFormat: @"<Body xmlns=\"Tasks:\">%@</Body>", o];
++           [s appendString: @"<BodyTruncated xmlns=\"Tasks:\">0</BodyTruncated>"];
++@@ -161,7 +161,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBI
++     [self setSummary: o];
++ 
++   // FIXME: merge with iCalEvent
++-  if ([[context valueForKey: @"ASProtocolVersion"] isEqualToString: @"2.5"])
+++  if ([[context objectForKey: @"ASProtocolVersion"] isEqualToString: @"2.5"])
++     {
++       if ((o = [theValues objectForKey: @"Body"]))
++         [self setComment: o];
+diff -ruN sogo3.orig/files/patch-Main_GNUmakefile.preamble sogo3/files/patch-Main_GNUmakefile.preamble
+--- sogo3.orig/files/patch-Main_GNUmakefile.preamble	2015-09-23 07:30:12.000000000 +0200
++++ sogo3/files/patch-Main_GNUmakefile.preamble	2016-07-20 06:34:23.088278000 +0200
+@@ -1,4 +1,4 @@
+---- Main/GNUmakefile.preamble.orig	2015-09-16 18:41:29 UTC
++--- Main/GNUmakefile.preamble.orig	2016-07-12 16:56:34 UTC
+ +++ Main/GNUmakefile.preamble
+ @@ -22,4 +22,4 @@ $(SOGOD)_TOOL_LIBS += \
+  	-lNGObjWeb		\
+diff -ruN sogo3.orig/files/patch-Tests_Unit_GNUmakefile sogo3/files/patch-Tests_Unit_GNUmakefile
+--- sogo3.orig/files/patch-Tests_Unit_GNUmakefile	2015-09-23 07:30:12.000000000 +0200
++++ sogo3/files/patch-Tests_Unit_GNUmakefile	2016-07-20 06:34:23.118723000 +0200
+@@ -1,7 +1,7 @@
+---- Tests/Unit/GNUmakefile.orig	2015-09-16 18:41:31 UTC
++--- Tests/Unit/GNUmakefile.orig	2016-07-12 16:56:44 UTC
+ +++ Tests/Unit/GNUmakefile
+-@@ -35,7 +35,10 @@ $(TEST_TOOL)_CPPFLAGS += \
+- 	-Wall -D_GNU_SOURCE -I../../SOPE/ -I../../SoObjects/ -I../../UI/
++@@ -43,7 +43,10 @@ $(TEST_TOOL)_CPPFLAGS += \
++ 	-Wall -D_GNU_SOURCE -I../../SOPE/ -I../../SoObjects/ -I../../UI/ -I../../OpenChange
+  
+  ADDITIONAL_LIB_DIRS += \
+ -	-L../../SoObjects/SOGo/SOGo.framework/Versions/Current/sogo -L../../SOPE/NGCards/obj -L../../SOPE/GDLContentStore/obj -lSOGo -lNGMime -lNGCards -lGDLContentStore -lNGExtensions -lSBJson -lobjc \
+diff -ruN sogo3.orig/files/patch-Tools_GNUmakefile.preamble sogo3/files/patch-Tools_GNUmakefile.preamble
+--- sogo3.orig/files/patch-Tools_GNUmakefile.preamble	2015-09-23 07:30:12.000000000 +0200
++++ sogo3/files/patch-Tools_GNUmakefile.preamble	2016-07-20 06:34:23.145876000 +0200
+@@ -1,4 +1,4 @@
+---- Tools/GNUmakefile.preamble.orig	2015-09-16 18:41:31 UTC
++--- Tools/GNUmakefile.preamble.orig	2016-07-12 16:56:44 UTC
+ +++ Tools/GNUmakefile.preamble
+ @@ -13,4 +13,5 @@ ADDITIONAL_LIB_DIRS += \
+  	-L../SoObjects/SOGo/SOGo.framework/sogo -lSOGo \
+diff -ruN sogo3.orig/files/patch-configure sogo3/files/patch-configure
+--- sogo3.orig/files/patch-configure	2016-07-13 15:55:29.000000000 +0200
++++ sogo3/files/patch-configure	2016-07-20 06:34:23.172879000 +0200
+@@ -1,4 +1,4 @@
+---- configure.orig	2016-07-06 11:37:52 UTC
++--- configure.orig	2016-07-12 16:56:55 UTC
+ +++ configure
+ @@ -1,4 +1,4 @@
+ -#!/bin/bash
